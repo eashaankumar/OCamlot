@@ -14,3 +14,16 @@ type movement
    - Keeps track of all troop movements
 *)
 type state
+
+(* [move] contains information regarding a move that a player
+   can make. Contains two [tower] instances which denote the
+   start and end locations of the move
+*)
+type move
+
+(* [possible] moves is a list of [move] instances which
+   denotes all of the moves that a player with a given
+   allegiance can make at the time of the function call.
+   Requires: Inputs include [state] and [allegiance]. 
+*)
+val possible_moves : state -> allegiance-> move list
