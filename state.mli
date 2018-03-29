@@ -9,7 +9,12 @@ type allegiance
 *)
 type tower
 
-(* sprite, start tower, end tower, number of troops in the movement, allegiance,
+(* [movement] contains all the information of the following:
+   - [sprite]
+   - start tower, a [tower]
+   - end tower, a [tower]
+   - number of troops
+   - [allegiance] of the troops
  *)
 type movement
 
@@ -27,7 +32,7 @@ type state
 *)
 type move
 
-(* [possible] moves is a list of [move] instances which
+(* [possible_moves] is a list of [move] instances which
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
    Requires: Inputs include [state] and [allegiance].
