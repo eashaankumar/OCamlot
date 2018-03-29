@@ -1,3 +1,9 @@
+
+(* [allegiance] denotes which side owns troop movements and towers.
+   There are two categories in allegiance, one for each side
+*)
+type allegiance
+
 (* [tower] contains information about its id, positiion, sprite image,
    number of troops, and current allegiance/team.
 *)
@@ -24,6 +30,6 @@ type move
 (* [possible] moves is a list of [move] instances which
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
-   Requires: Inputs include [state] and [allegiance]. 
+   Requires: Inputs include [state] and [allegiance].
 *)
 val possible_moves : state -> allegiance-> move list
