@@ -1,0 +1,33 @@
+### Starting build.
+# Target: engine.mli.depends, tags: { extension:mli, file:engine.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules engine.mli > engine.mli.depends # cached
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.mli > state.mli.depends # cached
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmi state.mli # cached
+# Target: engine.cmi, tags: { byte, compile, extension:mli, file:engine.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o engine.cmi engine.mli # cached
+# Target: engine.ml.depends, tags: { extension:ml, file:engine.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules engine.ml > engine.ml.depends
+# Target: engine.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:engine.cmo, file:engine.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o engine.cmo engine.ml
++ ocamlfind ocamlc -c -o engine.cmo engine.ml
+File "engine.ml", line 1:
+Error: The implementation engine.ml does not match the interface engine.cmi:
+       The value `game_loop' is required but not provided
+       File "engine.mli", line 48, characters 0-50: Expected declaration
+       The value `render' is required but not provided
+       File "engine.mli", line 40, characters 0-32: Expected declaration
+       The value `update' is required but not provided
+       File "engine.mli", line 33, characters 0-48: Expected declaration
+       The value `get_input' is required but not provided
+       File "engine.mli", line 25, characters 0-28: Expected declaration
+       The value `init_game' is required but not provided
+       File "engine.mli", line 18, characters 0-41: Expected declaration
+       The extension constructor `Init_Failure' is required but not provided
+       The type `properties' is required but not provided
+       File "engine.mli", line 6, characters 0-15: Expected declaration
+       The type `input' is required but not provided
+       File "engine.mli", line 3, characters 0-10: Expected declaration
+Command exited with code 2.
+# Compilation unsuccessful.
