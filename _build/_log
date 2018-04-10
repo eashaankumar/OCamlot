@@ -1,0 +1,24 @@
+### Starting build.
+# Target: engine.mli.depends, tags: { extension:mli, file:engine.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules engine.mli > engine.mli.depends # cached
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.mli > state.mli.depends # cached
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmi state.mli # cached
+# Target: engine.cmi, tags: { byte, compile, extension:mli, file:engine.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o engine.cmi engine.mli # cached
+# Target: engine.ml.depends, tags: { extension:ml, file:engine.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules engine.ml > engine.ml.depends
+# Target: engine.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:engine.cmo, file:engine.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o engine.cmo engine.ml
++ ocamlfind ocamlc -c -o engine.cmo engine.ml
+File "engine.ml", line 1:
+Error: The implementation engine.ml does not match the interface engine.cmi:
+       Values do not match:
+         val init_game : 'a -> 'b list
+       is not included in
+         val init_game : properties -> State.state
+       File "engine.mli", line 18, characters 0-41: Expected declaration
+       File "engine.ml", line 7, characters 4-13: Actual declaration
+Command exited with code 2.
+# Compilation unsuccessful.
