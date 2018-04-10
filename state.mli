@@ -27,9 +27,24 @@ type state
 *)
 type move
 
+(*
+[skill] contains information about how much mana a skill
+comsumes and what it does (to be determined later).
+It should have whether it's a buff or and attack.
+*)
+type skill
+
+(*Either applying a skill to a tower or a move*)
+type command
+
 (* [possible] moves is a list of [move] instances which
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
    Requires: Inputs include [state] and [allegiance].
 *)
 val possible_moves : state -> allegiance-> move list
+
+(*
+[new_state]
+*)
+val new_state : state -> command -> state
