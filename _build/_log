@@ -1,0 +1,8 @@
+### Starting build.
+# Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules main.ml > main.ml.depends
++ ocamlfind ocamldep -modules main.ml > main.ml.depends
+File "main.ml", line 13, characters 16-16:
+Error: Syntax error
+Command exited with code 2.
+# Compilation unsuccessful.

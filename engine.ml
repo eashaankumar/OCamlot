@@ -3,7 +3,6 @@ open State
 
 type input = {
     left_mouse_down:bool
-
 }
 
 type properties = {
@@ -12,7 +11,9 @@ type properties = {
 
 exception Init_Failure of string
 
-let init_game prop = 
+let init_game prop : state = 
+  print_endline "Starting game!";
+  open_graph "";
   {
     towers = [|{id=0;pos=(100,100);twr_sprite=[];twr_troops=10;twr_team=Player}|];
     num_towers = 2;
@@ -24,29 +25,18 @@ let init_game prop =
   }
 
 let get_input () = 
-    {left_mouse_down=true}
+  {left_mouse_down=true}
 
 let update ste inpt = 
-    []
+  ste
 
 let render ste = 
-    ()
-
-let game_loop ste run =
-    ste
-
-(* [main ()] starts the REPL, which prompts for a game to play.
- * You are welcome to improve the user interface, but it must
- * still prompt for a game to play rather than hardcode a game file. *)
-let main () =
-  (*ANSITerminal.(print_string [red]
-    "\n\nWelcome to the 3110 Text Adventure Game engine.\n");
-  play_game (file_prompt ())*)
-  (* TODO: Obtain properties *)
-  let prop = {num_towers=5} in
-  let init_state = init_game prop in
-  let _ = game_loop init_state true in
-  (* Print out ending game state if necessary before closing *)
   ()
 
-let () = main ()
+let game_loop ste run =
+  ste
+  
+let close_game ste = 
+  close_graph ();
+  print_endline "Closing Game!";
+  
