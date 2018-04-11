@@ -1,4 +1,5 @@
 open Graphics
+open State
 
 type input = {
     left_mouse_down:bool
@@ -13,7 +14,7 @@ exception Init_Failure of string
 
 let init_game prop = 
   {
-    towers = [|{id=0;pos=(100,100);twr_sprite=}|];
+    towers = [|{id=0;pos=(100,100);twr_sprite=[];twr_troops=10;twr_team=Player}|];
     num_towers = 2;
     player_score = 1;
     enemy_score = 1;

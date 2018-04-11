@@ -6,7 +6,7 @@ type allegiance =
 type coord = int * int
 
 (*Fill this out later*)
-type image
+type image = int
 
 type tower = {
   id : int ;
