@@ -42,6 +42,9 @@ type skill
 (*Either applying a skill to a tower or a move*)
 type command
 
+(*Fill this out later*)
+type image
+
 (* [possible] moves is a list of [move] instances which
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
