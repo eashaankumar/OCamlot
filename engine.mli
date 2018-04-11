@@ -28,7 +28,7 @@ val get_input : unit-> input
  * returns: updated game [state]
  * effects: [update] is not allowed to print output, get input, or render
  *)
-val update : State.state -> input -> State.state
+val update : State.state -> input -> State.state * bool
 
 (**
  * [render s] draws all entities in state on the screen. 

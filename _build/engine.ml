@@ -1,4 +1,3 @@
-open Graphics
 open State
  
 type input = {
@@ -13,7 +12,7 @@ exception Init_Failure of string
 
 let init_game prop : state = 
   print_endline "Starting game!";
-  open_graph "";
+  Graphics.open_graph "";
   {
     towers = [|{id=0;pos=(100.,100.);twr_sprite=[];twr_troops=10;twr_team=Player}|];
     num_towers = 2;
@@ -25,29 +24,29 @@ let init_game prop : state =
   }
 
 let get_input () = 
-  {left_mouse_down=true}
+  {left_mouse_down=Graphics.button_down ()}
 
 let update ste inpt = 
-  ste
+  if inpt.left_mouse_down then (ste,false) else ste,true
 
 let render ste = 
-  auto_synchronize false;
-  clear_graph ();
+  Graphics.auto_synchronize false;
+  Graphics.clear_graph ();
   (* Render *)
-  auto_synchronize true;
+  Graphics.auto_synchronize true;
   ()
 
 let rec game_loop ste run =
   if not run then ste 
   else begin
-    let new_ste = update ste (get_input ()) in
+    let (new_ste, should_run) = update ste (get_input ()) in
     render ste;
     Unix.sleepf 0.01;
-    game_loop new_ste true;
+    game_loop new_ste should_run;
   end
   
 let close_game ste = 
-  close_graph ();
+  Graphics.close_graph ();
   print_endline "Closing Game!";
 
 ;;

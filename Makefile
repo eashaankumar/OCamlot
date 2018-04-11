@@ -2,7 +2,7 @@
 	#ocamlbuild -use-ocamlfind state_test.byte && ./state_test.byte
 
 play:
-	ocamlbuild -use-ocamlfind -pkg graphics -pkg unix engine.byte && ./engine.byte
+	ocamlbuild -use-ocamlfind -pkg graphics -lib unix engine.byte && ./engine.byte
 
 #check:
 #	bash checkenv.sh && bash checktypes.sh
