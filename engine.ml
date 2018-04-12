@@ -1,5 +1,10 @@
 open State
- 
+
+let last_time = ref 0.
+let frame_counter = ref 0
+let second_counter = ref 0.
+let fps = ref 0
+
 type input = {
     left_mouse_down:bool
 }
@@ -53,7 +58,7 @@ let init_game prop : state =
                           twr_team = Player}|] in
   tower_id := !tower_id + 2;
   (* Create Init State *)
-  {
+  let st = {
     towers = Array.append neutral_twr_array base_twr_array;
     num_towers = !tower_id;
     player_score = 1;
@@ -61,18 +66,33 @@ let init_game prop : state =
     movements = [];
     player_mana = 100;
     enemy_mana = 100
-  }
+  } in
+  last_time := Unix.gettimeofday ();
+  st
 
 let get_input () = 
   {left_mouse_down=Graphics.button_down ()}
 
-let update ste inpt = 
-  if inpt.left_mouse_down then (ste,false) else ste,true
+let update st0 inpt = 
+  (* Calculate delta_time and fps *)
+  let delta_time = Unix.gettimeofday () -. !last_time in
+  second_counter := !second_counter +. delta_time;
+  if !second_counter > 1. then (
+    second_counter := 0.;
+    fps := !frame_counter;
+    frame_counter := 0;
+  ) else (
+    second_counter := !second_counter +. delta_time;
+    frame_counter := !frame_counter + 1;
+  );
+  (* Do this as the end of Update *)
+  last_time := Unix.gettimeofday ();
+  if inpt.left_mouse_down then (st0,false) else st0,true
 
 let render st = 
   Graphics.auto_synchronize false;
   Graphics.clear_graph ();
-  (* Render *)
+  (* Render Towers *)
   Array.iter (fun tower -> 
     let x_pos = (fst (tower.pos)) in
     let y_pos = (snd (tower.pos)) in
@@ -86,7 +106,15 @@ let render st =
     end in
     Graphics.set_color (Graphics.rgb tc.(0) tc.(1) tc.(2));
     Graphics.fill_rect x_pos y_pos x_size y_size;
+    (* Troop count text *)
+    Graphics.set_color (Graphics.rgb 0 0 0);
+    Graphics.moveto (x_pos + x_size/2) (y_pos + y_size/2);
+    Graphics.draw_string (string_of_int tower.twr_troops);
   ) st.towers;
+  (* FPS *)
+  Graphics.set_color (Graphics.rgb 0 0 0);
+  Graphics.moveto (Graphics.size_x () - 30) (Graphics.size_y () - 30);
+  Graphics.draw_string (string_of_int !fps);
   (**********)
   Graphics.auto_synchronize true;
   ()
@@ -110,15 +138,16 @@ let close_game ste =
  * You are welcome to improve the user interface, but it must
  * still prompt for a game to play rather than hardcode a game file. *)
 let main () =
+  (* Create temporary property for map, implement property generator later *)
   let prop = {
     twrs_neutral=[(100,100);
             (200,200);
-            (500,500);
-            (550,550)];
+            (700,500);
+            (600,400)];
     twr_player=(0, 0);
-    twr_enemy=(750,550);
-    twr_neutral_size = (16,16);
-    twr_base_size = (20,20);
+    twr_enemy=(768,568);
+    twr_neutral_size = (32,32);
+    twr_base_size = (32, 32);
     width=800;
     height=600
   } in
