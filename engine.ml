@@ -5,7 +5,9 @@ type input = {
 }
 
 type properties = {
-    towers: (int * int) list;
+    twrs_neutral: (int * int) list;
+    twr_player: (int * int);
+    twr_enemy: (int * int);
     width:int;
     height:int
 }
@@ -17,22 +19,38 @@ let init_game prop : state =
   Graphics.set_window_title "Ocamlot";
   Graphics.open_graph "";
   Graphics.resize_window (prop.width) (prop.height);
-  (* Create Towers *)
-  let tower_array = begin
+  let tower_id = ref 0 in
+  (* Create Neutral Towers *)
+  let neutral_twr_array = begin
     List.fold_left (fun arr pos -> 
-      let new_tower = {id = Array.length arr;
+      let new_tower = {id = !tower_id;
                       pos = pos;
                       twr_sprite = [];
                       twr_troops = 0;
                       twr_troops_max = 20;
                       twr_team = Neutral} in
+      tower_id := !tower_id + 1;
       Array.append arr ([|new_tower|])
-    ) [||] (prop.towers)
+    ) [||] (prop.twrs_neutral)
   end in
+  (* Create Enemy and Player towers *)
+  let base_twr_array = [|{id = !tower_id;
+                          pos = prop.twr_enemy;
+                          twr_sprite = [];
+                          twr_troops = 0;
+                          twr_troops_max = 50;
+                          twr_team = Enemy};
+                         {id = !tower_id + 1;
+                          pos = prop.twr_player;
+                          twr_sprite = [];
+                          twr_troops = 0;
+                          twr_troops_max = 50;
+                          twr_team = Player}|] in
+  tower_id := !tower_id + 2;
   (* Create Init State *)
   {
-    towers = tower_array;
-    num_towers = Array.length tower_array;
+    towers = Array.append neutral_twr_array base_twr_array;
+    num_towers = !tower_id;
     player_score = 1;
     enemy_score = 1;
     movements = [];
@@ -53,12 +71,13 @@ let render st =
   Array.iter (fun tower -> 
     let x_pos = (fst (tower.pos)) in
     let y_pos = (snd (tower.pos)) in
-
-    match (tower.twr_team) with
-    | Player -> Graphics.set_color (Graphics.rgb 0 0 255)
-    | Enemy -> Graphics.set_color (Graphics.rgb 255 0 0)
-    | Neutral -> Graphics.set_color (Graphics.rgb 100 100 100)
-    ;
+    let tc = begin
+      match (tower.twr_team) with 
+      | Player ->  [|0; 0; 255|]
+      | Enemy -> [|255; 0; 0|]
+      | Neutral -> [|100; 100; 100|]
+    end in
+    Graphics.set_color (Graphics.rgb tc.(0) tc.(1) tc.(2));
     Graphics.fill_rect x_pos y_pos 10 10;
   ) st.towers;
   (**********)
@@ -85,10 +104,12 @@ let close_game ste =
  * still prompt for a game to play rather than hardcode a game file. *)
 let main () =
   let prop = {
-    towers=[(100,100);
+    twrs_neutral=[(100,100);
             (200,200);
             (500,500);
             (550,550)];
+    twr_player=(0, 0);
+    twr_enemy=(790,590);
     width=800;
     height=600
   } in
