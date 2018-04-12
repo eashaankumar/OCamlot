@@ -2,6 +2,7 @@
 type allegiance =
   | Player
   | Enemy
+  | Neutral
 
 (*Fill this out later*)
 type image = int

@@ -7,11 +7,11 @@ play:
 #check:
 #	bash checkenv.sh && bash checktypes.sh
 
-zip:
-	zip a2src.zip *.ml* *.json
+#zip:
+#	zip a2src.zip *.ml* *.json
 	
-zipcheck:
-	bash checkzip.sh
+#zipcheck:
+#	bash checkzip.sh
 
 clean:
 	ocamlbuild -clean
