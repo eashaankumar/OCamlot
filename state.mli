@@ -15,9 +15,10 @@ type image = int
 *)
 type tower = {
   id : int ;
-  pos : float * float ;
+  pos : int * int ;
   twr_sprite : image list ;
   twr_troops : int ;
+  twr_troops_max : int;
   twr_team: allegiance
 }
 
