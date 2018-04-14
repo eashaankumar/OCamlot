@@ -1,56 +1,50 @@
 (* [input] describes keyboard and mouse input for any given frame. *)
 type input
 
-(* [properties] describes information needed to create the initial game state *)
-type properties
-(* [Init_Failure s] represents the error raised when an initial game state
- * could not be created successfully. *)
-exception Init_Failure of string
+val active_state : State.state ref
+val avtive_input : input ref
 
 (**
- * [init_game p] is the initial game state that is created based on provided
- * properties [p]. 
- * returns: Initial game state
- * exceptions: [Init_Failure s] if [p] is invalid
+ * [init_game] is initializes the graphics canvas and state. 
+ * returns: None
+ * effects: [active_state]
  *)
-val init_game : properties -> State.state
+val init_game : unit -> unit
 
 (**
- * [get_input s] obtains user input from the keyboard and mouse and returns
- * an [input] data structure.
- * returns: [input] containing all user input
+ * [get_input] obtains user input from the keyboard and mouse
+ * returns: None
+ * effects: [active_input]
  *)
-val get_input : unit-> input
+val get_input : unit-> unit
 
 (**
- * [update s i] updates game state [s] using input [i] without causing
- * any side effects. 
- * returns: updated game [state]
- * effects: [update] is not allowed to print output, get input, or render
+ * [update] updates game state [active_state] using input [active_input] 
+ * returns: None
+ * effects: [active_state]
  *)
-val update : State.state -> input -> State.state * bool
+val update : unit -> unit
 
 (**
- * [render s] draws all entities in state on the screen. 
- * returns: [unit], ie nothing
- * effects: draws the new frame.
+ * [render] draws all entities in [active_state] on the canvas. 
+ * returns: None
+ * effects: None
  *)
-val render : State.state -> unit
+val render : unit -> unit
 
 (**
- * [close_game s] runs at the very end of the game to ensure clean shutdown
+ * [close_game] runs at the very end of the game to ensure clean shutdown
  * of the game. 
- * precondition: [s] is the state at which game ended
- * returns: nothing
- * effects: nothing
+ * precondition: [active_state] is the state at which game ended
+ * returns: None
+ * effects: None
  *)
-val close_game : State.state -> unit
+val close_game : unit -> unit
 
 (**
- * [game_loop s run] is responsible for continuously updating the game [state]
- * as long as [run] is [true]. 
- * returns: updated [state] for the next iteration
- * effects: changes made to [state] based on functions defined above
+ * [game_loop] is responsible for continuously calling [get_intput], [update],
+ * returns: None
+ * effects: None
  *)
-val game_loop : State.state -> bool -> State.state
+val game_loop : unit -> unit
 
