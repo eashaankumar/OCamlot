@@ -1,0 +1,16 @@
+### Starting build.
+# Target: ocamlot.ml.depends, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), extension:ml, file:ocamlot.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -modules ocamlot.ml > ocamlot.ml.depends # cached
+# Target: state.mli.depends, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -modules state.mli > state.mli.depends # cached
+# Target: state.cmi, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -o state.cmi state.mli # cached
+# Target: ocamlot.cmo, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), byte, compile, extension:cmo, extension:ml, file:ocamlot.cmo, file:ocamlot.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -o ocamlot.cmo ocamlot.ml # cached
+# Target: state.ml.depends, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), extension:ml, file:state.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -modules state.ml > state.ml.depends # cached
+# Target: state.cmo, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt -o state.cmo state.ml # cached
+# Target: ocamlot.byte, tags: { package(js_of_ocaml-lwt), package(js_of_ocaml.ppx), package(lwt.ppx), byte, dont_link_with, extension:byte, file:ocamlot.byte, link, ocaml, program, quiet }
+ocamlfind ocamlc -linkpkg -package lwt.ppx -package js_of_ocaml.ppx -package js_of_ocaml-lwt state.cmo ocamlot.cmo -o ocamlot.byte # cached
+# Compilation successful.

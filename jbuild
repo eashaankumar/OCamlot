@@ -9,8 +9,8 @@
  ((targets (ocamlot.js))
   (action
     (run ${bin:js_of_ocaml} --noruntime ${lib:js_of_ocaml-compiler:runtime.js}
-         --source-map ${path:cubes.bc} -o ${@} --pretty))))
+         --source-map ${path:ocamlot.bc} -o ${@} --pretty))))
 
 (alias
  ((name DEFAULT)
-  (deps (ocalmot.js index.html))))
+  (deps (ocamlot.js index.html))))
