@@ -63,3 +63,7 @@ let possible_moves st side =
 
 let new_state st c =
   failwith "Not implemented"
+
+let update st = 
+  print_endline "update";
+  st

@@ -1,2 +1,0 @@
-https://github.com/ocsigen/js_of_ocaml/blob/master/examples/cubes/cubes.ml for 
-main (), create_canvas () in engine.ml; index.html 

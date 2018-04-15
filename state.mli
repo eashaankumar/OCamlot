@@ -75,3 +75,5 @@ val possible_moves : state -> allegiance-> move list
 [new_state]
 *)
 val new_state : state -> command -> state
+
+val update : state -> state
