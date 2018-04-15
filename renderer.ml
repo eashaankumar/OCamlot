@@ -17,6 +17,18 @@ module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
+(******************************************************************************)
+let x = ref 0.
+
+let draw_sprite_sheet ctx img_src pos = 
+  let img = Html.createImg document in
+  img##src <- js img_src;
+  ctx##drawImage_full (img, !x, 0., 180., 230., pos.x, pos.y, 100., 100.);
+  x := !x +. 0.1;
+  (*ctx##drawImage (img, pos.x, pos.y);*)
+  ()
+(******************************************************************************)
+
 (****** Helpers ******)
 (**
  * [update_delta] returns time elapsed between last update call and this one.
@@ -107,6 +119,8 @@ let render context state =
       } 
       (0,0,0) 20;
   ) (state.towers);
+  (* temporary *)
+  draw_sprite_sheet context "images/test_spritesheet.png" {x=100.;y=100.};
   (* Draw fps *)
   draw_text 
     context (string_of_int (!fps)) 

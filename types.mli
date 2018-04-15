@@ -1,3 +1,5 @@
+module Html = Dom_html 
+
 type vector2 = {
   x:float;
   y:float 
@@ -8,11 +10,23 @@ type bounds = {
   h:float
 }
 
+type animation_frame = {
+  offset:vector2;
+  bounds:bounds;
+}
+
 (**
  * [sprite] represents an animation sequence for an entity. It contains all
  * information necessary for identifying the correct animation image.
  *)
-type sprite = int
+type sprite = {
+  frames: animation_frame array;
+  img: Html.imageElement Js.t;
+  index: int;
+  size: bounds;
+  time_delay: float;
+  curr_time: float;
+}
 
 (* [allegiance] denotes which side owns troop movements and towers.
    There are two categories in allegiance, one for each side
@@ -21,9 +35,6 @@ type allegiance =
   | Player
   | Enemy
   | Neutral
-  
-(* Fill this out later *)
-type image = int
 
 (* [tower] contains information about its id, positiion, sprite image,
    number of troops, and current allegiance/team.
@@ -32,7 +43,7 @@ type tower = {
   twr_id : int ;
   twr_pos : vector2;
   twr_size : bounds;
-  twr_sprite : image list ;
+  twr_sprite : sprite;
   twr_troops : int ;
   twr_troops_max : int;
   twr_team: allegiance

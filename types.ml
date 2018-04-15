@@ -9,21 +9,32 @@ type bounds = {
   h:float
 }
 
-type sprite = int
-
 type allegiance =
   | Player
   | Enemy
   | Neutral
 
-(*Fill this out later*)
-type image = int
+module Html = Dom_html 
+
+type animation_frame = {
+  offset:vector2;
+  bounds:bounds;
+}
+
+type sprite = {
+  frames: animation_frame array;
+  img: Html.imageElement Js.t;
+  index: int;
+  size: bounds;
+  time_delay: float;
+  curr_time: float;
+}
 
 type tower = {
   twr_id : int ;
   twr_pos : vector2;
   twr_size : bounds ;
-  twr_sprite : image list ;
+  twr_sprite : sprite;
   twr_troops : int ;
   twr_troops_max : int;
   twr_team: allegiance
@@ -33,7 +44,7 @@ type movement = {
   start_tower : int ;
   end_tower : int ;
   mvmt_troops : int ;
-  mvmt_sprite : image list ;
+  mvmt_sprite : sprite ;
   mvmt_team : allegiance ;
   progress : float
 }

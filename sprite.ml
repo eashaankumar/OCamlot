@@ -1,0 +1,46 @@
+open Types
+
+module Html = Dom_html 
+let js = Js.string
+let document = Html.document
+
+(****** Helpers ******)
+(**
+ * [init_sprite sheet_src time_delay size] creates an empty sprite animation
+ * and loads in an image from [sheet_src] with provided parameters
+ * returns: [sprite]
+ *)
+let init_sprite sheet_src time_delay (w,h)= 
+  let img = Html.createImg document in
+  img##src <- js sheet_src;
+  {frames=[||];img=img;index=0;size={w=w;h=h};time_delay=time_delay;curr_time=0.}
+
+let add_animation_frame sprite (x,y) (w,h) = 
+  let new_frames = Array.append sprite.frames [|{
+    offset = {x = x; y = y};
+    bounds = {w = w; h = h};
+  }|] in
+  {frames = new_frames; 
+   img = sprite.img; 
+   index = sprite.index; 
+   size = sprite.size;
+   time_delay = sprite.time_delay; 
+   curr_time = sprite.curr_time
+  }
+
+(* Functions *)
+let tick sp delta = 
+  (* switch frames *)
+  if sp.curr_time >= sp.time_delay then begin
+    (* Wrap around *)
+    if sp.index + 1 >= (Array.length sp.frames) then
+      {frames=sp.frames;img=sp.img;index=0;size=sp.size;time_delay=sp.time_delay;curr_time=0.}
+    else 
+      {frames=sp.frames;img=sp.img;index=sp.index+1;size=sp.size;time_delay=sp.time_delay;curr_time=0.}
+  end
+  (* else keep same *)
+  else begin
+    {frames=sp.frames;img=sp.img;index=sp.index;size=sp.size;time_delay=sp.time_delay;curr_time=sp.curr_time +. delta}
+  end
+
+let troop_sprite = init_sprite "images/test_spritesheet.png" 0.1 (100.,100.)
