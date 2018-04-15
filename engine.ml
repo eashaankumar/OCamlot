@@ -1,4 +1,4 @@
-open State
+open Types
 
 module Html = Dom_html 
 let js = Js.string

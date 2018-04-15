@@ -4,7 +4,7 @@ build:
 		-no-links \
 		main.d.js
 	#ocamlbuild -use-ocamlfind helper.cmo types.cmo state.cmo ai.cmo command.cmo gui.cmo sprites.cmo game.cmo -r
-	ocamlbuild -use-ocamlfind renderer.cmo state.cmo engine.cmo -r
+	ocamlbuild -use-ocamlfind types.cmo renderer.cmo state.cmo engine.cmo -r
 clean:
 	ocamlbuild -clean
 

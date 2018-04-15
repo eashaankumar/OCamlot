@@ -1,4 +1,4 @@
-open State
+open Types
 
 val width : float
 val height : float
