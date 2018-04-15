@@ -8,7 +8,10 @@ let possible_moves st side =
 let new_state st c =
   failwith "Not implemented"
 
-let update st = 
+let new_state_plus_delta st c d =
+  failwith "Not implemented"
+
+let update st =
   (* Housekeeping *)
   {
     towers = st.towers;
