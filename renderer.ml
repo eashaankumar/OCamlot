@@ -1,11 +1,48 @@
 open Types
 
+(* Public *)
 let width = 800.
 let height = 600.
+
+let time = ref 0.
+let fps = ref 0
+let delta = ref 0.
+
+(* Private *)
+let last_update_time = ref 0. 
+let frames_count = ref 0
+let time_count = ref 0.
 
 module Html = Dom_html 
 let js = Js.string
 let document = Html.document
+
+(****** Helpers ******)
+(**
+ * [update_delta] returns time elapsed between last update call and this one.
+ * returns: unit
+ * effects: [delta]
+ *)
+let update_delta () = 
+  delta := !time -. !last_update_time;
+  last_update_time := !time;
+  ()
+
+(**
+ * [get_fps] calculates current fps on game.
+ * returns: unit
+ * effects: [fps], [time_count], [frames_count]
+ * requires: [update_fps] should be run every frame in [render]
+ *)
+let update_fps () = 
+  if !time_count > 1. then (
+    fps := !frames_count;
+    time_count := 0.;
+    frames_count := 0;
+  ) else (
+    time_count := !time_count +. !delta;
+    frames_count := !frames_count + 1;
+  ) 
 
 (**
  * [color_to_hex color] calculates hexadecimal representation of the 
@@ -14,10 +51,11 @@ let document = Html.document
  * requires: [color] be of form (0-255,0-255,0-255) 
  *)
 let color_to_hex (r,g,b) = 
+   
   js ("#"^
-  (Printf.sprintf "%X" r)^
-  (Printf.sprintf "%X" g)^
-  (Printf.sprintf "%X" g))
+  (Printf.sprintf "%02X" r)^
+  (Printf.sprintf "%02X" g)^
+  (Printf.sprintf "%02X" b))
 
 (**
  * [draw_image ctx img_src pos] draws image from path [img_src] at [pos].
@@ -30,18 +68,51 @@ let draw_image ctx img_src pos =
   ctx##drawImage (img, pos.x, pos.y);
   ()
 
+(**
+ * [draw_text ctx text pos color font_size] renders [text] with the 
+ * given parameters
+ * returns: unit
+ * requires: [color] is (0-255,0-255,0-255)
+ *           [font_size] > 0
+ *)
+let draw_text ctx text pos color font_size : unit =
+  ctx##fillStyle <- color_to_hex color;
+  ctx##font <- js ((string_of_int font_size)^"px Triforce");
+  ctx##fillText (js text, pos.x, pos.y);
+  ()
+
 let render context state =
-  print_endline "render";
-  context##clearRect (0., 0., width, height);
+  (* House Keeping *)
+  update_delta ();
+  update_fps ();
   (* Draw canvas background *)
-  context##fillStyle <- color_to_hex (0,0,0);
+  context##clearRect (0., 0., width, height);
+  context##fillStyle <- color_to_hex (255,255,255);
   context##fillRect (0., 0., width, height);
   (* Draw entities *)
   Array.iter (fun tower -> 
-    match tower.twr_team with
-    | Player -> context##fillStyle <- color_to_hex (0,255,0);
-    | Enemy -> context##fillStyle <- color_to_hex (255,0,0)
-    | Neutral -> context##fillStyle <- color_to_hex (100,100,100);
+    let c = (
+      match (tower.twr_team) with
+      | Player ->(0,255,0)
+      | Enemy ->(255,0,0)
+      | Neutral ->(100,100,100)
+    ) in
+    context##fillStyle <- color_to_hex c;
     context##fillRect (tower.twr_pos.x, tower.twr_pos.y, tower.twr_size.w, tower.twr_size.h);
+    draw_text 
+      context (string_of_int (tower.twr_troops)) 
+      {
+        x=tower.twr_pos.x +. tower.twr_size.w/.2.;
+        y=tower.twr_pos.y +. tower.twr_size.h/.3.
+      } 
+      (0,0,0) 20;
   ) (state.towers);
+  (* Draw fps *)
+  draw_text 
+    context (string_of_int (!fps)) 
+    {
+      x=width-.30.;
+      y=30.;
+    } 
+    (255,20,147) 30;
   ()

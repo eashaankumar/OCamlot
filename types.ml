@@ -1,3 +1,4 @@
+
 type vector2 = {
   x:float;
   y:float 
@@ -66,5 +67,5 @@ type state = {
   enemy_score : int ;
   movements : movement list ;
   player_mana : int ;
-  enemy_mana : int
+  enemy_mana : int;
 }

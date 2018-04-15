@@ -60,7 +60,7 @@ type state = {
   enemy_score : int ;
   movements : movement list ;
   player_mana : int ;
-  enemy_mana : int
+  enemy_mana : int;
 }
 
 (* [move] contains information regarding a move that a player
