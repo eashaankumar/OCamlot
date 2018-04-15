@@ -23,7 +23,6 @@ type sprite = {
   frames: animation_frame array;
   img: Html.imageElement Js.t;
   index: int;
-  size: bounds;
   time_delay: float;
   curr_time: float;
 }
@@ -42,10 +41,11 @@ type allegiance =
 type tower = {
   twr_id : int ;
   twr_pos : vector2;
-  twr_size : bounds;
+  twr_size : bounds ;
   twr_sprite : sprite;
-  twr_troops : int ;
-  twr_troops_max : int;
+  twr_troops : float ;
+  twr_troops_max : float;
+  twr_troops_regen_speed : float;
   twr_team: allegiance
 }
 

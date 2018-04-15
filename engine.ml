@@ -12,8 +12,9 @@ let state = ref {
       twr_pos = {x=0.;y=0.};
       twr_size = {w=80.;h=100.} ;
       twr_sprite = Sprite.troop_sprite;
-      twr_troops = 0 ;
-      twr_troops_max = 50;
+      twr_troops = 0.;
+      twr_troops_max = 50.;
+      twr_troops_regen_speed = 1.;
       twr_team = Player
     };
     {
@@ -21,8 +22,9 @@ let state = ref {
       twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.100.};
       twr_size = {w=80.;h=100.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 50;
+      twr_troops = 0. ;
+      twr_troops_max = 50.;
+      twr_troops_regen_speed = 1.;
       twr_team = Enemy
     };
     (* Neutral *)
@@ -31,8 +33,9 @@ let state = ref {
       twr_pos = {x=300.;y=200.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
     {
@@ -40,8 +43,9 @@ let state = ref {
       twr_pos = {x=200.;y=400.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
     {
@@ -49,8 +53,9 @@ let state = ref {
       twr_pos = {x=100.;y=500.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
     (*  *)
@@ -59,8 +64,9 @@ let state = ref {
       twr_pos = {x=Renderer.width-.300.;y=Renderer.height-.200.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
     {
@@ -68,8 +74,9 @@ let state = ref {
       twr_pos = {x=Renderer.width-.200.;y=Renderer.height-.400.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
     {
@@ -77,8 +84,9 @@ let state = ref {
       twr_pos = {x=Renderer.width-.100.;y=Renderer.height-.500.};
       twr_size = {w=40.;h=50.} ;
       twr_sprite = Sprite.troop_sprite ;
-      twr_troops = 0 ;
-      twr_troops_max = 20;
+      twr_troops = 0. ;
+      twr_troops_max = 20.;
+      twr_troops_regen_speed = 1.;
       twr_team = Neutral
     };
   |] ;

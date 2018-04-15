@@ -18,14 +18,11 @@ let js = Js.string
 let document = Html.document
 
 (******************************************************************************)
-let x = ref 0.
-
-let draw_sprite_sheet ctx img_src pos = 
-  let img = Html.createImg document in
-  img##src <- js img_src;
-  ctx##drawImage_full (img, !x, 0., 180., 230., pos.x, pos.y, 100., 100.);
-  x := !x +. 0.1;
-  (*ctx##drawImage (img, pos.x, pos.y);*)
+let draw_sprite_sheet ctx sprite pos size= 
+  let frame = sprite.frames.(sprite.index) in
+  ctx##drawImage_full (
+    sprite.img, frame.offset.x, frame.offset.y, frame.bounds.w, frame.bounds.h, 
+    pos.x, pos.y, size.w, size.h);
   ()
 (******************************************************************************)
 
@@ -103,24 +100,23 @@ let render context state =
   context##fillRect (0., 0., width, height);
   (* Draw entities *)
   Array.iter (fun tower -> 
-    let c = (
+    (*let c = (
       match (tower.twr_team) with
       | Player ->(0,255,0)
       | Enemy ->(255,0,0)
       | Neutral ->(100,100,100)
     ) in
     context##fillStyle <- color_to_hex c;
-    context##fillRect (tower.twr_pos.x, tower.twr_pos.y, tower.twr_size.w, tower.twr_size.h);
+    context##fillRect (tower.twr_pos.x, tower.twr_pos.y, tower.twr_size.w, tower.twr_size.h);*)
+    draw_sprite_sheet context tower.twr_sprite tower.twr_pos tower.twr_size;
     draw_text 
-      context (string_of_int (tower.twr_troops)) 
+      context (string_of_int ( int_of_float tower.twr_troops)) 
       {
         x=tower.twr_pos.x +. tower.twr_size.w/.2.;
         y=tower.twr_pos.y +. tower.twr_size.h/.3.
       } 
       (0,0,0) 20;
   ) (state.towers);
-  (* temporary *)
-  draw_sprite_sheet context "images/test_spritesheet.png" {x=100.;y=100.};
   (* Draw fps *)
   draw_text 
     context (string_of_int (!fps)) 
