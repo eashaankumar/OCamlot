@@ -3,8 +3,14 @@ open Js_of_ocaml
 open Js_of_ocaml_lwt
 
 module Html = Dom_html
+let document = Html.document
+
+(* Types *)
+type vector2 = float * float
 
 (* Definitions *)
+let js = Js.string
+
 let (>>=) = Lwt.bind
 
 let active_state = ref {
@@ -16,6 +22,7 @@ let active_state = ref {
   player_mana = 0;
   enemy_mana = 0
 }
+
 
 (* Helper Functions *)
 (**
@@ -29,10 +36,21 @@ let create_canvas () =
   c##.height := 800;
   c
 
+(**
+ * [draw_image ctx img_src pos] draws image from [img_src] at [pos]
+ * returns: unit
+ * effects: none
+ *)
+let draw_image ctx img_src (pos:vector2) =
+  let img = Html.createImg document in
+  img##.src := img_src;
+  ctx##drawImage (img) (fst pos) (snd pos);
+  ()
 (* Functions *)
 let init_game () = ()
 
-let update () = ()
+let update () = 
+  print_endline "update"
 
 let render ctx canvas =
   let c = canvas##getContext (Html._2d_) in
@@ -41,7 +59,8 @@ let render ctx canvas =
   c##clearRect 0. 0. (float canvas##.width) (float canvas##.height);
   c##.globalCompositeOperation := Js.string "lighter";
   c##.fillStyle := Js.string "#0000FF";
-  c##fillRect 0. 0. 100. 100.;
+  (*c##fillRect 0. 0. 100. 100.;*)
+  draw_image c (js"sprites/starwars.jpg") (0.,200.);
   ctx##drawImage_fromCanvas canvas 0. 0.;
   ()
   
@@ -50,7 +69,7 @@ let close_game () =
   print_endline ("Game Over!")
 
 let rec game_loop c c' = 
-  Lwt_js.sleep 0.01 >>= fun () ->
+  Lwt_js.sleep 0.001 >>= fun () ->
   update ();
   render c c';
   game_loop c c'
@@ -68,7 +87,7 @@ let main _ =
   (* Start Game *)
   init_game ();
   ignore (game_loop c c');
-  close_game ();
+  (*close_game ();*)
   Js._false
 
 let _ = Html.window##.onload := Html.handler main 
