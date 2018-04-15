@@ -11,6 +11,9 @@ let new_state st c =
 let new_state_plus_delta st c d =
   failwith "Not implemented"
 
+let gameover st = 
+  failwith "Not implemented"
+
 let update st =
   (* Housekeeping *)
   {
