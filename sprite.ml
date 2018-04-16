@@ -15,6 +15,10 @@ let init_sprite sheet_src time_delay=
   img##src <- js sheet_src;
   {frames=[||];img=img;index=0;time_delay=time_delay;curr_time=0.}
 
+(**
+ * [add_animation_frame offset bounds sprite] adds a new frame to [sprite]
+ * returns: [sprite] with the new frame.
+ *)
 let add_animation_frame (x,y) (w,h) sprite = 
   let new_frames = Array.append sprite.frames [|{
     offset = {x = x; y = y};
