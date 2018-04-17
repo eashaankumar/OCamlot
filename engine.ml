@@ -98,6 +98,20 @@ let state = ref {
   enemy_mana = 0;
 }
 
+(* TODO: Figure out how to get canvas from document *)
+let canvas = ref ( Html.createCanvas document )
+
+(****** Helpers ******)
+let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) = 
+  let rect = (!canvas)##getBoundingClientRect () in
+  let x = event##clientX - int_of_float rect##left in
+  let y = event##clientY - int_of_float rect##top in
+  {x=float_of_int x;y= float_of_int y}
+(*********************)
+
+let get_html_element id =
+  Js.Opt.get (document##getElementById (js id)) (fun _ -> assert false)
+
 let key_pressed event = 
   let _ = match event##keyCode with
   | key -> print_endline ((string_of_int key)^" pressed")
@@ -108,18 +122,22 @@ let key_released event =
   | key -> print_endline ((string_of_int key)^" released")
   in Js._true
 
-let mouse_pressed event = 
-  (*let _ = match event##mousedown with
-  | key -> print_endline ((string_of_int key)^" pressed")
-  in*) 
+let mouse_pressed (event:Dom_html.mouseEvent Js.t) = 
+  let pos = calculate_mouse_pos event in
+  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
   print_endline "mouse event pressed";  
   Js._true
 
 let mouse_released event = 
-  (*let _ = match event##mouseup with
-  | key -> print_endline ((string_of_int key)^" released")
-  in*) 
+  let pos = calculate_mouse_pos event in
+  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
   print_endline "mouse event released";  
+  Js._true
+
+let mouse_move event = 
+  let pos = calculate_mouse_pos event in
+  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
+  print_endline "mouse moved!!!";  
   Js._true
 
 let game_loop context running = 
