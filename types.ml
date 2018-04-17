@@ -71,6 +71,17 @@ type command =
   | Move of move
   | Skill of skill * tower
 
+type mouse_state = 
+  | Pressed
+  | Released
+  | Moved
+
+type input = {
+  mouse_pos : vector2;
+  mouse_state : mouse_state;
+  prev_state : mouse_state;
+}
+
 type state = {
   towers : tower array ;
   num_towers : int ;

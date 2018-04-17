@@ -58,6 +58,17 @@ type tower = {
  *)
 type movement
 
+type mouse_state = 
+  | Pressed
+  | Released
+  | Moved
+
+type input = {
+  mouse_pos : vector2;
+  mouse_state : mouse_state;
+  prev_state : mouse_state;
+}
+
 (* [state] will contain the following information
    - All towers in the match
    - Number of towers to dominate needed to win the match

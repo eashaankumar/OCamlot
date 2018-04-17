@@ -98,6 +98,13 @@ let state = ref {
   enemy_mana = 0;
 }
 
+(* Initialize input *)
+let input = ref {
+  mouse_pos = {x=0.;y=0.};
+  mouse_state = Moved;
+  prev_state = Moved;
+}
+
 (* TODO: Figure out how to get canvas from document *)
 let canvas = ref ( Html.createCanvas document )
 
@@ -124,25 +131,22 @@ let key_released event =
 
 let mouse_pressed (event:Dom_html.mouseEvent Js.t) = 
   let pos = calculate_mouse_pos event in
-  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
-  print_endline "mouse event pressed";  
+  input := {mouse_pos = pos; mouse_state = Pressed; prev_state = !input.mouse_state};
   Js._true
 
 let mouse_released event = 
   let pos = calculate_mouse_pos event in
-  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
-  print_endline "mouse event released";  
+  input := {mouse_pos = pos; mouse_state = Released; prev_state = !input.mouse_state};
   Js._true
 
 let mouse_move event = 
   let pos = calculate_mouse_pos event in
-  print_endline ((string_of_float pos.x)^" "^(string_of_float pos.y));
-  print_endline "mouse moved!!!";  
+  input := {mouse_pos = pos; mouse_state = Moved; prev_state = !input.mouse_state};
   Js._true
 
 let game_loop context running = 
   let rec helper () = 
-    state := State.update !state;
+    state := State.update !state !input;
     Renderer.render context !state;
     ignore (
       Html.window##requestAnimationFrame(

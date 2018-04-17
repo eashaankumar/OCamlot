@@ -27,4 +27,4 @@ val new_state_plus_delta : state -> command -> float -> state
 *)
 val gameover : state -> bool
 
-val update : state -> state
+val update : state -> input -> state
