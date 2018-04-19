@@ -1,6 +1,11 @@
 open Types
 
-let to_tower
+type to_from = {
+  to_tower : int option;
+  from_tower : int option;
+}
+
+let destination = ref {to_tower = None; from_tower = None}
 
 (****** Helpers ******)
 
