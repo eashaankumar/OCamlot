@@ -1,5 +1,7 @@
 open Types
 
+let to_tower
+
 (****** Helpers ******)
 
 let possible_moves st side =
@@ -11,14 +13,14 @@ let new_state st c =
 let new_state_plus_delta st c d =
   failwith "Not implemented"
 
-let gameover st = 
+let gameover st =
   failwith "Not implemented"
 
 (**
  * [update_troop_count tower] updates the troop count in [tower]
  * returns: new troop [count]
  *)
-let update_troop_count tower = 
+let update_troop_count tower =
   let troops = (
     tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
   ) in
@@ -26,7 +28,7 @@ let update_troop_count tower =
   else if troops < 0. then 0.
   else troops
 
-let print_mouse_input input = 
+let print_mouse_input input =
   print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");
   let _ = match input.mouse_state with
   | Pressed -> print_string "Pressed ";
@@ -42,7 +44,7 @@ let print_mouse_input input =
 let update st input =
   (* Sprite towers *)
   let updated_twrs = begin
-    Array.map (fun tower -> 
+    Array.map (fun tower ->
       let new_twr_sprite = Sprite.tick tower.twr_sprite !Renderer.delta in
       let new_troop_count = update_troop_count tower in
       {
@@ -59,7 +61,7 @@ let update st input =
   end in
   (* TEST: Print out input *)
   let _ = print_mouse_input input in
-  
+
   {
     towers = updated_twrs;
     num_towers = st.num_towers;

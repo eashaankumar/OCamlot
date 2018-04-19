@@ -1,11 +1,10 @@
 open Types
 
-(* [possible] moves is an array of [move] instances which
+(* [possible] moves is an array of [command] instances which
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
-   Requires: Inputs include [state] and [allegiance].
 *)
-val possible_moves : state -> allegiance-> command array
+val possible_moves : state -> allegiance -> command array
 
 (*
  * [new_state] is the state that is created by applying
@@ -27,4 +26,7 @@ val new_state_plus_delta : state -> command -> float -> state
 *)
 val gameover : state -> bool
 
+(* [update st ipt] is [new_state st c] where [c] is the command
+   that [ipt] corresponds to.
+*)
 val update : state -> input -> state

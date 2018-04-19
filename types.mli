@@ -1,8 +1,8 @@
-module Html = Dom_html 
+module Html = Dom_html
 
-type vector2 = {
+type vector2d = {
   x:float;
-  y:float 
+  y:float
 }
 
 type bounds = {
@@ -11,7 +11,7 @@ type bounds = {
 }
 
 type animation_frame = {
-  offset:vector2;
+  offset:vector2d;
   bounds:bounds;
 }
 
@@ -40,7 +40,7 @@ type allegiance =
 *)
 type tower = {
   twr_id : int ;
-  twr_pos : vector2;
+  twr_pos : vector2d;
   twr_size : bounds ;
   twr_sprite : sprite;
   twr_troops : float ;
@@ -58,13 +58,13 @@ type tower = {
  *)
 type movement
 
-type mouse_state = 
+type mouse_state =
   | Pressed
   | Released
   | Moved
 
 type input = {
-  mouse_pos : vector2;
+  mouse_pos : vector2d;
   mouse_state : mouse_state;
   prev_state : mouse_state;
 }
