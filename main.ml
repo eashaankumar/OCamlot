@@ -24,12 +24,12 @@ let main () =
   let _ = Html.addEventListener
     document (Html.Event.mousemove) (Html.handler Engine.mouse_move)
     Js._true in
-  let _ = Html.addEventListener
+  (*let _ = Html.addEventListener
     document Html.Event.keydown (Html.handler Engine.key_pressed)
     Js._true in
   let _ = Html.addEventListener
     document Html.Event.keydown (Html.handler Engine.key_released)
-    Js._true in
+    Js._true in*)
   (* Testing *)
   Engine.game_loop context true
 let _ = main ()

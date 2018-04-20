@@ -102,24 +102,60 @@ let state = ref {
 let input = ref {
   mouse_pos = {x=0.;y=0.};
   mouse_state = Moved;
-  prev_state = Moved;
 }
+
+(* Pref mouse state *)
+let prev_mouse_state = ref Moved
 
 (* TODO: Figure out how to get canvas from document *)
 let canvas = ref ( Html.createCanvas document )
 
 (****** Helpers ******)
+let print_mouse_input () =
+  (*print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");*)
+  match !input.mouse_state with
+  | Pressed -> "Pressed "
+  | Released -> "Released "
+  | Moved -> "Moved "^(string_of_float !Renderer.delta)
+
 let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) = 
   let rect = (!canvas)##getBoundingClientRect () in
   let x = event##clientX - int_of_float rect##left in
   let y = event##clientY - int_of_float rect##top in
   {x=float_of_int x;y= float_of_int y}
+
+let enforce_one_frame_mouse () = 
+  print_endline (print_mouse_input ());
+  let new_mouse_state = begin
+    match !prev_mouse_state with
+    | Pressed -> begin
+      match !input.mouse_state with
+      | Pressed -> Moved
+      | Moved -> Moved
+      | Released -> Released
+      end
+    | Moved -> begin
+        match !input.mouse_state with
+        | Pressed -> Pressed
+        | Moved -> Moved
+        | Released -> Released
+      end
+    | Released -> begin
+        match !input.mouse_state with
+        | Pressed -> Pressed
+        | Moved -> Moved
+        | Released -> Moved
+      end
+  end in
+  prev_mouse_state := !input.mouse_state;
+  {mouse_pos = !input.mouse_pos; mouse_state = new_mouse_state}
+
 (*********************)
 
 let get_html_element id =
   Js.Opt.get (document##getElementById (js id)) (fun _ -> assert false)
 
-let key_pressed event = 
+(*let key_pressed event = 
   let _ = match event##keyCode with
   | key -> print_endline ((string_of_int key)^" pressed")
   in Js._true
@@ -127,26 +163,27 @@ let key_pressed event =
 let key_released event = 
   let _ = match event##keyCode with
   | key -> print_endline ((string_of_int key)^" released")
-  in Js._true
+  in Js._true*)
 
 let mouse_pressed (event:Dom_html.mouseEvent Js.t) = 
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Pressed; prev_state = !input.mouse_state};
+  input := {mouse_pos = pos; mouse_state = Pressed;};
   Js._true
 
 let mouse_released event = 
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Released; prev_state = !input.mouse_state};
+  input := {mouse_pos = pos; mouse_state = Released;};
   Js._true
 
 let mouse_move event = 
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Moved; prev_state = !input.mouse_state};
+  input := {mouse_pos = pos; mouse_state = Moved;};
   Js._true
 
 let game_loop context running = 
   let rec helper () = 
-    state := State.update !state !input;
+    input := enforce_one_frame_mouse ();
+    state := State.update !state !input; 
     Renderer.render context !state;
     ignore (
       Html.window##requestAnimationFrame(

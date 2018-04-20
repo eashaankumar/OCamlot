@@ -33,19 +33,6 @@ let update_troop_count tower =
   else if troops < 0. then 0.
   else troops
 
-let print_mouse_input input =
-  print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");
-  let _ = match input.mouse_state with
-  | Pressed -> print_string "Pressed ";
-  | Released -> print_string "Released ";
-  | Moved -> print_string "Moved ";
-  in
-  let _ = match input.prev_state with
-  | Pressed -> print_endline "Pressed";
-  | Released -> print_endline "Released";
-  | Moved -> print_endline "Moved";
-  in ()
-
 let update st input =
   (* Sprite towers *)
   let updated_twrs = begin
@@ -65,7 +52,7 @@ let update st input =
     ) st.towers
   end in
   (* TEST: Print out input *)
-  let _ = print_mouse_input input in
+  (*let _ = print_mouse_input input in*)
 
   {
     towers = updated_twrs;

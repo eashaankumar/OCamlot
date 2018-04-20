@@ -66,7 +66,6 @@ type mouse_state =
 type input = {
   mouse_pos : vector2d;
   mouse_state : mouse_state;
-  prev_state : mouse_state;
 }
 
 (* [state] will contain the following information
