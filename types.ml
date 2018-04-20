@@ -29,6 +29,7 @@ type sprite = {
   curr_time: float;
 }
 
+(* requires: tower id be position in tower array in state *)
 type tower = {
   twr_id : int ;
   twr_pos : vector2d;
