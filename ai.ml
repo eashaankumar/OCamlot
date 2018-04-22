@@ -159,7 +159,7 @@ module MCTS_AI = struct
   let get_times_sampled t =
     match t with
     | Node(st,cm,v,n,children,parent,_) -> n
-    | Leaf _ -> 0.0
+    | Leaf _ -> 1.0 (*so that when log doesn't blow up*)
 
   let get_value t is_max =
     match t with
@@ -212,7 +212,7 @@ module MCTS_AI = struct
 
   let beginning_node st =
     let children = create_children st Enemy in
-    ref (Node(st,Rest,0.0,0.0,children,ref (Leaf(Rest,1.0)),false))
+    ref (Node(st,Rest,0.0,0.0,children,ref (Leaf(Rest,1.0)),true))
 
   let rec add_path t = begin
     match !t with
@@ -222,7 +222,7 @@ module MCTS_AI = struct
         | Node _ -> add_path ex_child
         | Leaf (cm,_) -> ex_child := !(new_node t cm)
       end
-    | Leaf(v,cm) -> ()
+    | Leaf _ -> ()
   end
 
   let create_tree st iters =
@@ -233,9 +233,24 @@ module MCTS_AI = struct
     done;
     root
 
+  let win_pctg node =
+    match !node with
+    | Node(st,cm,v,n,children,parent,is_max) -> v
+    | Leaf _ -> 0.0
+
+  let get_highest_percentage node =
+    let func = (>) in
+    let children =
+      match !node with
+      | Node(_,_,_,_,chldrn,_,_) -> chldrn
+      | Leaf _ -> [||] in
+    Array.fold_left
+      (fun acc child -> if (func (win_pctg child) (win_pctg acc)) then child else acc)
+      (Array.get children 0) children
+
   let get_move st =
     let t = create_tree st iterations in
-    let child = get_extreme_child t true in
+    let child = get_highest_percentage t in
     match !child with
     | Node(_,cm,_,_,_,_,_) -> cm
     | Leaf(cm,_) -> cm
