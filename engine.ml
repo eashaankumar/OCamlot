@@ -1,6 +1,6 @@
 open Types
 
-module Html = Dom_html 
+module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
@@ -118,13 +118,13 @@ let print_mouse_input () =
   | Released -> "Released "
   | Moved -> "Moved "^(string_of_float !Renderer.delta)
 
-let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) = 
+let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) =
   let rect = (!canvas)##getBoundingClientRect () in
   let x = event##clientX - int_of_float rect##left in
   let y = event##clientY - int_of_float rect##top in
   {x=float_of_int x;y= float_of_int y}
 
-let enforce_one_frame_mouse () = 
+let enforce_one_frame_mouse () =
   print_endline (print_mouse_input ());
   let new_mouse_state = begin
     match !prev_mouse_state with
@@ -155,39 +155,39 @@ let enforce_one_frame_mouse () =
 let get_html_element id =
   Js.Opt.get (document##getElementById (js id)) (fun _ -> assert false)
 
-(*let key_pressed event = 
+(*let key_pressed event =
   let _ = match event##keyCode with
   | key -> print_endline ((string_of_int key)^" pressed")
   in Js._true
 
-let key_released event = 
+let key_released event =
   let _ = match event##keyCode with
   | key -> print_endline ((string_of_int key)^" released")
   in Js._true*)
 
-let mouse_pressed (event:Dom_html.mouseEvent Js.t) = 
+let mouse_pressed (event:Dom_html.mouseEvent Js.t) =
   let pos = calculate_mouse_pos event in
   input := {mouse_pos = pos; mouse_state = Pressed;};
   Js._true
 
-let mouse_released event = 
+let mouse_released event =
   let pos = calculate_mouse_pos event in
   input := {mouse_pos = pos; mouse_state = Released;};
   Js._true
 
-let mouse_move event = 
+let mouse_move event =
   let pos = calculate_mouse_pos event in
   input := {mouse_pos = pos; mouse_state = Moved;};
   Js._true
 
-let game_loop context running = 
-  let rec helper () = 
+let game_loop context running =
+  let rec helper () =
     input := enforce_one_frame_mouse ();
-    state := State.update !state !input; 
+    state := State.update !state !input;
     Renderer.render context !state;
     ignore (
       Html.window##requestAnimationFrame(
-        Js.wrap_callback (fun t -> 
+        Js.wrap_callback (fun t ->
           Renderer.time := t /. 1000.;
           helper ()
         )
