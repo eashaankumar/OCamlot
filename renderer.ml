@@ -116,7 +116,8 @@ let draw_entities context state =
 let draw_ui context state = 
   Array.iter (fun ui_elmt ->
     match ui_elmt with
-    | Button (ustate, pos, size) -> begin
+    | Button (uistate, pos, size) -> begin
+        draw_sprite_sheet context (Types.get_uistate_sprite uistate) pos size;
         ()
       end
     | Label (prop, pos, size) -> begin

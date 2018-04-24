@@ -76,6 +76,11 @@ type ui_state =
   | Neutral of sprite
   | Clicked of sprite
 
+(** [get_uistate_sprite ui_state sprite] extracts the
+ * [sprite] from [ui_state]
+ *)
+val get_uistate_sprite : ui_state -> sprite
+
 type label_property = {
   text : string;
   color : color;

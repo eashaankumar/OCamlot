@@ -90,6 +90,12 @@ type ui_state =
   | Neutral of sprite
   | Clicked of sprite
 
+let get_uistate_sprite ui_state = 
+  match ui_state with
+  | Disabled (s) -> s
+  | Neutral (s) -> s
+  | Clicked (s) -> s
+
 type label_property = {
   text : string;
   color : color;
