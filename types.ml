@@ -82,6 +82,25 @@ type input = {
   mouse_state : mouse_state;
 }
 
+(* UI *)
+type color = {r:float;g:float;b:float}
+
+type ui_state = 
+  | Disabled of sprite
+  | Neutral of sprite
+  | Clicked of sprite
+
+type label_property = {
+  text : string;
+  color : color;
+  font_size : float;
+}
+
+type ui_element = 
+ | Button of ui_state * vector2d * bounds
+ | Label of label_property * vector2d * bounds
+ | Panel of sprite * vector2d * bounds
+
 type state = {
   towers : tower array ;
   num_towers : int ;
@@ -90,4 +109,6 @@ type state = {
   movements : movement list ;
   player_mana : int ;
   enemy_mana : int;
+  (* user interface *)
+  ui_elements : ui_element array;
 }

@@ -90,24 +90,13 @@ let draw_text ctx text pos color font_size : unit =
   ctx##fillText (js text, pos.x, pos.y);
   ()
 
-let render context state =
-  (* House Keeping *)
-  update_delta ();
-  update_fps ();
-  (* Draw canvas background *)
-  context##clearRect (0., 0., width, height);
-  context##fillStyle <- color_to_hex (255,255,255);
-  context##fillRect (0., 0., width, height);
-  (* Draw entities *)
+(**
+ * [draw_entities context state] draws all animate object/beings
+ * in the game [state]
+ * returns: unit
+ *)
+let draw_entities context state = 
   Array.iter (fun tower -> 
-    (*let c = (
-      match (tower.twr_team) with
-      | Player ->(0,255,0)
-      | Enemy ->(255,0,0)
-      | Neutral ->(100,100,100)
-    ) in
-    context##fillStyle <- color_to_hex c;
-    context##fillRect (tower.twr_pos.x, tower.twr_pos.y, tower.twr_size.w, tower.twr_size.h);*)
     draw_sprite_sheet context tower.twr_sprite tower.twr_pos tower.twr_size;
     draw_text 
       context (string_of_int ( int_of_float tower.twr_troops)) 
@@ -117,6 +106,40 @@ let render context state =
       } 
       (0,0,0) 20;
   ) (state.towers);
+  ()
+
+(**
+ * [draw_ui context state] draws all ui elements in [state]
+ * while taking into considering their [ui_state]
+ * returns: unit
+ *)
+let draw_ui context state = 
+  Array.iter (fun ui_elmt ->
+    match ui_elmt with
+    | Button (ustate, pos, size) -> begin
+        ()
+      end
+    | Label (prop, pos, size) -> begin
+        ()
+      end
+    | Panel (sprite, pos, bounds) -> begin
+        ()
+      end 
+  ) state.ui_elements;
+  ()
+
+let render context state =
+  (* House Keeping *)
+  update_delta ();
+  update_fps ();
+  (* Draw canvas background *)
+  context##clearRect (0., 0., width, height);
+  context##fillStyle <- color_to_hex (255,255,255);
+  context##fillRect (0., 0., width, height);
+  (* Draw entities *)
+  draw_entities context state;
+  (* Draw ui *)
+  draw_ui context state;
   (* Draw fps *)
   draw_text 
     context (string_of_int (!fps)) 

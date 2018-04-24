@@ -58,7 +58,7 @@ let tick sp delta =
      curr_time=sp.curr_time +. delta}
   end
 
-let troop_sprite = init_sprite "images/test_spritesheet.png" 0.5
+let troop_sprite = init_sprite "images/test_spritesheet.png" 0.25
                    |> add_animation_frame (0.,0.) (225.,250.) 
                    |> add_animation_frame (225.,0.) (225.,250.) 
                    |> add_animation_frame (450.,0.) (225.,250.) 

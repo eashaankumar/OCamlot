@@ -96,6 +96,7 @@ let state = ref {
   movements = [] ;
   player_mana = 0 ;
   enemy_mana = 0;
+  ui_elements = [||];
 }
 
 (* Initialize input *)
@@ -183,6 +184,7 @@ let mouse_move event =
 let game_loop context running =
   let rec helper () =
     input := enforce_one_frame_mouse ();
+    state := Ui.tick !state !input;
     state := State.update !state !input;
     Renderer.render context !state;
     ignore (

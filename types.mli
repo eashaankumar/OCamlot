@@ -68,6 +68,27 @@ type input = {
   mouse_state : mouse_state;
 }
 
+ (* UI *)
+type color = {r:float;g:float;b:float}
+
+type ui_state = 
+  | Disabled of sprite
+  | Neutral of sprite
+  | Clicked of sprite
+
+type label_property = {
+  text : string;
+  color : color;
+  font_size : float;
+}
+(** [ui_element] represents user interface elements
+ * that the player can interact with using the mouse.
+ *)
+type ui_element = 
+ | Button of ui_state * vector2d * bounds
+ | Label of label_property * vector2d * bounds
+ | Panel of sprite * vector2d * bounds
+
 (* [state] will contain the following information
    - All towers in the match
    - Number of towers to dominate needed to win the match
@@ -82,6 +103,8 @@ type state = {
   movements : movement list ;
   player_mana : int ;
   enemy_mana : int;
+  (* user interface *)
+  ui_elements : ui_element array;
 }
 
 (* [move] contains information regarding a move that a player
