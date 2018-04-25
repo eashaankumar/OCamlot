@@ -71,15 +71,18 @@ type input = {
  (* UI *)
 type color = {r:float;g:float;b:float}
 
-type ui_state = 
-  | Disabled of sprite
-  | Neutral of sprite
-  | Clicked of sprite
+type button_state =
+  | Disabled
+  | Neutral
+  | Clicked
 
-(** [get_uistate_sprite ui_state sprite] extracts the
- * [sprite] from [ui_state]
- *)
-val get_uistate_sprite : ui_state -> sprite
+
+type button_property = {
+  mutable btn_state: button_state;
+  mutable clicked_sprite: sprite;
+  mutable disabled_sprite: sprite;
+  mutable neutral_sprite: sprite;
+}
 
 type label_property = {
   text : string;
@@ -90,7 +93,7 @@ type label_property = {
  * that the player can interact with using the mouse.
  *)
 type ui_element = 
- | Button of ui_state * vector2d * bounds
+ | Button of button_property * vector2d * bounds
  | Label of label_property * vector2d * bounds
  | Panel of sprite * vector2d * bounds
 
@@ -108,8 +111,12 @@ type state = {
   movements : movement list ;
   player_mana : int ;
   enemy_mana : int;
-  (* user interface *)
-  ui_elements : ui_element array;
+}
+
+type scene = {
+  mutable state : state ;
+  mutable ui : ui_element array;
+  mutable input : input;
 }
 
 (* [move] contains information regarding a move that a player

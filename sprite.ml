@@ -32,6 +32,15 @@ let add_animation_frame (x,y) (w,h) sprite =
   }
 
 (* Functions *)
+let reset_to_first_frame sprite = 
+  {
+    frames: sprite.frames;
+    img: sprite.img;
+    index: 0;
+    time_delay: sprite.time_delay;
+    curr_time: 0.;
+  }
+
 let tick sp delta = 
   (* switch frames *)
   if sp.curr_time >= sp.time_delay then begin

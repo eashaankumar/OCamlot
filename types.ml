@@ -85,16 +85,15 @@ type input = {
 (* UI *)
 type color = {r:float;g:float;b:float}
 
-type ui_state = 
-  | Disabled of sprite
-  | Neutral of sprite
-  | Clicked of sprite
+type button_state =
+  | Disabled
+  | Neutral
+  | Clicked
 
-let get_uistate_sprite ui_state = 
-  match ui_state with
-  | Disabled (s) -> s
-  | Neutral (s) -> s
-  | Clicked (s) -> s
+type button_property = {
+  btn_state: button_state;
+  btn_sprite: sprite;
+}
 
 type label_property = {
   text : string;
@@ -103,9 +102,9 @@ type label_property = {
 }
 
 type ui_element = 
- | Button of ui_state * vector2d * bounds
- | Label of label_property * vector2d * bounds
- | Panel of sprite * vector2d * bounds
+  | Button of button_property * vector2d * bounds
+  | Label of label_property * vector2d * bounds
+  | Panel of sprite * vector2d * bounds
 
 type state = {
   towers : tower array ;
@@ -115,6 +114,11 @@ type state = {
   movements : movement list ;
   player_mana : int ;
   enemy_mana : int;
-  (* user interface *)
-  ui_elements : ui_element array;
 }
+
+type scene = {
+  mutable state : state ;
+  mutable ui : ui_element array;
+  mutable input : input;
+}
+

@@ -4,8 +4,8 @@ module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
-(* Intialize state *)
-let state = ref {
+(* Initialize states *)
+let init_state = {
   towers = [|
     {
       twr_id = 0;
@@ -96,13 +96,19 @@ let state = ref {
   movements = [] ;
   player_mana = 0 ;
   enemy_mana = 0;
-  ui_elements = [||];
 }
 
 (* Initialize input *)
-let input = ref {
+let init_input = {
   mouse_pos = {x=0.;y=0.};
   mouse_state = Moved;
+}
+
+(* Initialize scene *)
+let scene = {
+  state = init_state;
+  ui = [||];
+  input = init_input;
 }
 
 (* Pref mouse state *)
@@ -114,7 +120,7 @@ let canvas = ref ( Html.createCanvas document )
 (****** Helpers ******)
 let print_mouse_input () =
   (*print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");*)
-  match !input.mouse_state with
+  match scene.input.mouse_state with
   | Pressed -> "Pressed "
   | Released -> "Released "
   | Moved -> "Moved "^(string_of_float !Renderer.delta)
@@ -130,26 +136,26 @@ let enforce_one_frame_mouse () =
   let new_mouse_state = begin
     match !prev_mouse_state with
     | Pressed -> begin
-      match !input.mouse_state with
+      match scene.input.mouse_state with
       | Pressed -> Moved
       | Moved -> Moved
       | Released -> Released
       end
     | Moved -> begin
-        match !input.mouse_state with
+        match scene.input.mouse_state with
         | Pressed -> Pressed
         | Moved -> Moved
         | Released -> Released
       end
     | Released -> begin
-        match !input.mouse_state with
+        match scene.input.mouse_state with
         | Pressed -> Pressed
         | Moved -> Moved
         | Released -> Moved
       end
   end in
-  prev_mouse_state := !input.mouse_state;
-  {mouse_pos = !input.mouse_pos; mouse_state = new_mouse_state}
+  prev_mouse_state := scene.input.mouse_state;
+  {mouse_pos = scene.input.mouse_pos; mouse_state = new_mouse_state}
 
 (*********************)
 
@@ -168,25 +174,25 @@ let key_released event =
 
 let mouse_pressed (event:Dom_html.mouseEvent Js.t) =
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Pressed;};
+  scene.input <- {mouse_pos = pos; mouse_state = Pressed;};
   Js._true
 
 let mouse_released event =
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Released;};
+  scene.input <- {mouse_pos = pos; mouse_state = Released;};
   Js._true
 
 let mouse_move event =
   let pos = calculate_mouse_pos event in
-  input := {mouse_pos = pos; mouse_state = Moved;};
+  scene.input <- {mouse_pos = pos; mouse_state = Moved;};
   Js._true
 
 let game_loop context running =
   let rec helper () =
-    input := enforce_one_frame_mouse ();
-    state := Ui.tick !state !input;
-    state := State.update !state !input;
-    Renderer.render context !state;
+    scene.input <- enforce_one_frame_mouse ();
+    scene.ui <- Ui.tick scene.ui scene.input;
+    scene.state <- State.update scene.state scene.input;
+    Renderer.render context scene;
     ignore (
       Html.window##requestAnimationFrame(
         Js.wrap_callback (fun t ->

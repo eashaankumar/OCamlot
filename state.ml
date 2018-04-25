@@ -62,5 +62,4 @@ let update st input =
     movements = st.movements;
     player_mana = st.player_mana;
     enemy_mana = st.enemy_mana;
-    ui_elements = st.ui_elements;
   }

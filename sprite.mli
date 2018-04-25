@@ -14,3 +14,5 @@ open Types
 val tick : sprite -> float -> sprite
 
 val troop_sprite : sprite
+
+val reset_to_first_frame : sprite -> sprite

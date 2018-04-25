@@ -95,7 +95,7 @@ let draw_text ctx text pos color font_size : unit =
  * in the game [state]
  * returns: unit
  *)
-let draw_entities context state = 
+let draw_entities context scene = 
   Array.iter (fun tower -> 
     draw_sprite_sheet context tower.twr_sprite tower.twr_pos tower.twr_size;
     draw_text 
@@ -105,7 +105,7 @@ let draw_entities context state =
         y=tower.twr_pos.y +. tower.twr_size.h/.3.
       } 
       (0,0,0) 20;
-  ) (state.towers);
+  ) (scene.state.towers);
   ()
 
 (**
@@ -113,11 +113,17 @@ let draw_entities context state =
  * while taking into considering their [ui_state]
  * returns: unit
  *)
-let draw_ui context state = 
+let draw_ui context scene = 
   Array.iter (fun ui_elmt ->
     match ui_elmt with
-    | Button (uistate, pos, size) -> begin
-        draw_sprite_sheet context (Types.get_uistate_sprite uistate) pos size;
+    | Button (btn_prop, pos, size) -> begin
+        let sprite_to_draw = (
+          match btn_prop.btn_state with
+            | Disabled -> btn_prop.disabled_sprite
+            | Neutral -> btn_prop.neutral_sprite
+            | Clicked -> btn_prop.clicked_sprite
+        ) in
+        draw_sprite_sheet context sprite_to_draw pos size;
         ()
       end
     | Label (prop, pos, size) -> begin
@@ -126,10 +132,10 @@ let draw_ui context state =
     | Panel (sprite, pos, bounds) -> begin
         ()
       end 
-  ) state.ui_elements;
+  ) scene.ui;
   ()
 
-let render context state =
+let render context scene =
   (* House Keeping *)
   update_delta ();
   update_fps ();
@@ -138,9 +144,9 @@ let render context state =
   context##fillStyle <- color_to_hex (255,255,255);
   context##fillRect (0., 0., width, height);
   (* Draw entities *)
-  draw_entities context state;
+  draw_entities context scene;
   (* Draw ui *)
-  draw_ui context state;
+  draw_ui context scene;
   (* Draw fps *)
   draw_text 
     context (string_of_int (!fps)) 

@@ -1,3 +1,3 @@
 open Types
 
-val tick : state -> input -> state
+val tick : ui_element array -> input -> ui_element array
