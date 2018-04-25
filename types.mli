@@ -69,25 +69,23 @@ type input = {
 }
 
  (* UI *)
-type color = {r:float;g:float;b:float}
+type color = {r:int;g:int;b:int}
 
 type button_state =
-  | Disabled
-  | Neutral
-  | Clicked
+  | Disabled (* 2 *)
+  | Neutral (* 0 *)
+  | Clicked (* 1 *)
 
 
 type button_property = {
-  mutable btn_state: button_state;
-  mutable clicked_sprite: sprite;
-  mutable disabled_sprite: sprite;
-  mutable neutral_sprite: sprite;
+  btn_state: button_state;
+  btn_sprite: sprite;
 }
 
 type label_property = {
   text : string;
   color : color;
-  font_size : float;
+  font_size : int;
 }
 (** [ui_element] represents user interface elements
  * that the player can interact with using the mouse.
@@ -113,9 +111,11 @@ type state = {
   enemy_mana : int;
 }
 
+type interface = (string * ui_element) list
+
 type scene = {
   mutable state : state ;
-  mutable ui : ui_element array;
+  mutable interface : interface;
   mutable input : input;
 }
 

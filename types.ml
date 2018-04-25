@@ -83,7 +83,7 @@ type input = {
 }
 
 (* UI *)
-type color = {r:float;g:float;b:float}
+type color = {r:int;g:int;b:int}
 
 type button_state =
   | Disabled
@@ -98,7 +98,7 @@ type button_property = {
 type label_property = {
   text : string;
   color : color;
-  font_size : float;
+  font_size : int;
 }
 
 type ui_element = 
@@ -116,9 +116,11 @@ type state = {
   enemy_mana : int;
 }
 
+type interface = (string * ui_element) list
+
 type scene = {
   mutable state : state ;
-  mutable ui : ui_element array;
+  mutable interface : interface;
   mutable input : input;
 }
 

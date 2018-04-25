@@ -59,7 +59,7 @@ let update_fps () =
  * returns: [string] representing hexadecimal color
  * requires: [color] be of form (0-255,0-255,0-255) 
  *)
-let color_to_hex (r,g,b) = 
+let color_to_hex {r=r;g=g;b=b} = 
    
   js ("#"^
   (Printf.sprintf "%02X" r)^
@@ -84,7 +84,7 @@ let draw_image ctx img_src pos =
  * requires: [color] is (0-255,0-255,0-255)
  *           [font_size] > 0
  *)
-let draw_text ctx text pos color font_size : unit =
+let draw_text ctx text pos (color:color) font_size : unit =
   ctx##fillStyle <- color_to_hex color;
   ctx##font <- js ((string_of_int font_size)^"px Triforce");
   ctx##fillText (js text, pos.x, pos.y);
@@ -104,7 +104,7 @@ let draw_entities context scene =
         x=tower.twr_pos.x +. tower.twr_size.w/.2.;
         y=tower.twr_pos.y +. tower.twr_size.h/.3.
       } 
-      (0,0,0) 20;
+      {r=0;g=0;b=0} 20;
   ) (scene.state.towers);
   ()
 
@@ -114,25 +114,26 @@ let draw_entities context scene =
  * returns: unit
  *)
 let draw_ui context scene = 
-  Array.iter (fun ui_elmt ->
+  List.iter (fun (id,ui_elmt) ->
     match ui_elmt with
     | Button (btn_prop, pos, size) -> begin
         let sprite_to_draw = (
           match btn_prop.btn_state with
-            | Disabled -> btn_prop.disabled_sprite
-            | Neutral -> btn_prop.neutral_sprite
-            | Clicked -> btn_prop.clicked_sprite
+            | Neutral -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
+            | Clicked -> btn_prop.btn_sprite |> Sprite.set_animation_frame 1
+            | Disabled -> btn_prop.btn_sprite |> Sprite.set_animation_frame 2
         ) in
         draw_sprite_sheet context sprite_to_draw pos size;
         ()
       end
     | Label (prop, pos, size) -> begin
+        draw_text context prop.text pos prop.color prop.font_size;
         ()
       end
     | Panel (sprite, pos, bounds) -> begin
         ()
       end 
-  ) scene.ui;
+  ) scene.interface;
   ()
 
 let render context scene =
@@ -141,7 +142,7 @@ let render context scene =
   update_fps ();
   (* Draw canvas background *)
   context##clearRect (0., 0., width, height);
-  context##fillStyle <- color_to_hex (255,255,255);
+  context##fillStyle <- color_to_hex {r=255;g=255;b=255};
   context##fillRect (0., 0., width, height);
   (* Draw entities *)
   draw_entities context scene;
@@ -154,5 +155,5 @@ let render context scene =
       x=width-.30.;
       y=30.;
     } 
-    (255,20,147) 30;
+    {r=255;g=20;b=147} 30;
   ()

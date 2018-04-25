@@ -104,10 +104,13 @@ let init_input = {
   mouse_state = Moved;
 }
 
+(* Random Label *)
+let temp_label = Label ({text="Test";color={r=0;g=0;b=0};font_size=20}, {x=100.;y=100.},{w=100.;h=100.})
+
 (* Initialize scene *)
 let scene = {
   state = init_state;
-  ui = [||];
+  interface = [("testing",temp_label)];
   input = init_input;
 }
 
@@ -190,7 +193,7 @@ let mouse_move event =
 let game_loop context running =
   let rec helper () =
     scene.input <- enforce_one_frame_mouse ();
-    scene.ui <- Ui.tick scene.ui scene.input;
+    scene.interface <- Ui.tick scene.interface scene.input;
     scene.state <- State.update scene.state scene.input;
     Renderer.render context scene;
     ignore (

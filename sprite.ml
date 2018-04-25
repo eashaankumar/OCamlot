@@ -32,13 +32,27 @@ let add_animation_frame (x,y) (w,h) sprite =
   }
 
 (* Functions *)
+let reset_frame_delay sp = 
+  {frames=sp.frames;
+  img=sp.img;
+  index=sp.index;
+  time_delay=sp.time_delay;
+  curr_time=0.}
+
+let set_animation_frame i sp = 
+  {frames=sp.frames;
+  img=sp.img;
+  index=i;
+  time_delay=sp.time_delay;
+  curr_time=sp.curr_time}
+
 let reset_to_first_frame sprite = 
   {
-    frames: sprite.frames;
-    img: sprite.img;
-    index: 0;
-    time_delay: sprite.time_delay;
-    curr_time: 0.;
+    frames= sprite.frames;
+    img= sprite.img;
+    index= 0;
+    time_delay= sprite.time_delay;
+    curr_time= sprite.curr_time;
   }
 
 let tick sp delta = 

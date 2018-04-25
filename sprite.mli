@@ -13,6 +13,29 @@ open Types
  *)
 val tick : sprite -> float -> sprite
 
+(**
+ * [troop_sprite] holds information about troop sprite animation
+ *)
 val troop_sprite : sprite
 
+(**
+ * [reset_to_first_frame sp] sets the animation frame to the 
+ * starting frame.
+ * returns: [sprite] with starting frame as the current frame
+ *)
 val reset_to_first_frame : sprite -> sprite
+
+(** 
+ * [set_animation_frame i sp] sets the animation frame of [sp]
+ * to the frame located at index [i].
+ * returns: [sprite] with updated animation frame
+ * requires: [i] is a valid index
+ *)
+val set_animation_frame : int -> sprite -> sprite
+
+(**
+ * [reset_frame_time sp] sets sprite's [curr_time] field
+ * to 0.0 seconds, effectively restarting the current frame delay
+ * returns: [sprite] with reset delay
+ *)
+val reset_frame_delay : sprite -> sprite
