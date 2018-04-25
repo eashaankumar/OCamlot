@@ -104,13 +104,11 @@ let init_input = {
   mouse_state = Moved;
 }
 
-(* Random Label *)
-let temp_label = Label ({text="Test";color={r=0;g=0;b=0};font_size=20}, {x=100.;y=100.},{w=100.;h=100.})
-
 (* Initialize scene *)
 let scene = {
   state = init_state;
-  interface = [("testing",temp_label)];
+  interface = [("fps",ref Ui.fps_label);
+               ("Start", ref Ui.menu_button1)];
   input = init_input;
 }
 

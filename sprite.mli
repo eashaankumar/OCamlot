@@ -18,6 +18,8 @@ val tick : sprite -> float -> sprite
  *)
 val troop_sprite : sprite
 
+val menu_btn_sprite1 : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the 
  * starting frame.

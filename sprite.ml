@@ -82,7 +82,12 @@ let tick sp delta =
   end
 
 let troop_sprite = init_sprite "images/test_spritesheet.png" 0.25
-                   |> add_animation_frame (0.,0.) (225.,250.) 
-                   |> add_animation_frame (225.,0.) (225.,250.) 
-                   |> add_animation_frame (450.,0.) (225.,250.) 
-                   |> add_animation_frame (675.,0.) (225.,250.)
+                  |> add_animation_frame (0.,0.) (225.,250.) 
+                  |> add_animation_frame (225.,0.) (225.,250.) 
+                  |> add_animation_frame (450.,0.) (225.,250.) 
+                  |> add_animation_frame (675.,0.) (225.,250.)
+
+let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
+                  |> add_animation_frame (0.,0.) (242.,70.)
+                  |> add_animation_frame (0.,70.) (242.,70.)
+                  |> add_animation_frame (0.,140.) (242.,70.)

@@ -91,14 +91,14 @@ type button_state =
   | Clicked
 
 type button_property = {
-  btn_state: button_state;
-  btn_sprite: sprite;
+  mutable btn_state: button_state;
+  mutable btn_sprite: sprite;
 }
 
 type label_property = {
-  text : string;
-  color : color;
-  font_size : int;
+  mutable text : string;
+  mutable color : color;
+  mutable font_size : int;
 }
 
 type ui_element = 
@@ -116,7 +116,7 @@ type state = {
   enemy_mana : int;
 }
 
-type interface = (string * ui_element) list
+type interface = (string * (ui_element ref)) list
 
 type scene = {
   mutable state : state ;

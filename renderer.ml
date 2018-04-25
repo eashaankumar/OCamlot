@@ -114,8 +114,8 @@ let draw_entities context scene =
  * returns: unit
  *)
 let draw_ui context scene = 
-  List.iter (fun (id,ui_elmt) ->
-    match ui_elmt with
+  List.iter (fun (id, ui_elmt) ->
+    match !ui_elmt with
     | Button (btn_prop, pos, size) -> begin
         let sprite_to_draw = (
           match btn_prop.btn_state with
@@ -148,12 +148,4 @@ let render context scene =
   draw_entities context scene;
   (* Draw ui *)
   draw_ui context scene;
-  (* Draw fps *)
-  draw_text 
-    context (string_of_int (!fps)) 
-    {
-      x=width-.30.;
-      y=30.;
-    } 
-    {r=255;g=20;b=147} 30;
   ()
