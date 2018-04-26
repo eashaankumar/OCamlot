@@ -12,8 +12,112 @@ let destination = ref {to_tower = None; from_tower = None}
 let possible_moves st side =
   failwith "Not implemented"
 
+(* Precondition: the command is correct, i.e.: player is not commanding the enemy.
+   Assumes the amount of troops to be sent is positive.
+*)
 let new_state st c =
-  failwith "Not implemented"
+  match c with
+  | Move {mv_start = start; mv_end = finish; mv_troops = amount} -> begin
+      let ts = st.towers.(start) in
+      let te = st.towers.(finish) in
+      let ts_team_original = ts.twr_team in
+      let te_team_original = te.twr_team in
+      let player_score = ref st.player_score in
+      let enemy_score = ref st.enemy_score in
+      if ts_team_original = Neutral
+      then failwith "Cannot move from a neutral tower!"
+      else
+      let amount = float_of_int amount in
+      let ts' =
+        begin
+          let cur_team = ref ts.twr_team in
+          {
+            twr_id = ts.twr_id;
+            twr_pos = ts.twr_pos;
+            twr_size = ts.twr_size;
+            twr_sprite = ts.twr_sprite;
+            twr_troops_max = ts.twr_troops_max;
+            twr_troops_regen_speed = ts.twr_troops_regen_speed;
+            twr_troops = begin
+              let net = ts.twr_troops -. amount in
+              if net <= 0.
+              then let _ = cur_team := Neutral in
+                let _ = if ts_team_original = Player
+                  then player_score := !player_score - 1
+                  else enemy_score := !enemy_score - 1
+                in 0.
+              else net
+            end;
+            twr_team = !cur_team
+          }
+        end in
+      let te' =
+        begin
+          let cur_team = ref te.twr_team in
+          {
+            twr_id = te.twr_id;
+            twr_pos = te.twr_pos;
+            twr_size = te.twr_size;
+            twr_sprite = te.twr_sprite;
+            twr_troops_max = te.twr_troops_max;
+            twr_troops_regen_speed = te.twr_troops_regen_speed;
+            twr_troops = begin
+              match te.twr_team with
+              | Neutral -> let _ = cur_team := ts_team_original in amount
+              | Player -> begin
+                  match ts_team_original with
+                  | Neutral -> failwith "Cannot move from neutral tower!"
+                  | Player -> te.twr_troops +. amount
+                  | Enemy -> begin
+                      let net = te.twr_troops -. amount in
+                      let _ =
+                        if net < 0.
+                        then cur_team := Enemy
+                        else if net = 0. then cur_team := Neutral
+                        else ()
+                      in net
+                  end
+                end
+              | Enemy -> begin
+                  match ts_team_original with
+                  | Neutral -> failwith "Cannot move from a neutral tower!"
+                  | Enemy -> te.twr_troops +. amount
+                  | Player -> begin
+                      let net = te.twr_troops -. amount in
+                      let _ =
+                        if net < 0.
+                        then cur_team := Player
+                        else if net = 0. then cur_team := Neutral
+                        else ()
+                      in net
+                    end
+                end
+            end;
+            twr_team = !cur_team
+          }
+        end in
+      {
+        towers = begin
+          let _ = st.towers.(start) <- ts' in
+          let _ = st.towers.(finish) <- te' in
+          st.towers
+        end;
+        num_towers = st.num_towers;
+        player_mana = st.player_mana;
+        enemy_mana = st.enemy_mana;
+        player_score = begin
+          if ts_team_original = ts'.twr_team
+          then if te
+        end;
+        enemy_score = begin
+
+        end;
+        movements = begin
+
+        end
+      }
+  end
+  | Skill ({mana_cost = mp; effect; side}, tower) ->
 
 let new_state_plus_delta st c d =
   failwith "Not implemented"

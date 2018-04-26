@@ -1,18 +1,21 @@
 module Html = Dom_html
 
+(* Represents the x-y coordinate plane. *)
 type vector2d = {
-  x:float;
-  y:float
+  x : float;
+  y : float
 }
 
+(* represents a rectangle denoting the boundary of an entity. *)
 type bounds = {
-  w:float;
-  h:float
+  w : float;
+  h : float
 }
+
 
 type animation_frame = {
-  offset:vector2d;
-  bounds:bounds;
+  offset : vector2d;
+  bounds : bounds
 }
 
 (**
@@ -91,7 +94,7 @@ type label_property = {
 (** [ui_element] represents user interface elements
  * that the player can interact with using the mouse.
  *)
-type ui_element = 
+type ui_element =
  | Button of button_property * vector2d * bounds
  | Label of label_property * vector2d * bounds
  | Panel of sprite * vector2d * bounds
