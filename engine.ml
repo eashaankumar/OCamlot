@@ -19,7 +19,7 @@ let tower_base_player = {
 
 let tower_base_enemy = {
   twr_id = 1;
-  twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.100.};
+  twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.136.};
   twr_size = {w=80.;h=136.} ;
   twr_sprite = Sprite.tower_base ;
   twr_troops = 0. ;
@@ -38,7 +38,7 @@ let init_state = {
       twr_pos = {x=300.;y=200.};
       twr_size = {w=50.;h=85.} ;
       twr_sprite = Sprite.tower_type1 ;
-      twr_troops = 0. ;
+      twr_troops = 30. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = 1.;
       twr_team = Neutral;
@@ -75,7 +75,7 @@ let init_input = {
 let scene = {
   state = init_state;
   interface = [("fps",ref Ui.fps_label);
-               ("Start", ref Ui.menu_button1)];
+               ("Start", ref Ui.menu_button1);];
   input = init_input;
   highlight_towers = []
 }

@@ -91,3 +91,6 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
                   |> add_animation_frame (0.,70.) (242.,70.)
                   |> add_animation_frame (0.,140.) (242.,70.)
+
+let stat_board_sprite = init_sprite "images/stat_bar.jpg" 0.
+                  |> add_animation_frame (0.,0.) (242.,70.)

@@ -1,6 +1,7 @@
 open Types
 
 (* Public *)
+
 let width = 800.
 let height = 600.
 
@@ -143,7 +144,8 @@ let draw_ui context scene =
         draw_text context prop.text pos prop.color prop.font_size;
         ()
       end
-    | Panel (sprite, pos, bounds) -> begin
+    | Panel (sprite, pos, size) -> begin
+        draw_sprite_sheet context sprite pos size;
         ()
       end 
   ) scene.interface;
@@ -156,7 +158,7 @@ let render context scene =
   (* Draw canvas background *)
   context##clearRect (0., 0., width, height);
   context##fillStyle <- color_to_hex {r=255;g=255;b=255};
-  context##fillRect (0., 0., width, height);
+  (*context##fillRect (0., 0., true_width, true_height);*)
   draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};
   (* Draw entities *)
   draw_entities context scene;

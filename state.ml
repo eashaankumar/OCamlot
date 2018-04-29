@@ -132,12 +132,19 @@ let gameover st =
  * returns: new troop [count]
  *)
 let update_troop_count tower =
-  let troops = (
+  (*let troops = (
     tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
   ) in
-  if troops > tower.twr_troops_max then tower.twr_troops_max
+  if troops > tower.twr_troops_max then tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
   else if troops < 0. then 0.
-  else troops
+  else troops*)
+  let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
+  if dir = 0 then
+    tower.twr_troops_max
+  else if tower.twr_troops < tower.twr_troops_max then
+    tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
+  else 
+    tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
 
 let update sc input =
   (* Sprite towers *)
