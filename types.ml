@@ -38,7 +38,8 @@ type tower = {
   twr_troops : float;
   twr_troops_max : float;
   twr_troops_regen_speed : float;
-  twr_team : allegiance
+  twr_team : allegiance;
+  selector_offset : vector2d;
 }
 
 type movement = {
@@ -124,4 +125,5 @@ type scene = {
   mutable state : state ;
   mutable interface : interface;
   mutable input : input;
+  mutable highlight_towers : int list;
 }

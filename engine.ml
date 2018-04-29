@@ -13,7 +13,8 @@ let tower_base_player = {
   twr_troops = 0.;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
-  twr_team = Player
+  twr_team = Player;
+  selector_offset = {x = 0.; y = 80.};
 }
 
 let tower_base_enemy = {
@@ -24,7 +25,8 @@ let tower_base_enemy = {
   twr_troops = 0. ;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
-  twr_team = Enemy
+  twr_team = Enemy;
+  selector_offset = {x=0.;y=80.};
 }
 
 (* Initialize states *)
@@ -39,7 +41,8 @@ let init_state = {
       twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = 1.;
-      twr_team = Neutral
+      twr_team = Neutral;
+      selector_offset = {x=0.;y=50.};
     };
     (*  *)
     {
@@ -50,7 +53,8 @@ let init_state = {
       twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = 1.;
-      twr_team = Neutral
+      twr_team = Neutral;
+      selector_offset = {x=0.;y=50.};
     };
   |] ;
   num_towers = 0 ;
@@ -73,6 +77,7 @@ let scene = {
   interface = [("fps",ref Ui.fps_label);
                ("Start", ref Ui.menu_button1)];
   input = init_input;
+  highlight_towers = []
 }
 
 (* Pref mouse state *)
@@ -155,7 +160,7 @@ let game_loop context running =
   let rec helper () =
     scene.input <- enforce_one_frame_mouse ();
     scene.interface <- Ui.tick scene.interface scene.input;
-    scene.state <- State.update scene.state scene.input;
+    scene.state <- State.update scene scene.input;
     Renderer.render context scene;
     ignore (
       Html.window##requestAnimationFrame(

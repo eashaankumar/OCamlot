@@ -45,7 +45,7 @@ let tick interface input =
   (get_label_prop !ref_fps_label).text <- string_of_int !Renderer.fps;
   interface
 
-let fps_label = Label ({text="0";color={r=255;g=20;b=147};font_size=30}, 
+let fps_label = Label ({text="0";color={r=255;g=20;b=147};font_size=20}, 
                        {x=Renderer.width-.30.;y=30.;},
                        {w=30.;h=30.})
 

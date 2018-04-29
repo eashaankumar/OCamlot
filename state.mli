@@ -29,4 +29,4 @@ val gameover : state -> bool
 (* [update st ipt] is [new_state st c] where [c] is the command
    that [ipt] corresponds to.
 *)
-val update : state -> input -> state
+val update : scene -> input -> state

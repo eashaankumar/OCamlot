@@ -101,19 +101,23 @@ let draw_text ctx text pos (color:color) font_size : unit =
  * returns: unit
  *)
 let draw_entities context scene = 
-  Array.iter (fun tower -> 
-    draw_sprite_sheet context tower.twr_sprite tower.twr_pos tower.twr_size;
+  Array.iter (fun t -> 
+    (* Add glow *)
+    let _ = if List.mem t.twr_id scene.highlight_towers then
+      draw_image context "images/towers/selector.png" (Physics.add_vector2d t.twr_pos t.selector_offset) (100.,100.) {w=t.twr_size.w;h=t.twr_size.w};
+    in
+    draw_sprite_sheet context t.twr_sprite t.twr_pos t.twr_size;
     let fs = 15. in
-    let x = tower.twr_pos.x +. tower.twr_size.w/.2. -. (fs) in
-    let y = tower.twr_pos.y +. 10. in
+    let x = t.twr_pos.x +. t.twr_size.w/.2. -. (fs) in
+    let y = t.twr_pos.y +. 10. in
     let (twr_label_path,color) = begin
-      match tower.twr_team with
+      match t.twr_team with
       | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100}
       | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100}
       | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0}
     end in
     draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
-    draw_text context (string_of_int ( int_of_float tower.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
+    draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
   ) (scene.state.towers);
   ()
 

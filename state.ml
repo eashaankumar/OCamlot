@@ -139,33 +139,59 @@ let update_troop_count tower =
   else if troops < 0. then 0.
   else troops
 
-let update st input =
+let update sc input =
   (* Sprite towers *)
   let updated_twrs = begin
-    Array.map (fun tower ->
-      let new_twr_sprite = Sprite.tick tower.twr_sprite !Renderer.delta in
-      let new_troop_count = update_troop_count tower in
+    Array.map (fun t ->
+      (* Check if mouse is over this tower and pressed *)
+      let _ = begin
+        match input.mouse_state with
+        (* Tower to be highlighted *)
+        | Pressed -> 
+          begin
+            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then 
+              sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
+              ()
+          end
+        (* Remove towers from list *)
+        | Released -> 
+          begin
+            if List.mem t.twr_id sc.highlight_towers then
+              sc.highlight_towers <- begin
+                List.fold_left (fun acc tid -> 
+                  if tid = t.twr_id then acc
+                  else tid::acc
+                ) [] sc.highlight_towers
+              end;
+            ()          
+          end
+        | Moved -> ()
+      end in
+
+      let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
+      let new_troop_count = update_troop_count t in
       {
-        twr_id = tower.twr_id;
-        twr_pos = tower.twr_pos;
-        twr_size = tower.twr_size ;
+        twr_id = t.twr_id;
+        twr_pos = t.twr_pos;
+        twr_size = t.twr_size ;
         twr_sprite = new_twr_sprite;
         twr_troops = new_troop_count ;
-        twr_troops_max = tower.twr_troops_max;
-        twr_troops_regen_speed = tower.twr_troops_regen_speed;
-        twr_team = tower.twr_team
+        twr_troops_max = t.twr_troops_max;
+        twr_troops_regen_speed = t.twr_troops_regen_speed;
+        twr_team = t.twr_team;
+        selector_offset = t.selector_offset;
       }
-    ) st.towers
+    ) sc.state.towers
   end in
   (* TEST: Print out input *)
   (*let _ = print_mouse_input input in*)
 
   {
     towers = updated_twrs;
-    num_towers = st.num_towers;
-    player_score = st.player_score;
-    enemy_score = st.enemy_mana;
-    movements = st.movements;
-    player_mana = st.player_mana;
-    enemy_mana = st.enemy_mana;
+    num_towers = sc.state.num_towers;
+    player_score = sc.state.player_score;
+    enemy_score = sc.state.enemy_mana;
+    movements = sc.state.movements;
+    player_mana = sc.state.player_mana;
+    enemy_mana = sc.state.enemy_mana;
   }

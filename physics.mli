@@ -13,4 +13,10 @@ open Types
  *)
 val point_inside : vector2d -> vector2d -> bounds -> bool
 
+(**
+ * [add_vector2d p1 p2] adds x and y coordinates of [p1] and [p2]
+ * returns: sum of [p1] and [p2]
+ *)
+val add_vector2d : vector2d -> vector2d -> vector2d
+
 (* TODO: Add any physics calculations... *)

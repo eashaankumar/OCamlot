@@ -49,7 +49,8 @@ type tower = {
   twr_troops : float ;
   twr_troops_max : float;
   twr_troops_regen_speed : float;
-  twr_team: allegiance
+  twr_team: allegiance;
+  selector_offset : vector2d;
 }
 
 (* [movement] contains all the information of the following:
@@ -78,7 +79,6 @@ type button_state =
   | Disabled (* 2 *)
   | Neutral (* 0 *)
   | Clicked (* 1 *)
-
 
 type button_property = {
   mutable btn_state: button_state;
@@ -121,6 +121,7 @@ type scene = {
   mutable state : state ;
   mutable interface : interface;
   mutable input : input;
+  mutable highlight_towers : int list;
 }
 
 (* [move] contains information regarding a move that a player
