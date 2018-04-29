@@ -15,8 +15,8 @@ let possible_moves st side =
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
 *)
-let new_state st c =
-  match c with
+let new_state st (c:command) = st
+  (*match c with
   | Move {mv_start = start; mv_end = finish; mv_troops = amount} -> begin
       let ts = st.towers.(start) in
       let te = st.towers.(finish) in
@@ -106,18 +106,20 @@ let new_state st c =
         player_mana = st.player_mana;
         enemy_mana = st.enemy_mana;
         player_score = begin
-          if ts_team_original = ts'.twr_team
-          then if te
+          (*if ts_team_original = ts'.twr_team
+          then if te*)
+          0
         end;
         enemy_score = begin
-
+          0
         end;
         movements = begin
-
+          []
         end
       }
-  end
-  | Skill ({mana_cost = mp; effect; side}, tower) ->
+    end
+  | Skill ({mana_cost = mp; effect; side}, tower) -> st
+*)
 
 let new_state_plus_delta st c d =
   failwith "Not implemented"

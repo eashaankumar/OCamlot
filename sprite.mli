@@ -16,7 +16,9 @@ val tick : sprite -> float -> sprite
 (**
  * [troop_sprite] holds information about troop sprite animation
  *)
-val troop_sprite : sprite
+val tower_base : sprite
+
+val tower_type1 : sprite
 
 val menu_btn_sprite1 : sprite
 

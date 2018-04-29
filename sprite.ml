@@ -13,7 +13,7 @@ let document = Html.document
 let init_sprite sheet_src time_delay= 
   let img = Html.createImg document in
   img##src <- js sheet_src;
-  {frames=[||];img=img;index=0;time_delay=time_delay;curr_time=0.}
+  {frames=[||];img=img;index=0;time_delay=time_delay;curr_time=Random.float time_delay}
 
 (**
  * [add_animation_frame offset bounds sprite] adds a new frame to [sprite]
@@ -81,11 +81,11 @@ let tick sp delta =
      curr_time=sp.curr_time +. delta}
   end
 
-let troop_sprite = init_sprite "images/test_spritesheet.png" 0.25
-                  |> add_animation_frame (0.,0.) (225.,250.) 
-                  |> add_animation_frame (225.,0.) (225.,250.) 
-                  |> add_animation_frame (450.,0.) (225.,250.) 
-                  |> add_animation_frame (675.,0.) (225.,250.)
+let tower_base = init_sprite "images/towers/tower1.png" 0.5
+                  |> add_animation_frame (0.,0.) (200.,345.) 
+
+let tower_type1 = init_sprite "images/towers/tower2.png" 0.
+                  |> add_animation_frame (0.,0.) (200.,320.) 
 
 let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)

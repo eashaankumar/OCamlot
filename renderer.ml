@@ -17,15 +17,6 @@ module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
-(******************************************************************************)
-let draw_sprite_sheet ctx sprite pos size= 
-  let frame = sprite.frames.(sprite.index) in
-  ctx##drawImage_full (
-    sprite.img, frame.offset.x, frame.offset.y, frame.bounds.w, frame.bounds.h, 
-    pos.x, pos.y, size.w, size.h);
-  ()
-(******************************************************************************)
-
 (****** Helpers ******)
 (**
  * [update_delta] returns time elapsed between last update call and this one.
@@ -67,14 +58,28 @@ let color_to_hex {r=r;g=g;b=b} =
   (Printf.sprintf "%02X" b))
 
 (**
- * [draw_image ctx img_src pos] draws image from path [img_src] at [pos].
+ * [draw_image ctx img_src pos size] draws image from path [img_src] at [pos]
+ * with dimensions [size]
  * returns: unit
  * requires: [img_src] is a valid path to an image
  *)
-let draw_image ctx img_src pos =
+let draw_image ctx img_src pos true_size size =
   let img = Html.createImg document in
   img##src <- js img_src;
-  ctx##drawImage (img, pos.x, pos.y);
+  (**ctx##drawImage (img, pos.x, pos.y);*)
+  ctx##drawImage_full(img, 0., 0., fst true_size, snd true_size, pos.x, pos.y, size.w, size.h);
+  ()
+
+(**
+ * [draw_sprite_sheet ctx sprite pos size] draws [sprite] at [pos] with
+ * dimensions [size].
+ * returns: unit
+ *)
+let draw_sprite_sheet ctx sprite pos size= 
+  let frame = sprite.frames.(sprite.index) in
+  ctx##drawImage_full (
+    sprite.img, frame.offset.x, frame.offset.y, frame.bounds.w, frame.bounds.h, 
+    pos.x, pos.y, size.w, size.h);
   ()
 
 (**
@@ -86,7 +91,7 @@ let draw_image ctx img_src pos =
  *)
 let draw_text ctx text pos (color:color) font_size : unit =
   ctx##fillStyle <- color_to_hex color;
-  ctx##font <- js ((string_of_int font_size)^"px Triforce");
+  ctx##font <- js ((string_of_int font_size)^"px Aniron");
   ctx##fillText (js text, pos.x, pos.y);
   ()
 
@@ -98,13 +103,17 @@ let draw_text ctx text pos (color:color) font_size : unit =
 let draw_entities context scene = 
   Array.iter (fun tower -> 
     draw_sprite_sheet context tower.twr_sprite tower.twr_pos tower.twr_size;
-    draw_text 
-      context (string_of_int ( int_of_float tower.twr_troops)) 
-      {
-        x=tower.twr_pos.x +. tower.twr_size.w/.2.;
-        y=tower.twr_pos.y +. tower.twr_size.h/.3.
-      } 
-      {r=0;g=0;b=0} 20;
+    let fs = 15. in
+    let x = tower.twr_pos.x +. tower.twr_size.w/.2. -. (fs) in
+    let y = tower.twr_pos.y +. 10. in
+    let (twr_label_path,color) = begin
+      match tower.twr_team with
+      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100}
+      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100}
+      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0}
+    end in
+    draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
+    draw_text context (string_of_int ( int_of_float tower.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
   ) (scene.state.towers);
   ()
 
@@ -144,6 +153,7 @@ let render context scene =
   context##clearRect (0., 0., width, height);
   context##fillStyle <- color_to_hex {r=255;g=255;b=255};
   context##fillRect (0., 0., width, height);
+  draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};
   (* Draw entities *)
   draw_entities context scene;
   (* Draw ui *)
