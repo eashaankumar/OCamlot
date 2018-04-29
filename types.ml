@@ -73,7 +73,8 @@ type move = {
 
 type command =
   | Move of move
-  | Skill of skill * tower
+  | Skill of skill * int
+  | Null
 
 type mouse_state =
   | Pressed

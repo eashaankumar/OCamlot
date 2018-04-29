@@ -1,4 +1,5 @@
 open Types
+open Sprite
 
 type to_from = {
   to_tower : int option;
@@ -7,17 +8,43 @@ type to_from = {
 
 let destination = ref {to_tower = None; from_tower = None}
 
+let new_movement ts_index te_index troops sprite side = {
+  start_tower = ts_index;
+  end_tower  = te_index;
+  mvmt_troops = troops;
+  mvmt_sprite = sprite;
+  mvmt_team = side;
+  progress = 0.0
+}
+
+(*[update_movement] takes in a movement, [mvmt], a
+  time step, [delta], and a state [st], and progresses the movement according
+  to the speed of the troops and the distance from one tower
+  to the next*)
+let update_movement mvmt delta st =
+  let ts_index = mvmt.start_tower in
+  let te_index = mvmt.end_tower in
+  let ts = st.towers.(ts_index) in
+  let te = st.towers.(te_index) in
+  let start_vector = ts.twr_pos in
+  let end_vector = te.twr_pos in
+  let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
+                       (start_vector.y -. end_vector.y)**2.) in
+  (*TODO make velocity not hard-coded*)
+  let velocity = 100. in
+  {mvmt with progress = mvmt.progress +. (velocity *. delta)/.distance}
+
 (****** Helpers ******)
 
-let possible_moves st side =
+let possible_commands st side =
   failwith "Not implemented"
 
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
 *)
-let new_state st (c:command) = st
-  (*match c with
-  | Move {mv_start = start; mv_end = finish; mv_troops = amount} -> begin
+let new_state st (c:command) =
+  match c with
+  | Move ({mv_start = start; mv_end = finish; mv_troops = amount}) -> begin
       let ts = st.towers.(start) in
       let te = st.towers.(finish) in
       let ts_team_original = ts.twr_team in
@@ -25,13 +52,18 @@ let new_state st (c:command) = st
       let player_score = ref st.player_score in
       let enemy_score = ref st.enemy_score in
       if ts_team_original = Neutral
+      (* this failwith statement will probably exit the game *)
       then failwith "Cannot move from a neutral tower!"
       else
-      let amount = float_of_int amount in
+        let amount = float_of_int amount in
+
+      (* Changing the starting tower *)
       let ts' =
         begin
           let cur_team = ref ts.twr_team in
-          {
+          (*If you're keeping some of the same attributes of
+            ts then you don't need to re-assign the values*)
+          { ts with
             twr_id = ts.twr_id;
             twr_pos = ts.twr_pos;
             twr_size = ts.twr_size;
@@ -51,10 +83,12 @@ let new_state st (c:command) = st
             twr_team = !cur_team
           }
         end in
+
+      (* Changing the ending tower *)
       let te' =
         begin
           let cur_team = ref te.twr_team in
-          {
+          {te with
             twr_id = te.twr_id;
             twr_pos = te.twr_pos;
             twr_size = te.twr_size;
@@ -95,6 +129,7 @@ let new_state st (c:command) = st
             end;
             twr_team = !cur_team
           }
+
         end in
       {
         towers = begin
@@ -118,8 +153,10 @@ let new_state st (c:command) = st
         end
       }
     end
-  | Skill ({mana_cost = mp; effect; side}, tower) -> st
-*)
+    | Skill ({mana_cost = mp; effect; side}, tower) -> begin
+      st
+    end
+    | Null -> st
 
 let new_state_plus_delta st c d =
   failwith "Not implemented"
@@ -143,7 +180,7 @@ let update_troop_count tower =
     tower.twr_troops_max
   else if tower.twr_troops < tower.twr_troops_max then
     tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
-  else 
+  else
     tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
 
 let update sc input =
@@ -154,23 +191,23 @@ let update sc input =
       let _ = begin
         match input.mouse_state with
         (* Tower to be highlighted *)
-        | Pressed -> 
+        | Pressed ->
           begin
-            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then 
+            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then
               sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
               ()
           end
         (* Remove towers from list *)
-        | Released -> 
+        | Released ->
           begin
             if List.mem t.twr_id sc.highlight_towers then
               sc.highlight_towers <- begin
-                List.fold_left (fun acc tid -> 
+                List.fold_left (fun acc tid ->
                   if tid = t.twr_id then acc
                   else tid::acc
                 ) [] sc.highlight_towers
               end;
-            ()          
+            ()
           end
         | Moved -> ()
       end in

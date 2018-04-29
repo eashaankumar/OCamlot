@@ -4,7 +4,7 @@ open Types
    denotes all of the moves that a player with a given
    allegiance can make at the time of the function call.
 *)
-val possible_moves : state -> allegiance -> command array
+val possible_commands : state -> allegiance -> command array
 
 (*
  * [new_state] is the state that is created by applying

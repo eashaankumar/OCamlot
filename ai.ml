@@ -96,7 +96,7 @@ module MiniMax_AI = struct
 
 
   let get_move st =
-    let best_move = ref Rest in
+    let best_move = ref Null in
     let best_score = ref (0.0 -. max_float) in
     let moves = State.possible_moves st Enemy in
     let num_moves = Array.length moves in
@@ -212,7 +212,7 @@ module MCTS_AI = struct
 
   let beginning_node st =
     let children = create_children st Enemy in
-    ref (Node(st,Rest,0.0,0.0,children,ref (Leaf(Rest,1.0)),true))
+    ref (Node(st,Null,0.0,0.0,children,ref (Leaf(Null,1.0)),true))
 
   let rec add_path t = begin
     match !t with

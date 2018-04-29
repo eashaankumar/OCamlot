@@ -20,3 +20,10 @@ val point_inside : vector2d -> vector2d -> bounds -> bool
 val add_vector2d : vector2d -> vector2d -> vector2d
 
 (* TODO: Add any physics calculations... *)
+
+(**
+ * [get_movement_coord mvmt st] is a vector2d that corresponds
+ * to the location of that troop movement on the game map with
+ * state [st].
+ *)
+val get_movement_coord : movement -> state -> vector2d
