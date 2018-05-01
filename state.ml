@@ -34,6 +34,21 @@ let update_movement mvmt delta st =
   let velocity = 100. in
   {mvmt with progress = mvmt.progress +. (velocity *. delta)/.distance}
 
+(**
+ * [get_scores st] is a tuple containing the player score
+      and the enemy score in that order.
+   [st] - a valid state
+ *)
+let get_scores st =
+  Array.fold_left ( fun (acc1,acc2) e ->
+      match e.twr_team with
+      | Player -> (acc1+1,acc2)
+      | Enemy -> (acc1,acc2+1)
+      | Neutral -> (acc1,acc2)
+    )
+    (0,0) st.towers
+
+
 (****** Helpers ******)
 
 let possible_commands st side =
@@ -46,11 +61,7 @@ let new_state st (c:command) =
   match c with
   | Move (team,start,finish) -> begin
       let ts = st.towers.(start) in
-      let te = st.towers.(finish) in
       let ts_team_original = ts.twr_team in
-      let te_team_original = te.twr_team in
-      let player_score = ref st.player_score in
-      let enemy_score = ref st.enemy_score in
       if ts_team_original = Neutral
       (* this failwith statement will probably exit the game *)
       then st
@@ -74,48 +85,6 @@ let new_state st (c:command) =
           }
         end in
 
-      (* Changing the ending tower *)
-      (*let te' =
-        begin
-          let cur_team = ref te.twr_team in
-          {te with
-            twr_sprite = te.twr_sprite;
-            twr_troops = begin
-              match te.twr_team with
-              | Neutral -> cur_team := ts_team_original; 0.
-              | Player -> begin
-                  match ts_team_original with
-                  | Neutral -> te.twr_troops
-                  | Player -> te.twr_troops +. 0.
-                  | Enemy -> begin
-                      let net = te.twr_troops -. 0. in
-                      let _ =
-                        if net < 0.
-                        then cur_team := Enemy
-                        else if net = 0. then cur_team := Neutral
-                        else ()
-                      in net
-                  end
-                end
-              | Enemy -> begin
-                  match ts_team_original with
-                  | Neutral -> failwith "Cannot move from a neutral tower!"
-                  | Enemy -> te.twr_troops +. 0.
-                  | Player -> begin
-                      let net = te.twr_troops -. 0. in
-                      let _ =
-                        if net < 0.
-                        then cur_team := Player
-                        else if net = 0. then cur_team := Neutral
-                        else ()
-                      in net
-                    end
-                end
-            end;
-            twr_team = !cur_team
-          }
-
-        end in (* end of te' code *)*)
 
       (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
       let new_mvmt = new_movement
@@ -186,17 +155,63 @@ let new_state_plus_delta st c d =
     let rec mvmtlst l acc =
       match l with
       | [] -> acc
-      | h::t -> mvmtlst t ((update_movement h !Renderer.delta st)::acc) in
+      | h::t -> mvmtlst t ((update_movement h d st)::acc) in
     mvmtlst st.movements []
   end in
+  let temp_state =
   { (new_state st c) with
-    (* towers = Array.mapi (fun i t -> ) st.towers *)
+    towers = List.fold_left
+        (fun acc e ->
+           if e.progress <= 1. then acc
+           else let te = acc.(e.end_tower) in
+                let _ = (match (e.mvmt_team, te.twr_team) with
+                 | (Enemy,Player) -> begin
+                     acc.(e.end_tower) <-
+                       let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                       let new_team =
+                         if int_of_float new_count = 0 then (Neutral:allegiance) else
+                         if new_count < 0. then Enemy else Player in
+                     {te with
+                      twr_troops = if int_of_float new_count = 0 then 0. else
+                          abs_float new_count;
+                      twr_team = new_team;
+                     }
+                   end
+                 | (Player,Enemy) -> begin
+                     acc.(e.end_tower) <-
+                       let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                       let new_team =
+                         if int_of_float new_count = 0 then (Neutral:allegiance) else
+                         if new_count < 0. then Enemy else Player in
+                       {te with
+                        twr_troops = if int_of_float new_count = 0 then 0. else
+                            abs_float new_count;
+                        twr_team = new_team
+                       }
+                   end
+                 | (team,_) -> begin
+                     acc.(e.end_tower) <-
+                       let new_count = te.twr_troops +. float_of_int e.mvmt_troops in
+                       {te with
+                        twr_troops = new_count;
+                        twr_team = team
+                       }
+                   end
+               )
+                in acc
+      ) (Array.copy st.towers) mvmts;
     movements = List.filter (fun m -> m.progress < 1.) mvmts;
+  } in
+  let (pl_score, en_score) = get_scores temp_state in
+
+  {temp_state with
+   player_score = pl_score;
+   enemy_score = en_score
   }
 
 
 let gameover st =
-  failwith "Not implemented"
+  st.player_score >= st.num_towers || st.enemy_score >= st.num_towers 
 
 (**
  * [update_troop_count tower] updates the troop count in [tower]
@@ -216,6 +231,7 @@ let update_troop_count tower =
     tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
   else
     tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
+
 
 let update sc input =
   (* Sprite towers *)
