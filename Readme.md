@@ -10,3 +10,9 @@ Run index.html in browser
 
 - theme image
 http://www.baltana.com/backgrounds/vintage-background-hd-desktop-wallpaper-16551.html
+
+## Problems
+
+- Wrong towers
+- Start tower doesn't decrease
+- 

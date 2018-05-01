@@ -63,42 +63,40 @@ let new_state st (c:command) =
   | Move (team,start,finish) -> begin
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
-      if ts_team_original = Neutral
-      (* this failwith statement will probably exit the game *)
-      then st
-      else
-
-      let mvmt_troop_count = ref 0 in
-      (* Changing the starting tower *)
-      let ts' =
+      if ts_team_original = Neutral then (
+        st
+      ) else 
         begin
-          (*If you're keeping some of the same attributes of
-            ts then you don't need to re-assign the values*)
-          { ts with
-            twr_sprite = ts.twr_sprite;
-            twr_troops = begin
-              let half = int_of_float (ts.twr_troops/.2.) in
-              if half <= 0 then ts.twr_troops else
-              let net = ts.twr_troops -. float_of_int half in
-              mvmt_troop_count := half;
-              net
+          let mvmt_troop_count = ref 0 in
+          (* Changing the starting tower *)
+          let ts' =
+            begin
+              (*If you're keeping some of the same attributes of
+                ts then you don't need to re-assign the values*)
+              { ts with
+                twr_sprite = ts.twr_sprite;
+                twr_troops = begin
+                  let half = int_of_float (ts.twr_troops/.2.) in
+                  if half <= 0 then ts.twr_troops else
+                  let net = ts.twr_troops -. float_of_int half in
+                  mvmt_troop_count := half;
+                  net
+                end;
+              }
+            end in
+          (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
+          let new_mvmt = new_movement
+              start finish !mvmt_troop_count Sprite.tower_base ts_team_original in
+
+          { st with
+            towers = begin
+              let new_towers = Array.copy st.towers in
+              new_towers.(start) <- ts';
+              new_towers
             end;
+            movements = new_mvmt::(st.movements)
           }
-        end in
-
-
-      (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
-      let new_mvmt = new_movement
-          start finish !mvmt_troop_count Sprite.tower_base ts_team_original in
-
-      { st with
-        towers = begin
-          let new_towers = Array.copy st.towers in
-          new_towers.(start) <- ts';
-          new_towers
-        end;
-        movements = new_mvmt::(st.movements)
-      }
+        end
     end
   | Skill (team,{mana_cost = mp; effect; side}, tower) -> begin
       let has_enough_mana =
@@ -151,169 +149,165 @@ let new_state st (c:command) =
     end
     | Null -> st
 (**)
-let new_state_plus_delta st c d =
-  let mvmts = begin
-    let rec mvmtlst l acc =
-      match l with
-      | [] -> acc
-      | h::t -> mvmtlst t ((update_movement h d st)::acc) in
-    mvmtlst st.movements []
-  end in
-  let temp_state =
-  { (new_state st c) with
-    towers = List.fold_left
-        (fun acc e ->
-           if e.progress <= 1. then acc
-           else let te = acc.(e.end_tower) in
-                let _ = (match (e.mvmt_team, te.twr_team) with
-                 | (Enemy,Player) -> begin
-                     acc.(e.end_tower) <-
-                       let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
-                       let new_team =
-                         if int_of_float new_count = 0 then (Neutral:allegiance) else
-                         if new_count < 0. then Enemy else Player in
-                     {te with
-                      twr_troops = if int_of_float new_count = 0 then 0. else
-                          abs_float new_count;
-                      twr_team = new_team;
-                     }
-                   end
-                 | (Player,Enemy) -> begin
-                     acc.(e.end_tower) <-
-                       let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
-                       let new_team =
-                         if int_of_float new_count = 0 then (Neutral:allegiance) else
-                         if new_count < 0. then Enemy else Player in
-                       {te with
-                        twr_troops = if int_of_float new_count = 0 then 0. else
-                            abs_float new_count;
-                        twr_team = new_team
-                       }
-                   end
-                 | (team,_) -> begin
-                     acc.(e.end_tower) <-
-                       let new_count = te.twr_troops +. float_of_int e.mvmt_troops in
-                       {te with
-                        twr_troops = new_count;
-                        twr_team = team
-                       }
-                   end
-               )
-                in acc
-      ) (Array.copy st.towers) mvmts;
-    movements = List.filter (fun m -> m.progress < 1.) mvmts;
-  } in
-  let (pl_score, en_score) = get_scores temp_state in
-
-  {temp_state with
-   player_score = pl_score;
-   enemy_score = en_score
-  }
-
-
-let gameover st =
-  st.player_score >= st.num_towers || st.enemy_score >= st.num_towers 
 
 (**
  * [update_troop_count tower] updates the troop count in [tower]
  * returns: new troop [count]
  *)
 let update_troop_count tower =
-  let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
-  if dir = 0 then
-    tower.twr_troops_max
-  else if dir < 0 then
-    tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
-  else
-    tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
+  match tower.twr_team with
+  | Neutral -> 0.
+  | _ -> begin
+      let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
+      if dir = 0 then
+        tower.twr_troops_max
+      else if dir < 0 then
+        tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
+      else
+        tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
+    end
+    
+let new_state_plus_delta st c d =
+  let st' = new_state st c in
+  let mvmts = List.map (fun m -> update_movement m d st) st'.movements in
+  (* begin
+    let rec mvmtlst l acc =
+      match l with
+      | [] -> acc
+      | h::t -> mvmtlst t ((update_movement h d st)::acc) in
+    mvmtlst st.movements []
+  end in *)
+  print_endline (string_of_int (List.length mvmts));
+  let temp_state =
+    {st' with
+      towers = List.fold_left (fun acc e ->
+        if e.progress <= 1. then acc
+        else 
+          begin
+            let te = acc.(e.end_tower) in
+            let _ = (
+            (* Updates troop counts and allegiance for completed ending movements *)
+            match (e.mvmt_team, te.twr_team) with
+            | (Enemy,Player) -> 
+              begin
+                acc.(e.end_tower) <- 
+                  begin
+                    let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                    let new_team = (
+                      if int_of_float new_count = 0 then (Neutral:allegiance) 
+                      else if new_count < 0. then Enemy 
+                      else Player 
+                    ) in
+                    {te with
+                      twr_troops = if int_of_float new_count = 0 then 0. else
+                          abs_float new_count;
+                      twr_team = new_team;
+                    } 
+                  end
+              end
+            | (Player,Enemy) -> begin
+                acc.(e.end_tower) <-
+                  let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                  let new_team = (
+                    if int_of_float new_count = 0 then (Neutral:allegiance) else
+                    if new_count < 0. then Enemy else Player
+                  ) in
+                  {te with
+                  twr_troops = if int_of_float new_count = 0 then 0. else
+                      abs_float new_count;
+                  twr_team = new_team
+                  }
+              end
+            | (team,_) -> begin
+                  acc.(e.end_tower) <-
+                    let new_count = te.twr_troops +. float_of_int e.mvmt_troops in
+                    {te with
+                    twr_troops = new_count;
+                    twr_team = team
+                    }
+                end
+            ) in acc
+          end
+      ) (Array.copy st.towers) mvmts;
+    movements = List.filter (fun m -> m.progress < 1.) mvmts;
+  } in
+  let (pl_score, en_score) = get_scores temp_state in
+
+  {temp_state with
+    (* Update score and regenerated troops *)
+    towers = begin
+      Array.map (fun tower -> 
+        let new_tcount = update_troop_count tower in
+        {tower with twr_troops = new_tcount}
+      ) temp_state.towers
+    end;
+    player_score = pl_score;
+    enemy_score = en_score
+  }
+
+
+let gameover st =
+  st.player_score >= st.num_towers || st.enemy_score >= st.num_towers 
 
 (* Helpers for update *)
-(**
- * [update_towers st inp] updates towers in the state and detects if 
- * any movements were created.
- * returns: [state]
- *)
-let update_towers st inp : state = 
-  st
-(**)
-let update sc input =
-  (* Update towers *)
-  let updated_twrs = begin
-    Array.map (fun t ->
-      (* Check if mouse is over this tower and pressed *)
-      let _ = 
-      begin
-        match input.mouse_state with
-        (* Tower to be highlighted *)
-        | Pressed ->
-          begin
-            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
-              destination.from_tower <- Some t.twr_id;
-              sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
-            );
-            ()
-          end
-        (* Remove towers from list *)
-        | Released ->
-          begin
-            (*if List.mem t.twr_id sc.highlight_towers then
-              sc.highlight_towers <- begin
-                List.fold_left (fun acc tid ->
-                  if tid = t.twr_id then acc
-                  else tid::acc
-                ) [] sc.highlight_towers
-              end;*)
-            (* unhighlight all towers *)
-            sc.highlight_towers <- [];
-            (* End tower *)
-            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
-              destination.to_tower <- Some t.twr_id;
-              (* Create new movement *)
-
-            );
-              (* Add movement to state *)
-              (* Reset destination *)
-            ()
-          end
-        | Moved -> ()
-      end in
-      (* Update troop sprite *)
-      let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
-      (* Update troop count *)
-      let new_troop_count = update_troop_count t in
-      (* Return updated tower *)
-      {
-        twr_id = t.twr_id;
-        twr_pos = t.twr_pos;
-        twr_size = t.twr_size ;
-        twr_sprite = new_twr_sprite;
-        twr_troops = new_troop_count ;
-        twr_troops_max = t.twr_troops_max;
-        twr_troops_regen_speed = t.twr_troops_regen_speed;
-        twr_team = t.twr_team;
-        selector_offset = t.selector_offset;
-      }
-    ) sc.state.towers
-  end in
-  (* Update movements *)
-  let updated_movements = 
+let update sc input = 
+  let command = ref Null in (* Dummy Command *)
+  let updated_towers = 
     begin
-      List.fold_left(fun acc mvmt -> 
-        (* Movement has been completed *)
-        if mvmt.progress >= 1. then acc
-        (* Otherwise, update movement *)
-        else 
-        (update_movement mvmt !Renderer.delta sc.state) :: acc
-      ) [] sc.state.movements
-    end
-  in
-  (* Return updated state *)
-  {
-    towers = updated_twrs;
-    num_towers = sc.state.num_towers;
-    player_score = sc.state.player_score;
-    enemy_score = sc.state.enemy_mana;
-    movements = updated_movements;
-    player_mana = sc.state.player_mana;
-    enemy_mana = sc.state.enemy_mana;
-  } 
+      Array.map (fun t ->
+        (* Check if mouse is over this tower and pressed *)
+        let _ = 
+        begin
+          match input.mouse_state with
+          (* Tower to be highlighted *)
+          | Pressed ->
+            begin
+              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+                print_endline "Selected From tower";
+                destination.from_tower <- Some t.twr_id;
+                sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
+              );
+              ()
+            end
+          (* Remove towers from list *)
+          | Released ->
+            begin
+              (* unhighlight all towers *)
+              sc.highlight_towers <- [];
+              (* End tower *)
+              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+                destination.to_tower <- Some t.twr_id;
+                
+                (* Create new Command *)
+                let _ = begin
+                  match (destination.from_tower, destination.to_tower) with
+                  | (Some(a),Some(b)) -> 
+                    begin
+                      command := Move (Player, a,b);
+                      (* Reset destination *)
+                      destination.from_tower <- None;
+                      destination.to_tower <- None;
+                    end
+                  | _ -> 
+                    begin
+                      ()
+                    end
+                end in
+                ()
+              );
+              ()
+            end
+          | Moved -> ()
+        end in
+        (* Update troop sprite *)
+        let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
+        (* Update troop count *)
+        (*let new_troop_count = update_troop_count t in*)
+        (* Return updated tower *)
+        {t with twr_sprite = new_twr_sprite;}
+      ) sc.state.towers
+    end in 
+
+    (* Return new state *)
+    let state' = {sc.state with towers = updated_towers} in
+    new_state_plus_delta state' !command !Renderer.delta
