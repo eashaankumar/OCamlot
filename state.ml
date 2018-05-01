@@ -2,11 +2,11 @@ open Types
 open Sprite
 
 type to_from = {
-  to_tower : int option;
-  from_tower : int option;
+  mutable to_tower : int option;
+  mutable from_tower : int option;
 }
 
-let destination = ref {to_tower = None; from_tower = None}
+let destination = {to_tower = None; from_tower = None}
 
 let new_movement ts_index te_index troops sprite side = {
   start_tower = ts_index;
@@ -22,6 +22,7 @@ let new_movement ts_index te_index troops sprite side = {
   to the speed of the troops and the distance from one tower
   to the next*)
 let update_movement mvmt delta st =
+  print_endline ("Updating movement: " ^ (string_of_float mvmt.progress));
   let ts_index = mvmt.start_tower in
   let te_index = mvmt.end_tower in
   let ts = st.towers.(ts_index) in
@@ -149,7 +150,7 @@ let new_state st (c:command) =
           end
     end
     | Null -> st
-
+(**)
 let new_state_plus_delta st c d =
   let mvmts = begin
     let rec mvmtlst l acc =
@@ -218,52 +219,69 @@ let gameover st =
  * returns: new troop [count]
  *)
 let update_troop_count tower =
-  (*let troops = (
-    tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
-  ) in
-  if troops > tower.twr_troops_max then tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
-  else if troops < 0. then 0.
-  else troops*)
   let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
   if dir = 0 then
     tower.twr_troops_max
-  else if tower.twr_troops < tower.twr_troops_max then
+  else if dir < 0 then
     tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
   else
     tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
 
-
+(* Helpers for update *)
+(**
+ * [update_towers st inp] updates towers in the state and detects if 
+ * any movements were created.
+ * returns: [state]
+ *)
+let update_towers st inp : state = 
+  st
+(**)
 let update sc input =
-  (* Sprite towers *)
+  (* Update towers *)
   let updated_twrs = begin
     Array.map (fun t ->
       (* Check if mouse is over this tower and pressed *)
-      let _ = begin
+      let _ = 
+      begin
         match input.mouse_state with
         (* Tower to be highlighted *)
         | Pressed ->
           begin
-            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then
+            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+              destination.from_tower <- Some t.twr_id;
               sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
-              ()
+            );
+            ()
           end
         (* Remove towers from list *)
         | Released ->
           begin
-            if List.mem t.twr_id sc.highlight_towers then
+            (*if List.mem t.twr_id sc.highlight_towers then
               sc.highlight_towers <- begin
                 List.fold_left (fun acc tid ->
                   if tid = t.twr_id then acc
                   else tid::acc
                 ) [] sc.highlight_towers
-              end;
+              end;*)
+            (* unhighlight all towers *)
+            sc.highlight_towers <- [];
+            (* End tower *)
+            if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+              destination.to_tower <- Some t.twr_id;
+              (* Create new movement *)
+
+            );
+              (* Add movement to state *)
+              (* Reset destination *)
             ()
           end
         | Moved -> ()
       end in
-
+      (* Update troop sprite *)
       let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
+      (* Update troop count *)
       let new_troop_count = update_troop_count t in
+      (* Return updated tower *)
       {
         twr_id = t.twr_id;
         twr_pos = t.twr_pos;
@@ -277,15 +295,25 @@ let update sc input =
       }
     ) sc.state.towers
   end in
-  (* TEST: Print out input *)
-  (*let _ = print_mouse_input input in*)
-
+  (* Update movements *)
+  let updated_movements = 
+    begin
+      List.fold_left(fun acc mvmt -> 
+        (* Movement has been completed *)
+        if mvmt.progress >= 1. then acc
+        (* Otherwise, update movement *)
+        else 
+        (update_movement mvmt !Renderer.delta sc.state) :: acc
+      ) [] sc.state.movements
+    end
+  in
+  (* Return updated state *)
   {
     towers = updated_twrs;
     num_towers = sc.state.num_towers;
     player_score = sc.state.player_score;
     enemy_score = sc.state.enemy_mana;
-    movements = sc.state.movements;
+    movements = updated_movements;
     player_mana = sc.state.player_mana;
     enemy_mana = sc.state.enemy_mana;
-  }
+  } 

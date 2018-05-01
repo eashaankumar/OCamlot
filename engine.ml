@@ -60,7 +60,16 @@ let init_state = {
   num_towers = 0 ;
   player_score = 0 ;
   enemy_score = 0 ;
-  movements = [] ;
+  movements = [
+    {
+      start_tower = 0;
+      end_tower = 2;
+      mvmt_troops = 10;
+      mvmt_sprite = Sprite.tower_type1;
+      mvmt_team = Player;
+      progress = 0.;
+    }
+  ] ;
   player_mana = 0 ;
   enemy_mana = 0;
 }

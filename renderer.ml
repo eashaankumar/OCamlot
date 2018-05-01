@@ -102,6 +102,7 @@ let draw_text ctx text pos (color:color) font_size : unit =
  * returns: unit
  *)
 let draw_entities context scene = 
+  (* Draw towers *)
   Array.iter (fun t -> 
     (* Add glow *)
     let _ = if List.mem t.twr_id scene.highlight_towers then
@@ -120,6 +121,10 @@ let draw_entities context scene =
     draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
     draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
   ) (scene.state.towers);
+  (* Draw troops *)
+  List.iter (fun mvmt -> 
+    draw_sprite_sheet context mvmt.mvmt_sprite (Physics.get_movement_coord mvmt scene.state) {w=50.;h=50.};
+  ) (scene.state.movements);
   ()
 
 (**
