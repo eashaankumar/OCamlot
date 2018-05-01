@@ -24,6 +24,8 @@ val menu_btn_sprite1 : sprite
 
 val stat_board_sprite : sprite
 
+val troops_example_exprite : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the 
  * starting frame.
