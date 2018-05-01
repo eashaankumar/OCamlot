@@ -14,7 +14,7 @@ let new_movement ts_index te_index troops sprite side = {
   mvmt_troops = troops;
   mvmt_sprite = sprite;
   mvmt_team = side;
-  progress = 0.0
+  progress = 0.
 }
 
 (*[update_movement] takes in a movement, [mvmt], a
@@ -44,7 +44,7 @@ let possible_commands st side =
 *)
 let new_state st (c:command) =
   match c with
-  | Move ({mv_start = start; mv_end = finish; mv_troops = amount}) -> begin
+  | Move (team,start,finish) -> begin
       let ts = st.towers.(start) in
       let te = st.towers.(finish) in
       let ts_team_original = ts.twr_team in
@@ -53,57 +53,42 @@ let new_state st (c:command) =
       let enemy_score = ref st.enemy_score in
       if ts_team_original = Neutral
       (* this failwith statement will probably exit the game *)
-      then failwith "Cannot move from a neutral tower!"
+      then st
       else
-        let amount = float_of_int amount in
 
+      let mvmt_troop_count = ref 0 in
       (* Changing the starting tower *)
       let ts' =
         begin
-          let cur_team = ref ts.twr_team in
           (*If you're keeping some of the same attributes of
             ts then you don't need to re-assign the values*)
           { ts with
-            twr_id = ts.twr_id;
-            twr_pos = ts.twr_pos;
-            twr_size = ts.twr_size;
             twr_sprite = ts.twr_sprite;
-            twr_troops_max = ts.twr_troops_max;
-            twr_troops_regen_speed = ts.twr_troops_regen_speed;
             twr_troops = begin
-              let net = ts.twr_troops -. amount in
-              if net <= 0.
-              then let _ = cur_team := Neutral in
-                let _ = if ts_team_original = Player
-                  then player_score := !player_score - 1
-                  else enemy_score := !enemy_score - 1
-                in 0.
-              else net
+              let half = int_of_float (ts.twr_troops/.2.) in
+              if half <= 0 then ts.twr_troops else
+              let net = ts.twr_troops -. float_of_int half in
+              mvmt_troop_count := half;
+              net
             end;
-            twr_team = !cur_team
           }
         end in
 
       (* Changing the ending tower *)
-      let te' =
+      (*let te' =
         begin
           let cur_team = ref te.twr_team in
           {te with
-            twr_id = te.twr_id;
-            twr_pos = te.twr_pos;
-            twr_size = te.twr_size;
             twr_sprite = te.twr_sprite;
-            twr_troops_max = te.twr_troops_max;
-            twr_troops_regen_speed = te.twr_troops_regen_speed;
             twr_troops = begin
               match te.twr_team with
-              | Neutral -> let _ = cur_team := ts_team_original in amount
+              | Neutral -> cur_team := ts_team_original; 0.
               | Player -> begin
                   match ts_team_original with
-                  | Neutral -> failwith "Cannot move from neutral tower!"
-                  | Player -> te.twr_troops +. amount
+                  | Neutral -> te.twr_troops
+                  | Player -> te.twr_troops +. 0.
                   | Enemy -> begin
-                      let net = te.twr_troops -. amount in
+                      let net = te.twr_troops -. 0. in
                       let _ =
                         if net < 0.
                         then cur_team := Enemy
@@ -115,9 +100,9 @@ let new_state st (c:command) =
               | Enemy -> begin
                   match ts_team_original with
                   | Neutral -> failwith "Cannot move from a neutral tower!"
-                  | Enemy -> te.twr_troops +. amount
+                  | Enemy -> te.twr_troops +. 0.
                   | Player -> begin
-                      let net = te.twr_troops -. amount in
+                      let net = te.twr_troops -. 0. in
                       let _ =
                         if net < 0.
                         then cur_team := Player
@@ -130,36 +115,85 @@ let new_state st (c:command) =
             twr_team = !cur_team
           }
 
-        end in
-      {
+        end in (* end of te' code *)*)
+
+      (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
+      let new_mvmt = new_movement
+          start finish !mvmt_troop_count Sprite.tower_base ts_team_original in
+
+      { st with
         towers = begin
-          let _ = st.towers.(start) <- ts' in
-          let _ = st.towers.(finish) <- te' in
-          st.towers
+          let new_towers = Array.copy st.towers in
+          new_towers.(start) <- ts';
+          new_towers
         end;
-        num_towers = st.num_towers;
-        player_mana = st.player_mana;
-        enemy_mana = st.enemy_mana;
-        player_score = begin
-          (*if ts_team_original = ts'.twr_team
-          then if te*)
-          0
-        end;
-        enemy_score = begin
-          0
-        end;
-        movements = begin
-          []
-        end
+        movements = new_mvmt::(st.movements)
       }
     end
-    | Skill ({mana_cost = mp; effect; side}, tower) -> begin
-      st
+  | Skill (team,{mana_cost = mp; effect; side}, tower) -> begin
+      let has_enough_mana =
+        match team with
+        | Neutral -> false (*should fail*)
+        | Player -> st.player_mana >= mp
+        | Enemy -> st.enemy_mana >= mp in
+      if not has_enough_mana then
+        st
+      else
+        let new_towers = Array.copy st.towers in
+        let tower_team = new_towers.(tower).twr_team in
+        match side with
+        | Buff -> begin
+            if team <> tower_team then
+              st
+            else
+              match effect with
+              | Kill n -> st (*should fail*)
+              | Regen_incr f -> st
+              | Stun s -> st (*should fail*)
+          end
+        | Attack -> begin
+            if team = tower_team then
+              st
+            else
+              match effect with
+              | Kill n -> begin
+                  {st with
+                   towers = begin
+                     let new_troop_count =
+                       max 0. st.towers.(tower).twr_troops -. float_of_int n in
+                    new_towers.(tower) <-
+                      {st.towers.(tower) with
+                       twr_troops =
+                         new_troop_count;
+                      twr_team = begin
+                        if new_troop_count = 0. then
+                          Neutral
+                        else
+                          st.towers.(tower).twr_team
+                      end};
+                    new_towers
+                  end
+                  }
+              end
+              | Regen_incr f -> st
+              | Stun s -> st
+          end
     end
     | Null -> st
 
 let new_state_plus_delta st c d =
-  failwith "Not implemented"
+  let mvmts = begin
+    let rec mvmtlst l acc =
+      match l with
+      | [] -> acc
+      | h::t -> mvmtlst t ((update_movement h !Renderer.delta st)::acc) in
+    mvmtlst st.movements []
+  end in
+  { (new_state st c) with
+    (* towers = Array.mapi (fun i t -> ) st.towers *)
+    movements = List.filter (fun m -> m.progress < 1.) mvmts;
+  }
+
 
 let gameover st =
   failwith "Not implemented"

@@ -60,14 +60,14 @@ type tower = {
    - number of troops
    - [allegiance] of the troops
  *)
-type movement = {
+  type movement = {
   start_tower : int;
   end_tower : int;
   mvmt_troops : int;
   mvmt_sprite : sprite;
   mvmt_team : allegiance;
   progress : float
-}
+      }
 
 type mouse_state =
   | Pressed
@@ -131,19 +131,11 @@ type scene = {
   mutable highlight_towers : int list;
 }
 
-(* [move] contains information regarding a move that a player
-   can make. Contains two [tower] instances which denote the
-   start and end locations of the move
-*)
-type move = {
-  mv_start : int;
-  mv_end : int;
-  mv_troops : int
-}
 
 type effect =
   | Stun of float (* An attack *)
   | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
+  | Kill of int
 
 type skill_side =
   | Buff
@@ -162,6 +154,6 @@ type skill = {
 
 (*Either applying a skill to a tower or a move*)
 type command =
-  | Move of move
-  | Skill of skill * int
+  | Move of allegiance * int * int
+  | Skill of allegiance * skill * int
   | Null

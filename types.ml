@@ -54,6 +54,7 @@ type movement = {
 type effect =
   | Stun of float (* An attack *)
   | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
+  | Kill of int
 
 type skill_side =
   | Buff
@@ -72,8 +73,8 @@ type move = {
 }
 
 type command =
-  | Move of move
-  | Skill of skill * int
+  | Move of allegiance * int * int (* tuple of tower indices*)
+  | Skill of allegiance * skill * int
   | Null
 
 type mouse_state =
