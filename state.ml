@@ -164,7 +164,7 @@ let update_troop_count tower =
       else if dir < 0 then
         tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
       else
-        tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta
+        tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta *. 2.
     end
     
 let new_state_plus_delta st c d =

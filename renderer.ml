@@ -123,7 +123,19 @@ let draw_entities context scene =
   ) (scene.state.towers);
   (* Draw troops *)
   List.iter (fun mvmt -> 
-    draw_sprite_sheet context mvmt.mvmt_sprite (Physics.get_movement_coord mvmt scene.state) {w=50.;h=50.};
+    let vec = Physics.get_movement_coord mvmt scene.state in
+    let fs = 15. in
+    let x = vec.x +. 50./.2. -. (fs) in
+    let y = vec.y +. 10. in
+   let (twr_label_path,color) = begin
+      match mvmt.mvmt_team with
+      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100}
+      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100}
+      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0}
+    end in
+    draw_sprite_sheet context mvmt.mvmt_sprite (vec) {w=50.;h=50.};
+    draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
+    draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
   ) (scene.state.movements);
   ()
 
