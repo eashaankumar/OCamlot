@@ -131,20 +131,23 @@ type scene = {
   mutable highlight_towers : int list;
 }
 
-
+(* represents the effect of a skill *)
 type effect =
   | Stun of float (* An attack *)
   | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
   | Kill of int
 
+(* represents whether the one applying the skill benefits
+   directly from the skill (buff) or indirectly by somehow
+   harming the opponent (attack)
+*)
 type skill_side =
   | Buff
   | Attack
 
 (*
 [skill] contains information about how much mana a skill
-comsumes and what it does (to be determined later).
-It should have whether it's a buff or and attack.
+comsumes, what it does, and the type of benefit the skill provides.
 *)
 type skill = {
   mana_cost : int ;
@@ -152,7 +155,9 @@ type skill = {
   side : skill_side
 }
 
-(*Either applying a skill to a tower or a move*)
+(* a command is either applying a skill to a tower or a move from one tower
+  to another.
+*)
 type command =
   | Move of allegiance * int * int
   | Skill of allegiance * skill * int
