@@ -72,26 +72,28 @@ type mouse_state =
   | Released
   | Moved
 
-(* represents the player's input
- *)
+(* represents the player's input *)
 type input = {
   mouse_pos : vector2d;
   mouse_state : mouse_state;
 }
 
- (* UI *)
+(* represents a digitized display of color basedo n the RGB scheme. *)
 type color = {r : int; g : int; b : int}
 
+(* Whether it is clicked, not allowed to be clicked, or waiting to be clicked. *)
 type button_state =
   | Disabled (* 2 *)
   | Neutral (* 0 *)
   | Clicked (* 1 *)
 
+(* represents the properties of a button *)
 type button_property = {
   mutable btn_state: button_state;
   mutable btn_sprite: sprite;
 }
 
+(* represents the properties of a label *)
 type label_property = {
   mutable text : string;
   mutable color : color;
@@ -106,11 +108,7 @@ type ui_element =
  | Label of label_property * vector2d * bounds
  | Panel of sprite * vector2d * bounds
 
-(* [state] will contain the following information
-   - All towers in the match
-   - Number of towers to dominate needed to win the match
-   - Some way of keeping track of score for both players
-   - Keeps track of all troop movements
+(* [state] contains all the information about the game's mechanics.
 *)
 type state = {
   towers : tower array ;
@@ -122,8 +120,11 @@ type state = {
   enemy_mana : int;
 }
 
+(* A collection of ui_elements *)
 type interface = (string * (ui_element ref)) list
 
+(* represents everything representable on the screen, including state
+*)
 type scene = {
   mutable state : state ;
   mutable interface : interface;
