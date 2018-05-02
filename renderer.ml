@@ -2,19 +2,19 @@ open Types
 
 (* Public *)
 
-let width = 800.
-let height = 600.
+let width = 1080.
+let height = 720.
 
 let time = ref 0.
 let fps = ref 0
 let delta = ref 0.
 
 (* Private *)
-let last_update_time = ref 0. 
+let last_update_time = ref 0.
 let frames_count = ref 0
 let time_count = ref 0.
 
-module Html = Dom_html 
+module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
@@ -24,7 +24,7 @@ let document = Html.document
  * returns: unit
  * effects: [delta]
  *)
-let update_delta () = 
+let update_delta () =
   delta := !time -. !last_update_time;
   last_update_time := !time;
   ()
@@ -35,7 +35,7 @@ let update_delta () =
  * effects: [fps], [time_count], [frames_count]
  * requires: [update_fps] should be run every frame in [render]
  *)
-let update_fps () = 
+let update_fps () =
   if !time_count > 1. then (
     fps := !frames_count;
     time_count := 0.;
@@ -43,16 +43,16 @@ let update_fps () =
   ) else (
     time_count := !time_count +. !delta;
     frames_count := !frames_count + 1;
-  ) 
+  )
 
 (**
- * [color_to_hex color] calculates hexadecimal representation of the 
+ * [color_to_hex color] calculates hexadecimal representation of the
  * [color].
  * returns: [string] representing hexadecimal color
- * requires: [color] be of form (0-255,0-255,0-255) 
+ * requires: [color] be of form (0-255,0-255,0-255)
  *)
-let color_to_hex {r=r;g=g;b=b} = 
-   
+let color_to_hex {r=r;g=g;b=b} =
+
   js ("#"^
   (Printf.sprintf "%02X" r)^
   (Printf.sprintf "%02X" g)^
@@ -76,15 +76,15 @@ let draw_image ctx img_src pos true_size size =
  * dimensions [size].
  * returns: unit
  *)
-let draw_sprite_sheet ctx sprite pos size= 
+let draw_sprite_sheet ctx sprite pos size=
   let frame = sprite.frames.(sprite.index) in
   ctx##drawImage_full (
-    sprite.img, frame.offset.x, frame.offset.y, frame.bounds.w, frame.bounds.h, 
+    sprite.img, frame.offset.x, frame.offset.y, frame.bounds.w, frame.bounds.h,
     pos.x, pos.y, size.w, size.h);
   ()
 
 (**
- * [draw_text ctx text pos color font_size] renders [text] with the 
+ * [draw_text ctx text pos color font_size] renders [text] with the
  * given parameters
  * returns: unit
  * requires: [color] is (0-255,0-255,0-255)
@@ -101,9 +101,9 @@ let draw_text ctx text pos (color:color) font_size : unit =
  * in the game [state]
  * returns: unit
  *)
-let draw_entities context scene = 
+let draw_entities context scene =
   (* Draw towers *)
-  Array.iter (fun t -> 
+  Array.iter (fun t ->
     (* Add glow *)
     let _ = if List.mem t.twr_id scene.highlight_towers then
       draw_image context "images/towers/selector.png" (Physics.add_vector2d t.twr_pos t.selector_offset) (100.,100.) {w=t.twr_size.w;h=t.twr_size.w};
@@ -122,7 +122,7 @@ let draw_entities context scene =
     draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
   ) (scene.state.towers);
   (* Draw troops *)
-  List.iter (fun mvmt -> 
+  List.iter (fun mvmt ->
     let vec = Physics.get_movement_coord mvmt scene.state in
     let fs = 15. in
     let x = vec.x +. 50./.2. -. (fs) in
@@ -144,7 +144,7 @@ let draw_entities context scene =
  * while taking into considering their [ui_state]
  * returns: unit
  *)
-let draw_ui context scene = 
+let draw_ui context scene =
   List.iter (fun (id, ui_elmt) ->
     match !ui_elmt with
     | Button (btn_prop, pos, size) -> begin
@@ -164,7 +164,7 @@ let draw_ui context scene =
     | Panel (sprite, pos, size) -> begin
         draw_sprite_sheet context sprite pos size;
         ()
-      end 
+      end
   ) scene.interface;
   ()
 

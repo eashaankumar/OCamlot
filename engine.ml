@@ -34,7 +34,7 @@ let init_state = {
   towers = [| tower_base_player; tower_base_enemy;
     (* Neutral *)
     {
-      twr_id = 3;
+      twr_id = 2;
       twr_pos = {x=300.;y=200.};
       twr_size = {w=50.;h=85.} ;
       twr_sprite = Sprite.tower_type1 ;
@@ -46,7 +46,7 @@ let init_state = {
     };
     (*  *)
     {
-      twr_id = 2;
+      twr_id = 3;
       twr_pos = {x=Renderer.width-.300.;y=Renderer.height-.200.};
       twr_size = {w=50.;h=85.} ;
       twr_sprite = Sprite.tower_type1 ;
