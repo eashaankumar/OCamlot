@@ -1,13 +1,17 @@
 open Types
 open Sprite
 
+(* represents the tower a is pressed on and released at
+ *)
 type to_from = {
   mutable to_tower : int option;
   mutable from_tower : int option;
 }
 
+(* used to determine the start and end towers of a move command. *)
 let destination = {to_tower = None; from_tower = None}
 
+(* initializes a movement with no progress. *)
 let new_movement ts_index te_index troops sprite side = {
   start_tower = ts_index;
   end_tower  = te_index;
@@ -151,7 +155,6 @@ let new_state st (c : command) =
           end
     end
     | Null -> st
-(**)
 
 (**
  * [update_troop_count tower] updates the troop count in [tower]
@@ -160,7 +163,8 @@ let new_state st (c : command) =
 let update_troop_count tower =
   match tower.twr_team with
   | Neutral -> 0.
-  | _ -> begin
+  | _ ->
+    begin
       let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
       if dir = 0 then
         tower.twr_troops_max
@@ -169,6 +173,7 @@ let update_troop_count tower =
       else
         tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta *. 2.
     end
+
 
 let new_state_plus_delta st c d =
   let st' = new_state st c in
@@ -252,7 +257,7 @@ let new_state_plus_delta st c d =
 let gameover st =
   st.player_score >= st.num_towers || st.enemy_score >= st.num_towers
 
-(* Helpers for update *)
+
 let update sc input =
   let command = ref Null in (* Dummy Command *)
   let updated_towers =
