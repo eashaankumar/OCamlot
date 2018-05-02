@@ -1,32 +1,32 @@
 open Types
 
-(* [possible] moves is an array of [command] instances which
-   denotes all of the moves that a player with a given
-   allegiance can make at the time of the function call.
+(* [possible_moves st team] is an array of [command] instances denoting
+   all of the moves that a player with allegiance [team] can make in state [st].
 *)
 val possible_commands : state -> allegiance -> command array
 
-(*
- * [new_state] is the state that is created by applying
- * a command to a state. The returned state is entirely
- * separate from the input state.
-*)
+(* [new_state st c] returns a state representing the
+   instantaneous changes that can be made based on
+   command [c] and initializes any commands that require
+   time.
+ *)
 val new_state : state -> command -> state
 
 (*
- * [new_state_plus_delta] is the state that is created by
- * applying a command to a state and then waiting [delta]
+ * [new_state_plus_delta st c d] is the state that is created by
+ * applying command [c] to a state and then waiting [d]
  * seconds. This allows the current movements to progress.
 *)
 val new_state_plus_delta : state -> command -> float -> state
 
 (**
- * [gameover] takes in a state and returns a boolean value
- * denoting whether the game is over or not
+ * [gameover st] is true iff the game is over in state [st].
 *)
 val gameover : state -> bool
 
-(* [update st ipt] is [new_state st c] where [c] is the command
-   that [ipt] corresponds to.
+(* [update sc ipt] take state [st] from [sc] and creates a [st']
+   by ticking animation sprites once. It then creates the
+   appropriate command [c] based on input [ipt]. The entire result
+   is new_state_plus_delta [st' c d] where [d] is from Renderer.
 *)
 val update : scene -> input -> state

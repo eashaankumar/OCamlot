@@ -12,7 +12,7 @@ type bounds = {
   h : float
 }
 
-
+(* represents the box (or frame) surrounding an animation. *)
 type animation_frame = {
   offset : vector2d;
   bounds : bounds
@@ -27,19 +27,19 @@ type sprite = {
   img: Html.imageElement Js.t;
   index: int;
   time_delay: float;
-  curr_time: float;
+  curr_time: float
 }
 
 (* [allegiance] denotes which side owns troop movements and towers.
-   There are two categories in allegiance, one for each side
 *)
 type allegiance =
   | Player
   | Enemy
   | Neutral
 
-(* [tower] contains information about its id, positiion, sprite image,
-   number of troops, and current allegiance/team.
+(* [tower] contains information about its id, positiion, bounds, sprite image,
+   number of troops, maximum number of troops, troop regeneration speed,
+   and current allegiance/team.
 *)
 type tower = {
   twr_id : int ;
@@ -53,12 +53,8 @@ type tower = {
   selector_offset : vector2d;
 }
 
-(* [movement] contains all the information of the following:
-   - [sprite]
-   - start tower, a [tower]
-   - end tower, a [tower]
-   - number of troops
-   - [allegiance] of the troops
+(* [movement] represents the sending of troops, with some progress towards
+   its final destintion.
  *)
   type movement = {
   start_tower : int;
@@ -67,20 +63,24 @@ type tower = {
   mvmt_sprite : sprite;
   mvmt_team : allegiance;
   progress : float
-      }
+  }
 
+(* represents the state of the mouse.
+*)
 type mouse_state =
   | Pressed
   | Released
   | Moved
 
+(* represents the player's input
+ *)
 type input = {
   mouse_pos : vector2d;
   mouse_state : mouse_state;
 }
 
  (* UI *)
-type color = {r:int;g:int;b:int}
+type color = {r : int; g : int; b : int}
 
 type button_state =
   | Disabled (* 2 *)

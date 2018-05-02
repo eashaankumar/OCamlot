@@ -259,18 +259,14 @@ let update sc input =
     begin
       Array.map (fun t ->
         (* Check if mouse is over this tower and pressed *)
-        let _ =
         begin
           match input.mouse_state with
           (* Tower to be highlighted *)
           | Pressed ->
             begin
-              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
-                print_endline "Selected From tower";
+              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then
                 destination.from_tower <- Some t.twr_id;
-                sc.highlight_towers <- t.twr_id::sc.highlight_towers ;
-              );
-              ()
+                sc.highlight_towers <- t.twr_id::sc.highlight_towers
             end
           (* Remove towers from list *)
           | Released ->
@@ -278,30 +274,23 @@ let update sc input =
               (* unhighlight all towers *)
               sc.highlight_towers <- [];
               (* End tower *)
-              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+              if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then
                 destination.to_tower <- Some t.twr_id;
-
                 (* Create new Command *)
-                let _ = begin
+                begin
                   match (destination.from_tower, destination.to_tower) with
                   | (Some(a),Some(b)) ->
                     begin
                       command := Move (Player, a,b);
                       (* Reset destination *)
                       destination.from_tower <- None;
-                      destination.to_tower <- None;
+                      destination.to_tower <- None
                     end
-                  | _ ->
-                    begin
-                      ()
-                    end
-                end in
-                ()
-              );
-              ()
+                  | _ -> ()
+                end
             end
           | Moved -> ()
-        end in
+        end;
         (* Update troop sprite *)
         let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
         (* Update troop count *)
