@@ -22,7 +22,6 @@ let new_movement ts_index te_index troops sprite side = {
   to the speed of the troops and the distance from one tower
   to the next*)
 let update_movement mvmt delta st =
-  print_endline ("Updating movement: " ^ (string_of_float mvmt.progress));
   let ts_index = mvmt.start_tower in
   let te_index = mvmt.end_tower in
   let ts = st.towers.(ts_index) in
@@ -61,7 +60,7 @@ let possible_commands st side =
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
 *)
-let new_state st (c:command) =
+let new_state st (c : command) =
   match c with
   | Move (team,start,finish) -> begin
       let ts = st.towers.(start) in
@@ -76,26 +75,27 @@ let new_state st (c:command) =
             begin
               (*If you're keeping some of the same attributes of
                 ts then you don't need to re-assign the values*)
-              { ts with
-                twr_sprite = ts.twr_sprite;
-                twr_troops = begin
-                  let half = int_of_float (ts.twr_troops/. 2.) in
-                  if half <= 0 then ts.twr_troops else
-                    let net = ts.twr_troops -. (float_of_int half) in
-                  mvmt_troop_count := half;
-                  net
-                end;
+              {ts with
+                twr_troops =
+                  begin
+                    let half = int_of_float (ts.twr_troops /. 2.) in
+                    mvmt_troop_count := half;
+                    if half <= 0 then ts.twr_troops else
+                    ts.twr_troops -. (float_of_int half)
+                  end;
               }
             end in
           (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
           let new_mvmt = new_movement
               start finish !mvmt_troop_count Sprite.troops_example_exprite ts_team_original in
 
-          { st with
-            towers = begin
-              let new_towers = Array.copy st.towers in
+          {st with
+           towers = begin
+             (*let new_towers = Array.copy st.towers in
               new_towers.(start) <- ts';
-              new_towers
+               new_towers*)
+             st.towers.(start) <- ts';
+             st.towers
             end;
             movements = new_mvmt::(st.movements)
           }
