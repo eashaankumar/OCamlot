@@ -95,8 +95,8 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
 let stat_board_sprite = init_sprite "images/stat_bar.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
 
-let troops_example_exprite = init_sprite "images/test_spritesheet.png" 0.1
+let troops_example_exprite = init_sprite "images/test_spritesheet.png" 0.5
                   |> add_animation_frame (0.,0.) (255.,360.)
-                  |> add_animation_frame (255.,0.) (255.,360.)
-                  |> add_animation_frame (510.,0.) (255.,360.)
-                  |> add_animation_frame (765.,0.) (255.,360.)
+                  |> add_animation_frame (255.,0.) (210.,360.)
+                  |> add_animation_frame (465.,0.) (201.,360.)
+                  |> add_animation_frame (666.,0.) (222.,360.)
