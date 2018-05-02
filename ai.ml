@@ -1,7 +1,14 @@
 open Types
 open State
 
-module MiniMax_AI = struct
+module type AI = sig
+
+  val get_move : Types.state -> Types.command
+
+end
+
+
+module MiniMax_AI : AI = struct
 
   let delta = 0.1
   let max_depth = 3
@@ -37,7 +44,7 @@ module MiniMax_AI = struct
   	else
   	if (side = original_side) (*If it's a max state*) then
       let value = minV in
-      let moves = State.possible_moves st side in
+      let moves = State.possible_commands st side in
 
   		let rec loop m loop_max v =
   			let this_move = Array.get moves m in
@@ -67,7 +74,7 @@ module MiniMax_AI = struct
 
   	else (*If it's a min state*)
   		let value = maxV in
-  		let moves = State.possible_moves st side in
+      let moves = State.possible_commands st side in
   		let rec loop m loop_max v=
   			let this_move = Array.get moves m in
   			let new_st = State.new_state_plus_delta st this_move delta in
@@ -98,7 +105,7 @@ module MiniMax_AI = struct
   let get_move st =
     let best_move = ref Null in
     let best_score = ref (0.0 -. max_float) in
-    let moves = State.possible_moves st Enemy in
+    let moves = State.possible_commands st Enemy in
     let num_moves = Array.length moves in
     for move=0 to (num_moves-1) do
       let this_move = (Array.get moves move) in
@@ -113,7 +120,7 @@ module MiniMax_AI = struct
 
 end
 
-module MCTS_AI = struct
+module MCTS_AI : AI = struct
   (*Time-step*)
   let delta = 0.1
   (*Constant in front of the MTCS value function*)
@@ -130,16 +137,34 @@ module MCTS_AI = struct
     | Leaf of command * float
     | Node of Types.state * command * float * float * ((tree ref) array) * tree ref * bool
 
-
+(**
+ * [to_allegiance] is the allegiance value associated with
+      a max or min node
+   [max_bool] - if it's a max node then true else false
+ *)
   let to_allegiance max_bool =
     if max_bool then Enemy else Player
 
+(**
+ * [get_random_command] returns a completely random legal
+      move for the team with a given allegiance
+   [st] - the state from which to get legal moves
+   [allegiance] - the team that's going to move
+ *)
   let get_random_command st allegiance =
-    let commands = possible_moves st allegiance in
+    let commands = possible_commands st allegiance in
     let range = Array.length commands in
     let index = Random.int range in
     Array.get commands index
 
+(**
+ * [random_playout] is a the result of a random game
+      starting from [st] with the first move being a
+      max move if [max_bool] is true, else it's a
+      min move
+   [st] - the starting state
+   [max_bool] - whether or not the first move is a max node
+ *)
   let rec random_playout st max_bool =
     if State.gameover st then
       if st.player_score > st.enemy_score then
@@ -156,11 +181,22 @@ module MCTS_AI = struct
         let new_state = new_state_plus_delta st cm delta in
         random_playout new_state true
 
+(**
+ * [get_times_sampled] is a getter function that returns the
+      number of times sub-tree [t] has been played out
+   [t] - the sub-tree in question
+ *)
   let get_times_sampled t =
     match t with
     | Node(st,cm,v,n,children,parent,_) -> n
     | Leaf _ -> 1.0 (*so that when log doesn't blow up*)
 
+(**
+ * [get_value] is the value of the tree [t] used for determining
+      which node to be selected next
+   [t] - the sub-tree in question
+   [is_max] - whether or not the root of [t] is a max node
+ *)
   let get_value t is_max =
     match t with
     | Leaf (_,v)-> 10000.0
@@ -171,10 +207,22 @@ module MCTS_AI = struct
           (1.0-.v) +. c *.sqrt (log (get_times_sampled !parent))/.n
       end
 
+(**
+ * [create_children] is an array of Leaf values, one for each
+      possible command starting from a given state
+   [st] - the state from which to get the possible commands
+   [allegiance] - the team whose turn it is
+ *)
   let create_children st allegiance =
-    let moves = possible_moves st allegiance in
+    let moves = possible_commands st allegiance in
     Array.map (fun cm -> ref (Leaf (cm,10000.0))) moves
 
+(**
+ * [get_extreme_child] is the next node to be chosen based on
+      the value of the nodes
+   [node] - the node whose children nodes are chosen from
+   [is_max] - whether node is a max node
+ *)
   let get_extreme_child node is_max =
     let func = if is_max then (>) else (<) in
     let children,is_max =
@@ -185,6 +233,12 @@ module MCTS_AI = struct
       (fun acc child -> if (func (get_value !child is_max) (get_value !acc is_max)) then child else acc)
       (Array.get children 0) children
 
+(**
+ * [update_node] updates the value of [node] depending on the
+      results of a random playout [win_loss]
+   [node] - the node to update
+   [win_loss] - the win-value of the random playout (loss:0,win:1)
+ *)
   let update_node node win_loss =
     match !node with
     | Node(st,cm,v,n,children,parent,is_max) -> begin
@@ -192,6 +246,12 @@ module MCTS_AI = struct
       end
     | Leaf _ -> ()
 
+(**
+ * [update_tree] recursively updates the current node [node] and
+      all parent nodes with a random playout result
+   [node] - the bottom node to be updated
+   [win_loss] - the win-value of the random playout (loss:0,win:1)
+ *)
   let rec update_tree node win_loss =
     match !node with
     | Node(st,cm,v,n,children,parent,is_max) -> begin
@@ -200,6 +260,13 @@ module MCTS_AI = struct
       end
     | Leaf _ -> ()
 
+(**
+ * [new_node] is a new node created after selecting a command
+      [cm] from the best available node.
+   [node] - the parent node for the new node
+   [cm] - the command to go from the old state in [node] to
+      the new state in [new_node]
+ *)
   let new_node node cm =
     match !node with
     | Node(st,cm,v,n,children,parent,is_max) ->
@@ -210,21 +277,37 @@ module MCTS_AI = struct
                 create_children st (to_allegiance (not is_max)), node, not is_max))
     | Leaf _ -> node
 
+(**
+ * [beginning_node] is the root node of the entire tree
+   [st] - the beginning state of the tree
+ *)
   let beginning_node st =
     let children = create_children st Enemy in
     ref (Node(st,Null,0.0,0.0,children,ref (Leaf(Null,1.0)),true))
 
-  let rec add_path t = begin
-    match !t with
-    | Node(st,cm,v,n,children,parent,is_max) -> begin
-        let ex_child = get_extreme_child t is_max in
-        match !ex_child with
-        | Node _ -> add_path ex_child
-        | Leaf (cm,_) -> ex_child := !(new_node t cm)
-      end
-    | Leaf _ -> ()
-  end
+(**
+ * [add_path] creates a new random playout, creates a new node
+      and updates all relevant nodes.
+   [t] - the root node of the tree to add a playout to
+ *)
+  let rec add_path t =
+    begin
+      match !t with
+      | Node(st,cm,v,n,children,parent,is_max) -> begin
+          let ex_child = get_extreme_child t is_max in
+          match !ex_child with
+          | Node _ -> add_path ex_child
+          | Leaf (cm,_) -> ex_child := !(new_node t cm)
+        end
+      | Leaf _ -> ()
+    end
 
+(**
+ * [create_tree] instantiates a new tree starting with state and
+      runs [iters] number of [add_path] commands to it to form the tree
+   [st] - the starting state of the tree
+   [iters] - the number of times to [add_path]
+ *)
   let create_tree st iters =
     let root = beginning_node st in
     let counter = ref 0 in
@@ -233,11 +316,20 @@ module MCTS_AI = struct
     done;
     root
 
+(**
+ * [win_pctg] gets the win percentage for the give node
+   [node] - the aformentioned node
+ *)
   let win_pctg node =
     match !node with
     | Node(st,cm,v,n,children,parent,is_max) -> v
     | Leaf _ -> 0.0
 
+(**
+ * [get_highest_percentage] is the child node with the highest
+      win percentage
+   [node] - the parent node whose best child node will be returned
+ *)
   let get_highest_percentage node =
     let func = (>) in
     let children =
