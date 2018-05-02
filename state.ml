@@ -91,7 +91,7 @@ let new_state st (c : command) =
 
           {st with
            towers = begin
-             (*let new_towers = Array.copy st.towers in
+             (* let new_towers = Array.copy st.towers in
               new_towers.(start) <- ts';
                new_towers*)
              st.towers.(start) <- ts';
