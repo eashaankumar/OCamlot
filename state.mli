@@ -21,14 +21,21 @@ val new_state_plus_delta : state -> command -> float -> state
 
 (**
  * [check_transition sc] checks if the current scene [sc] has ended.
- * A scene is determined to have "ended" based on button clicks in the 
- * scene's interface or game logic in its state. If [sc] has ended, 
+ * A scene is determined to have "ended" based on button clicks in the
+ * scene's interface or game logic in its state. If [sc] has ended,
  * the scene's [next] field will be set to the next scene the game must
- * transition to. 
+ * transition to.
  * returns: [scene] with the next optional scene to transition to
  * effects: [sc]
  *)
 val check_transition : scene -> scene
+
+(**
+ * [gameover] is a boolean value that denotes whether the game
+      represented by [st] has been completed.
+   [st] - the instance of state in question
+ *)
+val gameover : state -> bool
 
 (* [update sc ipt] take state [st] from [sc] and creates a [st']
    by ticking animation sprites once. It then creates the

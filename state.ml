@@ -56,10 +56,41 @@ let get_scores st =
     (0,0) st.towers
 
 
+
 (****** Helpers ******)
 
 let possible_commands st side =
-  failwith "Not implemented"
+  let side_twr_list = (Array.fold_left
+      (fun acc e -> if e.twr_team = side then e.twr_id::acc else acc)
+      [] st.towers) in
+
+  let total_twr_list = (Array.fold_left
+      (fun acc e -> e.twr_id::acc)
+      [] st.towers) in
+
+  let rec f lst1 lst2 acc1 =
+    let rec g l1 l2 acc2 =
+      match l1,l2 with
+      | [],_ -> acc2
+      | _,[] -> acc2
+      | h1::t1,h2::t2 -> g t1 l2 ((h1,h2)::acc2) in
+    match lst2 with
+    | [] -> acc1
+    | h::t -> f lst1 t ((g lst1 lst2 [])@acc1) in
+
+  let indices_list =
+    List.filter (fun (h,t) -> h<>t) (f side_twr_list total_twr_list []) in
+
+  let move_list = List.map (fun (h,t) -> Move(side,h,t)) indices_list in
+
+  Array.of_list move_list
+
+
+
+
+
+
+
 
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
