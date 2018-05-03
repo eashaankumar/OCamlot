@@ -3,7 +3,7 @@ open Types
 (* Public *)
 
 let width = 1080.
-let height = 720.
+let height = 680.
 
 let time = ref 0.
 let fps = ref 0
