@@ -69,7 +69,7 @@ let new_state st (c : command) =
   | Move (team,start,finish) -> begin
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
-      if ts_team_original = Neutral then (
+      if ts_team_original = Neutral || start = finish then (
         st
       ) else
         begin
@@ -92,17 +92,16 @@ let new_state st (c : command) =
           (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
           let new_mvmt = new_movement
               start finish !mvmt_troop_count Sprite.troops_example_exprite ts_team_original in
-
+          let new_towers =
+            Array.mapi (fun i e -> if i = start then ts' else e) st.towers in
           {st with
            towers = begin
-             (* let new_towers = Array.copy st.towers in
-              new_towers.(start) <- ts';
-               new_towers*)
-             st.towers.(start) <- ts';
-             st.towers
+             new_towers
+             (*st.towers.(start) <- ts';
+               st.towers*)
             end;
             movements = new_mvmt::(st.movements)
-          }
+                  }
         end
     end
   | Skill (team,{mana_cost = mp; effect; side}, tower) -> begin
@@ -185,7 +184,6 @@ let new_state_plus_delta st c d =
       | h::t -> mvmtlst t ((update_movement h d st)::acc) in
     mvmtlst st.movements []
   end in *)
-  print_endline (string_of_int (List.length mvmts));
   let temp_state =
     {st' with
       towers = List.fold_left (fun acc e ->
@@ -236,9 +234,10 @@ let new_state_plus_delta st c d =
                 end
             ) in acc
           end
-      ) (Array.copy st.towers) mvmts;
+      ) (Array.copy st'.towers) mvmts;
     movements = List.filter (fun m -> m.progress < 1.) mvmts;
-  } in
+    } in
+
   let (pl_score, en_score) = get_scores temp_state in
 
   {temp_state with
@@ -261,6 +260,10 @@ let check_transition sc : scene =
   );
   sc
 
+let gameover st =
+  st.player_score = 0 || st.enemy_score = 0
+
+
 let update sc input =
   let command = ref Null in (* Dummy Command *)
   (* Tick troop sprites *)
@@ -275,26 +278,26 @@ let update sc input =
       ) sc.state.towers
     end in
   (* Tower selection *)
-  let _ = 
+  let _ =
   begin
     match input.mouse_state with
-    | Pressed -> 
+    | Pressed ->
       begin
         (* Find selected tower *)
-        Array.iter(fun t -> 
-          if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then( 
+        Array.iter(fun t ->
+          if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then(
             sc.highlight_towers <- t.twr_id::sc.highlight_towers;
             destination.from_tower <- Some t.twr_id;
           )
         ) sc.state.towers;
         ()
       end
-    | Released -> 
+    | Released ->
       begin
         (* Unhighlight all towers *)
         sc.highlight_towers <- [];
         (* Create movement *)
-        Array.iter (fun t -> 
+        Array.iter (fun t ->
           if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
             destination.to_tower <- Some t.twr_id;
             (* Create new Command *)
@@ -311,7 +314,7 @@ let update sc input =
         destination.to_tower <- None;
         ()
       end
-    | Moved -> 
+    | Moved ->
       begin
         ()
       end
