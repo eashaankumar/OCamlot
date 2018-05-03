@@ -49,6 +49,10 @@ let fps_label = Label ({text="0";color={r=255;g=20;b=147};font_size=20},
                        {x=Renderer.width-.30.;y=30.;},
                        {w=30.;h=30.})
 
+let gameover_label = Label ({text="Game Over";color={r=0;g=0;b=0};font_size=40},
+                       {x=Renderer.width/.2. -. 80.;y=100.;},
+                       {w=160.;h=40.})
+
 let menu_button1 = Button ({btn_state = Neutral; btn_sprite = Sprite.menu_btn_sprite1},
                            {x=600.;y=100.},
                            {w=Sprite.menu_btn_sprite1.frames.(0).bounds.w;

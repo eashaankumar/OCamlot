@@ -254,9 +254,12 @@ let new_state_plus_delta st c d =
   }
 
 
-let gameover st =
-  st.player_score >= st.num_towers || st.enemy_score >= st.num_towers
-
+let check_transition sc : scene =
+  if sc.state.player_score = 0 || sc.state.enemy_score = 0 then (
+    print_endline "GameOver";
+    sc.next <- Some "Game Over";
+  );
+  sc
 
 let update sc input =
   let command = ref Null in (* Dummy Command *)

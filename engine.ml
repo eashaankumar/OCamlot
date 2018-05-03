@@ -94,7 +94,8 @@ let game_scene = {
 
 let game_over_scene = {
   state = empty_state;
-  interface = [("fps",ref Ui.fps_label)];
+  interface = [("fps",ref Ui.fps_label);
+               ("game_over",ref Ui.gameover_label)];
   input = init_input;
   highlight_towers = [];
   next = None;
@@ -219,6 +220,7 @@ let game_loop context running =
     scene.interface <- Ui.tick scene.interface scene.input;
     scene.state <- State.update scene scene.input;
     Renderer.render context scene;
+    scene = State.check_transition scene;
     current_scene := scene;
     ignore (
       Html.window##requestAnimationFrame(
