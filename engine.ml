@@ -60,16 +60,18 @@ let init_state = {
   num_towers = 0 ;
   player_score = 0 ;
   enemy_score = 0 ;
-  movements = [
-    (*{
-      start_tower = 0;
-      end_tower = 2;
-      mvmt_troops = 10;
-      mvmt_sprite = Sprite.tower_type1;
-      mvmt_team = Player;
-      progress = 0.;
-    }*)
-  ] ;
+  movements = [] ;
+  player_mana = 0 ;
+  enemy_mana = 0;
+}
+
+(* Generic empty state *)
+let empty_state = {
+  towers = [||];
+  num_towers = 0 ;
+  player_score = 0 ;
+  enemy_score = 0 ;
+  movements = [] ;
   player_mana = 0 ;
   enemy_mana = 0;
 }
@@ -80,14 +82,30 @@ let init_input = {
   mouse_state = Moved;
 }
 
-(* Initialize scene *)
-let scene = {
+(* Initialize scenes *)
+let game_scene = {
   state = init_state;
   interface = [("fps",ref Ui.fps_label);
                ("Start", ref Ui.menu_button1);];
   input = init_input;
-  highlight_towers = []
+  highlight_towers = [];
+  next = None;
 }
+
+let game_over_scene = {
+  state = empty_state;
+  interface = [("fps",ref Ui.fps_label)];
+  input = init_input;
+  highlight_towers = [];
+  next = None;
+}
+
+let scene_dict = [
+  ("Game", game_scene);
+  ("Game Over", game_over_scene);
+]
+
+let current_scene = ref game_scene
 
 (* Pref mouse state *)
 let prev_mouse_state = ref Moved
@@ -98,6 +116,7 @@ let canvas = ref ( Html.createCanvas document )
 (****** Helpers ******)
 let print_mouse_input () =
   (*print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");*)
+  let scene = !current_scene in
   match scene.input.mouse_state with
   | Pressed -> "Pressed "
   | Released -> "Released "
@@ -111,6 +130,7 @@ let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) =
 
 let enforce_one_frame_mouse () =
   print_endline (print_mouse_input ());
+  let scene = !current_scene in
   let new_mouse_state = begin
     match !prev_mouse_state with
     | Pressed -> begin
@@ -152,25 +172,54 @@ let key_released event =
 
 let mouse_pressed (event:Dom_html.mouseEvent Js.t) =
   let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
   scene.input <- {mouse_pos = pos; mouse_state = Pressed;};
+  current_scene := scene;
   Js._true
 
 let mouse_released event =
   let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
   scene.input <- {mouse_pos = pos; mouse_state = Released;};
+  current_scene := scene;
   Js._true
 
 let mouse_move event =
   let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
   scene.input <- {mouse_pos = pos; mouse_state = Moved;};
+  current_scene := scene;
   Js._true
+
+(**
+ * [scene_transition unit] transitions [current_scene] to [next] scene.
+ * returns: [unit]
+ * effects: [current_scene]
+ *)
+let scene_transition () = 
+  let scene = !current_scene in
+  let _ = 
+    begin
+      match scene.next with
+      | None -> ()
+      | Some(nxt) -> 
+        begin
+          let next_scene = List.assoc nxt scene_dict in
+          current_scene := next_scene;
+          ()
+        end
+    end in
+  ()
 
 let game_loop context running =
   let rec helper () =
+    scene_transition ();
+    let scene = !current_scene in
     scene.input <- enforce_one_frame_mouse ();
     scene.interface <- Ui.tick scene.interface scene.input;
     scene.state <- State.update scene scene.input;
     Renderer.render context scene;
+    current_scene := scene;
     ignore (
       Html.window##requestAnimationFrame(
         Js.wrap_callback (fun t ->

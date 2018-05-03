@@ -128,4 +128,5 @@ type scene = {
   mutable interface : interface;
   mutable input : input;
   mutable highlight_towers : int list;
+  mutable next : string option;
 }
