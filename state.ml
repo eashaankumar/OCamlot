@@ -83,7 +83,7 @@ let possible_commands st side =
 
   let move_list = List.map (fun (h,t) -> Move(side,h,t)) indices_list in
 
-  Array.of_list move_list
+  Array.of_list (move_list)
 
 
 

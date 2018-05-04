@@ -122,7 +122,7 @@ end
 
 module MCTS_AI : AI = struct
   (*Time-step*)
-  let delta = 0.1
+  let delta = 0.8
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
@@ -283,7 +283,7 @@ module MCTS_AI : AI = struct
  *)
   let beginning_node st =
     let children = create_children st Enemy in
-    ref (Node(st,Null,0.0,0.0,children,ref (Leaf(Null,1.0)),true))
+    ref (Node(st,Null,0.0,0.0,children,ref (Leaf(Null,1.)),true))
 
 (**
  * [add_path] creates a new random playout, creates a new node
@@ -313,6 +313,7 @@ module MCTS_AI : AI = struct
     let counter = ref 0 in
     while !counter < iters do
       add_path root;
+      counter := !counter + 1
     done;
     root
 
@@ -336,6 +337,7 @@ module MCTS_AI : AI = struct
       match !node with
       | Node(_,_,_,_,chldrn,_,_) -> chldrn
       | Leaf _ -> [||] in
+    print_endline ("Children length: "^(string_of_int (Array.length children)));
     Array.fold_left
       (fun acc child -> if (func (win_pctg child) (win_pctg acc)) then child else acc)
       (Array.get children 0) children
@@ -343,6 +345,7 @@ module MCTS_AI : AI = struct
   let get_move st =
     let t = create_tree st iterations in
     let child = get_highest_percentage t in
+    print_endline ("Win %: "^(string_of_float (win_pctg child)));
     match !child with
     | Node(_,cm,_,_,_,_,_) -> cm
     | Leaf(cm,_) -> cm

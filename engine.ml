@@ -1,4 +1,5 @@
 open Types
+open Ai
 
 module Html = Dom_html
 let js = Js.string
@@ -10,7 +11,7 @@ let tower_base_player = {
   twr_pos = {x=0.;y=0.};
   twr_size = {w=80.;h=136.} ;
   twr_sprite = Sprite.tower_base;
-  twr_troops = 0.;
+  twr_troops = 4.;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
   twr_team = Player;
@@ -22,7 +23,7 @@ let tower_base_enemy = {
   twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.136.};
   twr_size = {w=80.;h=136.} ;
   twr_sprite = Sprite.tower_base ;
-  twr_troops = 0. ;
+  twr_troops = 10. ;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
   twr_team = Enemy;
@@ -38,7 +39,7 @@ let init_state = {
       twr_pos = {x=300.;y=200.};
       twr_size = {w=50.;h=85.} ;
       twr_sprite = Sprite.tower_type1 ;
-      twr_troops = 30. ;
+      twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = 1.;
       twr_team = Neutral;
@@ -197,13 +198,13 @@ let mouse_move event =
  * returns: [unit]
  * effects: [current_scene]
  *)
-let scene_transition () = 
+let scene_transition () =
   let scene = !current_scene in
-  let _ = 
+  let _ =
     begin
       match scene.next with
       | None -> ()
-      | Some(nxt) -> 
+      | Some(nxt) ->
         begin
           let next_scene = List.assoc nxt scene_dict in
           current_scene := next_scene;
@@ -213,6 +214,19 @@ let scene_transition () =
   ()
 
 let game_loop context running =
+  let start = Sys.time () in
+  let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
+  let finish = Sys.time () in
+  print_endline (string_of_float (finish -. start));
+  let (b,c) =
+    match cm with
+    | Move (x,y,z) -> (y,z)
+    | _ -> (-1,-1) in
+  print_endline ("Start: "^(string_of_int b));
+  current_scene :=
+    {!current_scene with
+     state = State.new_state_plus_delta
+         !current_scene.state cm !Renderer.delta};
   let rec helper () =
     scene_transition ();
     let scene = !current_scene in

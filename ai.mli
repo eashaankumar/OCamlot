@@ -15,3 +15,7 @@ module type AI = sig
   val get_move : Types.state -> Types.command
 
 end
+
+module MCTS_AI : AI
+
+module MiniMax_AI : AI
