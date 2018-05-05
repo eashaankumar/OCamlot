@@ -122,11 +122,13 @@ end
 
 module MCTS_AI : AI = struct
   (*Time-step*)
-  let delta = 0.8
+  let delta = 1.8
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
-  let iterations = 100
+  let iterations = 400
+
+  let max_random_iters = ref 100
 
   (* fraction of wins, number of times played, daughter nodes,
    * commands that got here, possible commands from here*)
@@ -162,24 +164,27 @@ module MCTS_AI : AI = struct
       starting from [st] with the first move being a
       max move if [max_bool] is true, else it's a
       min move
-   [st] - the starting state
-   [max_bool] - whether or not the first move is a max node
+   [st'] - the starting state
+   [max_bool'] - whether or not the first move is a max node
  *)
-  let rec random_playout st max_bool =
-    if State.gameover st then
-      if st.player_score > st.enemy_score then
-        0.0
+  let random_playout st' max_bool' =
+    let rec rand_w_iters st max_bool iters =
+      if iters > !max_random_iters then 0.4 +. (Random.float 0.2) else
+      if State.gameover st then
+        if st.player_score > st.enemy_score then
+          0.0
+        else
+          1.0
       else
-        1.0
-    else
-      if max_bool then
-        let cm = get_random_command st Enemy in
-        let new_state = new_state_plus_delta st cm delta in
-        random_playout new_state false
-      else
-        let cm = get_random_command st Player in
-        let new_state = new_state_plus_delta st cm delta in
-        random_playout new_state true
+        if max_bool then
+          let cm = get_random_command st Enemy in
+          let new_state = new_state_plus_delta st cm delta in
+          rand_w_iters new_state false (iters + 1)
+        else
+          let cm = get_random_command st Player in
+          let new_state = new_state_plus_delta st cm delta in
+          rand_w_iters new_state true (iters+1) in
+    rand_w_iters st' max_bool' 0
 
 (**
  * [get_times_sampled] is a getter function that returns the
@@ -269,12 +274,12 @@ module MCTS_AI : AI = struct
  *)
   let new_node node cm =
     match !node with
-    | Node(st,cm,v,n,children,parent,is_max) ->
-      let new_st = new_state_plus_delta st cm delta in
+    | Node(old_st,old_cm,v,n,children,parent,is_max) ->
+      let new_st = new_state_plus_delta old_st cm delta in
       let rand_play = random_playout new_st is_max in
-      update_tree parent rand_play;
+      update_tree node rand_play;
       ref (Node(new_st, cm, rand_play, 0.0,
-                create_children st (to_allegiance (not is_max)), node, not is_max))
+                create_children old_st (to_allegiance (not is_max)), node, not is_max))
     | Leaf _ -> node
 
 (**
@@ -332,7 +337,10 @@ module MCTS_AI : AI = struct
    [node] - the parent node whose best child node will be returned
  *)
   let get_highest_percentage node =
-    let func = (>) in
+    (*The line below is strictly to settle ties in a random way. The added
+      values are small enough to be within the margin of error and will not
+      make the algorithm choose a clearly worse move*)
+    let func a b = (a +. (Random.float 0.00001) > b +. (Random.float 0.00001)) in
     let children =
       match !node with
       | Node(_,_,_,_,chldrn,_,_) -> chldrn
@@ -342,8 +350,41 @@ module MCTS_AI : AI = struct
       (fun acc child -> if (func (win_pctg child) (win_pctg acc)) then child else acc)
       (Array.get children 0) children
 
+  let move_to_string cm =
+    match cm with
+    | Move (team,s,e) -> let team_str =
+      match team with
+        | Enemy -> "Enemy"
+        | Player -> "Player"
+        | Neutral -> "Neutral" in
+      team_str ^ " " ^ (string_of_int s) ^ " " ^ (string_of_int e)
+    | _ -> "Null/skill"
+
+  let get_cm t =
+    match !t with
+    | Node(st,cm,v,n,children,parent,is_max) -> cm
+    | Leaf (cm,v) -> cm
+
+  let to_string t =
+    let str = "" in
+    let to_str_node n=
+      match n with
+      | Node(st,cm,v,n,children,parent,is_max) ->
+        (move_to_string cm)^ "; " ^ "Value: " ^ (string_of_float v) ^
+        "; " ^ "Is max? " ^ (string_of_bool is_max) ^ "\n"
+      | Leaf _ -> "Leaf\n" in
+    let str = str ^ to_str_node t in
+    let chldrn =
+      match t with
+      | Node(st,cm,v,n,children,parent,is_max) -> children
+      | Leaf _ -> [||] in
+    let str = str ^ (Array.fold_left (fun acc e -> acc^(move_to_string (get_cm e))^"; ") "" chldrn) ^ "\n\n" in
+    let str = str ^ (Array.fold_left (fun acc e -> acc^(to_str_node !e)) "" chldrn) in
+    str
+
   let get_move st =
     let t = create_tree st iterations in
+    print_endline (to_string !t);
     let child = get_highest_percentage t in
     print_endline ("Win %: "^(string_of_float (win_pctg child)));
     match !child with
