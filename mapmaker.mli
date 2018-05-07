@@ -9,3 +9,17 @@ open Types
  * returns: next [state]
  *)
 val next_state : unit -> state
+
+(**
+ * [all_states_completed unit] checks if all levels have been completed.
+ * This means that the game ends.
+ * returns: [true] if all levels have been completed, [false] otherwise
+ *)
+val all_states_completed : unit -> bool
+
+(**
+ * [reset_states_counter unit] reset the the map generation to the first
+ * map such that future calls to [next_state] return the first map of the game.
+ * returns: [unit]
+ *)
+val reset_states_counter : unit -> unit

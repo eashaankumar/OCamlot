@@ -201,39 +201,55 @@ let manage_tasks context scene =
         scene.tasks <- [Update]
       end
     (* Fade in *)
-    | FadeIn(cur,lim)::t -> begin
-        print_endline("Fading in");
+    | FadeIn(cur,lim,amag)::t -> 
+      begin
         if (cur >= lim) then (
           scene.tasks <- t
         ) else(
           let cur' = cur +. !delta *. 1. in
-          scene.tasks <- (FadeIn(cur',lim)::t);
+          scene.tasks <- (FadeIn(cur',lim,amag)::t);
         )
       end
     | Wait(cur, lim)::t -> begin
-        print_endline("Waiting");
       end
-    | FadeOut (cur,lim)::t -> begin
-        print_endline("Fading out");
+    | FadeOut (cur,lim,amag)::t -> 
+      begin
+        if (cur >= lim) then (
+          scene.tasks <- t
+        ) else(
+          let cur' = cur +. !delta *. 1. in
+          scene.tasks <- (FadeOut(cur',lim,amag)::t);
+        )      
       end
-    | Update::_ -> ()
+    | _ -> ()
   end in
   (* draw tasks *)
   let _ = if List.length scene.tasks > 0 then
   begin
     match List.hd scene.tasks with
-    | FadeIn (cur, lim) -> 
+    | FadeIn (cur, lim, amag) -> 
       begin
         let percent_done = cur /. lim in
-        let alpha = ref ((1. -. percent_done) *. 1.) in
+        let alpha = ref ((1. -. percent_done) *. amag) in
         if !alpha <= 0. then alpha := 0. else ();
-        print_endline (string_of_float !alpha);
         context##fillStyle <- color_to_hex {r=0;g=0;b=0;a= !alpha};
         context##fillRect (0., 0., width, height);
         ()
       end
-    | FadeOut (cur, lim) -> 
+    | FadeOut (cur, lim, amag) -> 
       begin
+        let percent_done = cur /. lim in
+        let alpha = ref ((percent_done) *. amag) in
+        if !alpha <= 0. then alpha := 0. else ();
+        context##fillStyle <- color_to_hex {r=0;g=0;b=0;a= !alpha};
+        context##fillRect (0., 0., width, height);
+        ()
+      end
+      (* TODO: Assumption is that switch sceen will always come between fade in and fade out*)
+    | SwitchScene (_) -> 
+      begin
+        context##fillStyle <- color_to_hex {r=0;g=0;b=0;a=1.};
+        context##fillRect (0., 0., width, height);
         ()
       end
     | Wait (cur, lim) -> 

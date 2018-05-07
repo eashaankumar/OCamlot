@@ -13,7 +13,7 @@ let tower_base_player = {
   twr_sprite = Sprite.tower_base;
   twr_troops = 1.;
   twr_troops_max = 50.;
-  twr_troops_regen_speed = 0.;
+  twr_troops_regen_speed = 1.;
   twr_team = Player;
   selector_offset = {x = 0.; y = 80.};
 }
@@ -25,7 +25,7 @@ let tower_base_enemy = {
   twr_sprite = Sprite.tower_base ;
   twr_troops = 1. ;
   twr_troops_max = 50.;
-  twr_troops_regen_speed = 0.;
+  twr_troops_regen_speed = 1.;
   twr_team = Enemy;
   selector_offset = {x=0.;y=80.};
 }
@@ -59,8 +59,8 @@ let maps = [|
     };
   |] ;
   num_towers = 0 ;
-  player_score = 0 ;
-  enemy_score = 0 ;
+  player_score = 1 ;
+  enemy_score = 1 ;
   movements = [] ;
   player_mana = 0 ;
   enemy_mana = 0;
@@ -81,8 +81,8 @@ let maps = [|
     };
   |] ;
   num_towers = 0 ;
-  player_score = 0 ;
-  enemy_score = 0 ;
+  player_score = 1 ;
+  enemy_score = 1 ;
   movements = [] ;
   player_mana = 0 ;
   enemy_mana = 0;
@@ -92,3 +92,9 @@ let maps = [|
 let next_state () = 
   map_index := !map_index + 1;
   maps.(!map_index)
+
+let all_states_completed () = 
+  !map_index >= (Array.length maps) - 1
+
+let reset_states_counter () = 
+  map_index := -1

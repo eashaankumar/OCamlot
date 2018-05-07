@@ -128,9 +128,10 @@ type interface = (string * (ui_element ref)) list
 
 type task = 
 | Wait of float * float
-| FadeIn of float * float (* current, start, finishes at 0 *)
+| FadeIn of float * float * float (* current, limit, alpha magnitude *)
 | Update 
-| FadeOut of float * float (* current, end, starts at 0 *)
+| FadeOut of float * float * float (* current, limit, alpha magnitude *)
+| SwitchScene of string (* id of next scene *)
 
 (* represents everything representable on the screen, including state
 *)

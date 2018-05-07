@@ -131,9 +131,10 @@ type interface = (string * (ui_element ref)) list
 (* Transitions *)
 type task = 
 | Wait of float * float
-| FadeIn of float * float
+| FadeIn of float * float * float
 | Update 
-| FadeOut of float * float
+| FadeOut of float * float * float
+| SwitchScene of string
 
 type scene = {
   mutable name : string;

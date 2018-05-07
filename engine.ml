@@ -24,7 +24,7 @@ let init_input = {
 (* Initialize scenes *)
 let game_scene = {
   name = "Game";
-  tasks = [FadeIn (0.,5.)];
+  tasks = [];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ];
@@ -36,7 +36,7 @@ let game_scene = {
 
 let game_over_scene = {
   name = "Game Over";
-  tasks = [FadeIn (0.,5.)];
+  tasks = [FadeIn (0., 2., 1.)];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("game_over",ref Ui.gameover_label)];
@@ -48,7 +48,7 @@ let game_over_scene = {
 
 let intro_scene = {
   name = "Intro";
-  tasks = [FadeIn (0., 2.)];
+  tasks = [FadeIn (0., 2., 1.)];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("start",ref (
@@ -66,12 +66,6 @@ let intro_scene = {
   next = None;
   background = Sprite.grass_background;
 }
-
-let scene_dict = [
-  (intro_scene.name, intro_scene);
-  (game_scene.name, game_scene);
-  (game_over_scene.name, game_over_scene);
-]
 
 let current_scene = ref intro_scene
 
@@ -159,12 +153,18 @@ let mouse_move event =
   current_scene := scene;
   Js._true
 
+let get_scene_from_name name = 
+  match name with
+  | "Intro" -> intro_scene
+  | "Game" -> game_scene
+  | "Game Over" -> game_over_scene
+  | _ -> intro_scene
 (**
- * [scene_transition scid] transitions [current_scene] to [next] scene.
+ * [schedule_transition scid] transitions [current_scene] to [next] scene.
  * returns: [unit]
  * effects: [current_scene]
  *)
-let scene_transition scid =
+let schedule_transition scid =
   let _ =
     begin
       match scid with
@@ -172,11 +172,30 @@ let scene_transition scid =
       | Some(nxt) ->
         begin
           print_endline("Switching to "^(nxt));
-          (* Generate new Map *)
-          if nxt = "Game" then (
+          current_scene := {!current_scene with tasks = [FadeOut(0.,2.,1.);SwitchScene(nxt)]};
+          ()
+        end
+    end in
+  ()
+
+let scene_transition () = 
+  if List.length !current_scene.tasks > 0 then (
+    match List.hd !current_scene.tasks with
+    | SwitchScene(nxt) -> 
+      begin
+        if nxt = "Game" then (
+          (* Go back to start screen *)
+          if Mapmaker.all_states_completed () then (
+            Mapmaker.reset_states_counter (); 
+            let next_scene = get_scene_from_name "Intro" in
+            current_scene := next_scene;
+            current_scene := {!current_scene with tasks = [FadeIn (0.,2., 1.);]}
+          )
+          (* Generate new map if more levels remaining *) 
+          else (
             current_scene := {
               name = "Game";
-              tasks = [FadeIn (0.,2.);];
+              tasks = [FadeIn (0.,2., 1.);];
               state = Mapmaker.next_state ();
               interface = [("fps",ref Ui.fps_label);
                           ];
@@ -184,17 +203,18 @@ let scene_transition scid =
               highlight_towers = [];
               next = None;
               background = Sprite.grass_background;
-            }
+            };
           )
-          (* Otherwise get the desired scene from tuple list *)
-          else (
-            let next_scene = List.assoc nxt scene_dict in
-            current_scene := next_scene;
-          );
-          ()
-        end
-    end in
-  ()
+        )
+        (* Otherwise get the desired scene from tuple list *)
+        else (
+          let next_scene = get_scene_from_name nxt in
+          current_scene := next_scene;
+        );
+        ()
+      end
+    | _ -> ()
+  )
 
 let game_loop context running =
   (*let start = Sys.time () in
@@ -212,18 +232,18 @@ let game_loop context running =
          !current_scene.state cm !Renderer.delta};
          *)
   let rec helper () =
-    print_endline(string_of_int(List.length !current_scene.tasks)); 
     !current_scene.input <- enforce_one_frame_mouse ();
     !current_scene.interface <- Ui.tick !current_scene.interface !current_scene.input;
     (* Only update if task is Update *)
     if (List.length !current_scene.tasks > 0) && List.hd !current_scene.tasks = Update then (
       let next_scene_id = State.next_scene !current_scene in
-      scene_transition (next_scene_id);
+      schedule_transition (next_scene_id);
       !current_scene.state <- State.update !current_scene !current_scene.input;
     );
     Renderer.render context !current_scene;
     (* Manage tasks *)
     current_scene  := Renderer.manage_tasks context !current_scene;
+    scene_transition ();
     ignore (
       Html.window##requestAnimationFrame(
         Js.wrap_callback (fun t ->
