@@ -35,7 +35,7 @@ let update_movement mvmt delta st =
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 100. in
+  let velocity = 1000. in
   {mvmt with
    progress = mvmt.progress +. (velocity *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
@@ -287,9 +287,12 @@ let new_state_plus_delta st c d =
 let next_scene sc =
   match sc.name with
   | "Game" -> 
-    if sc.state.player_score = 0 || sc.state.enemy_score = 0 then (
+    if sc.state.player_score = 0 then (
       print_endline "GameOver";
       Some "Game Over"
+    )
+    else if sc.state.enemy_score = 0 then (
+      Some "Game"
     )
     else None
   (* Go through all buttons and check if they are clicked *)

@@ -51,12 +51,13 @@ let update_fps () =
  * returns: [string] representing hexadecimal color
  * requires: [color] be of form (0-255,0-255,0-255)
  *)
-let color_to_hex {r=r;g=g;b=b} =
+let color_to_hex {r=r;g=g;b=b;a=a} =
 
   js ("#"^
   (Printf.sprintf "%02X" r)^
   (Printf.sprintf "%02X" g)^
-  (Printf.sprintf "%02X" b))
+  (Printf.sprintf "%02X" b)^
+  (Printf.sprintf "%02X" (int_of_float (a *. 255.))))
 
 (**
  * [draw_image ctx img_src pos size] draws image from path [img_src] at [pos]
@@ -110,9 +111,9 @@ let draw_entities context scene =
     let y = vec.y +. 10. in
    let (twr_label_path,color) = begin
       match mvmt.mvmt_team with
-      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100}
-      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100}
-      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0}
+      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.}
+      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100;a=1.}
+      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0;a=1.}
     end in
     draw_sprite_sheet context mvmt.mvmt_sprite (vec) {w=50.;h=50.};
     draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
@@ -130,9 +131,9 @@ let draw_entities context scene =
     let y = t.twr_pos.y +. 10. in
     let (twr_label_path,color) = begin
       match t.twr_team with
-      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100}
-      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100}
-      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0}
+      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.}
+      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100;a=1.}
+      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0;a=1.}
     end in
     draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
     draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
@@ -176,7 +177,7 @@ let render context scene =
   update_fps ();
   (* Draw canvas background *)
   context##clearRect (0., 0., width, height);
-  context##fillStyle <- color_to_hex {r=255;g=255;b=255};
+  context##fillStyle <- color_to_hex {r=255;g=255;b=255;a=1.0};
   (*context##fillRect (0., 0., true_width, true_height);*)
   (*draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};*)
   draw_sprite_sheet context scene.background {x=0.;y=0.} {w=width;h=height};

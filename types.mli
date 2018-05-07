@@ -79,7 +79,7 @@ type input = {
 }
 
 (* represents a digitized display of color basedo n the RGB scheme. *)
-type color = {r : int; g : int; b : int}
+type color = {r : int; g : int; b : int; a : float}
 
 (* Whether it is clicked, not allowed to be clicked, or waiting to be clicked. *)
 type button_state =
@@ -169,3 +169,9 @@ type command =
   | Move of allegiance * int * int
   | Skill of allegiance * skill * int
   | Null
+
+(* Map generation *)
+(*type map = {
+  state : state;
+
+}*)

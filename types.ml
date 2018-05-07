@@ -88,7 +88,7 @@ type input = {
 }
 
 (* UI *)
-type color = {r:int;g:int;b:int}
+type color = {r : int; g : int; b : int; a : float}
 
 type button_state =
   | Disabled

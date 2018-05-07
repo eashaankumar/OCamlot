@@ -49,10 +49,10 @@ let tick interface input =
   (get_label_prop !ref_fps_label).text <- string_of_int !Renderer.fps;
   interface
 
-let fps_label = Label ({text="0";color={r=255;g=20;b=147};font_size=20},
+let fps_label = Label ({text="0";color={r=255;g=20;b=147;a=1.};font_size=20},
                        {x=Renderer.width-.30.;y=30.;},
                        {w=30.;h=30.})
 
-let gameover_label = Label ({text="Game Over";color={r=0;g=0;b=0};font_size=40},
+let gameover_label = Label ({text="Game Over";color={r=0;g=0;b=0;a=1.};font_size=40},
                        {x=Renderer.width/.2. -. 80.;y=100.;},
                        {w=160.;h=40.})
