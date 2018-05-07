@@ -24,6 +24,7 @@ let init_input = {
 (* Initialize scenes *)
 let game_scene = {
   name = "Game";
+  tasks = [FadeIn (0.,5.)];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ];
@@ -35,6 +36,7 @@ let game_scene = {
 
 let game_over_scene = {
   name = "Game Over";
+  tasks = [FadeIn (0.,5.)];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("game_over",ref Ui.gameover_label)];
@@ -46,6 +48,7 @@ let game_over_scene = {
 
 let intro_scene = {
   name = "Intro";
+  tasks = [FadeIn (0., 2.)];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("start",ref (
@@ -173,6 +176,7 @@ let scene_transition scid =
           if nxt = "Game" then (
             current_scene := {
               name = "Game";
+              tasks = [FadeIn (0.,2.);];
               state = Mapmaker.next_state ();
               interface = [("fps",ref Ui.fps_label);
                           ];
@@ -182,6 +186,7 @@ let scene_transition scid =
               background = Sprite.grass_background;
             }
           )
+          (* Otherwise get the desired scene from tuple list *)
           else (
             let next_scene = List.assoc nxt scene_dict in
             current_scene := next_scene;
@@ -192,7 +197,7 @@ let scene_transition scid =
   ()
 
 let game_loop context running =
-  let start = Sys.time () in
+  (*let start = Sys.time () in
   let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
   let finish = Sys.time () in
   print_endline (string_of_float (finish -. start));
@@ -205,14 +210,20 @@ let game_loop context running =
     {!current_scene with
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
+         *)
   let rec helper () =
-    let next_scene_id = State.next_scene !current_scene in
-    scene_transition (next_scene_id);
-    let scene = !current_scene in
-    scene.input <- enforce_one_frame_mouse ();
-    scene.interface <- Ui.tick scene.interface scene.input;
-    scene.state <- State.update scene scene.input;
-    Renderer.render context scene;
+    print_endline(string_of_int(List.length !current_scene.tasks)); 
+    !current_scene.input <- enforce_one_frame_mouse ();
+    !current_scene.interface <- Ui.tick !current_scene.interface !current_scene.input;
+    (* Only update if task is Update *)
+    if (List.length !current_scene.tasks > 0) && List.hd !current_scene.tasks = Update then (
+      let next_scene_id = State.next_scene !current_scene in
+      scene_transition (next_scene_id);
+      !current_scene.state <- State.update !current_scene !current_scene.input;
+    );
+    Renderer.render context !current_scene;
+    (* Manage tasks *)
+    current_scene  := Renderer.manage_tasks context !current_scene;
     ignore (
       Html.window##requestAnimationFrame(
         Js.wrap_callback (fun t ->

@@ -178,7 +178,10 @@ let render context scene =
   (* Draw canvas background *)
   context##clearRect (0., 0., width, height);
   context##fillStyle <- color_to_hex {r=255;g=255;b=255;a=1.0};
-  (*context##fillRect (0., 0., true_width, true_height);*)
+  (* Transition begin *)
+  (*context##fillStyle <- color_to_hex {r=0;g=0;b=0;a=0.2 *. !fade_amt};
+  context##fillRect (0., 0., width, height);*)
+  (* Transition end *)
   (*draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};*)
   draw_sprite_sheet context scene.background {x=0.;y=0.} {w=width;h=height};
   (* Draw entities *)
@@ -186,3 +189,57 @@ let render context scene =
   (* Draw ui *)
   draw_ui context scene;
   ()
+
+let manage_tasks context scene = 
+  (* Tasks *)
+  let _ = 
+  begin
+    match scene.tasks with
+    (* All transition tasks have been completed, start updating *)
+    | [] -> begin
+        print_endline("No more tasks left, updating");
+        scene.tasks <- [Update]
+      end
+    (* Fade in *)
+    | FadeIn(cur,lim)::t -> begin
+        print_endline("Fading in");
+        if (cur >= lim) then (
+          scene.tasks <- t
+        ) else(
+          let cur' = cur +. !delta *. 1. in
+          scene.tasks <- (FadeIn(cur',lim)::t);
+        )
+      end
+    | Wait(cur, lim)::t -> begin
+        print_endline("Waiting");
+      end
+    | FadeOut (cur,lim)::t -> begin
+        print_endline("Fading out");
+      end
+    | Update::_ -> ()
+  end in
+  (* draw tasks *)
+  let _ = if List.length scene.tasks > 0 then
+  begin
+    match List.hd scene.tasks with
+    | FadeIn (cur, lim) -> 
+      begin
+        let percent_done = cur /. lim in
+        let alpha = ref ((1. -. percent_done) *. 1.) in
+        if !alpha <= 0. then alpha := 0. else ();
+        print_endline (string_of_float !alpha);
+        context##fillStyle <- color_to_hex {r=0;g=0;b=0;a= !alpha};
+        context##fillRect (0., 0., width, height);
+        ()
+      end
+    | FadeOut (cur, lim) -> 
+      begin
+        ()
+      end
+    | Wait (cur, lim) -> 
+      begin
+        ()
+      end
+    | _ -> ()
+  end in
+  scene

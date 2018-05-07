@@ -128,8 +128,16 @@ type state = {
 
 type interface = (string * (ui_element ref)) list
 
+(* Transitions *)
+type task = 
+| Wait of float * float
+| FadeIn of float * float
+| Update 
+| FadeOut of float * float
+
 type scene = {
   mutable name : string;
+  mutable tasks : task list;
   mutable state : state ;
   mutable interface : interface;
   mutable input : input;

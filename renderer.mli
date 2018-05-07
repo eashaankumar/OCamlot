@@ -8,3 +8,5 @@ val fps : int ref
 val delta : float ref
 
 val render : Dom_html.canvasRenderingContext2D Js.t -> scene -> unit
+
+val manage_tasks : Dom_html.canvasRenderingContext2D Js.t -> scene -> scene
