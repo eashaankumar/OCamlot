@@ -284,12 +284,25 @@ let new_state_plus_delta st c d =
   }
 
 
-let check_transition sc : scene =
-  if sc.state.player_score = 0 || sc.state.enemy_score = 0 then (
-    print_endline "GameOver";
-    sc.next <- Some "Game Over";
-  );
-  sc
+let next_scene sc =
+  match sc.name with
+  | "Game" -> 
+    if sc.state.player_score = 0 || sc.state.enemy_score = 0 then (
+      print_endline "GameOver";
+      Some "Game Over"
+    )
+    else None
+  (* Go through all buttons and check if they are clicked *)
+  | _ -> List.fold_left (fun acc (id, ui_ref) -> 
+    match !ui_ref with
+    | Button (bprop, _, _, Some scid) -> begin
+        if bprop.btn_state = Clicked then 
+          Some scid
+        else 
+          acc
+      end
+    | _ -> acc
+  ) None sc.interface
 
 let gameover st =
   st.player_score = 0 || st.enemy_score = 0

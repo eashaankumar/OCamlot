@@ -147,14 +147,16 @@ let draw_entities context scene =
 let draw_ui context scene =
   List.iter (fun (id, ui_elmt) ->
     match !ui_elmt with
-    | Button (btn_prop, pos, size) -> begin
+    | Button (btn_prop, pos, size, _) -> begin
         let sprite_to_draw = (
           match btn_prop.btn_state with
             | Neutral -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
-            | Clicked -> btn_prop.btn_sprite |> Sprite.set_animation_frame 1
+            | Depressed -> btn_prop.btn_sprite |> Sprite.set_animation_frame 1
             | Disabled -> btn_prop.btn_sprite |> Sprite.set_animation_frame 2
+            | Clicked -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
         ) in
         draw_sprite_sheet context sprite_to_draw pos size;
+        draw_text context btn_prop.btn_label.text (Physics.add_vector2d pos btn_prop.btn_label_offset) btn_prop.btn_label.color btn_prop.btn_label.font_size;
         ()
       end
     | Label (prop, pos, size) -> begin
@@ -176,7 +178,8 @@ let render context scene =
   context##clearRect (0., 0., width, height);
   context##fillStyle <- color_to_hex {r=255;g=255;b=255};
   (*context##fillRect (0., 0., true_width, true_height);*)
-  draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};
+  (*draw_image context "images/grass.jpg" {x=0.;y=0.} (1280.,720.) {w=width;h=height};*)
+  draw_sprite_sheet context scene.background {x=0.;y=0.} {w=width;h=height};
   (* Draw entities *)
   draw_entities context scene;
   (* Draw ui *)

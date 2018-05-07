@@ -85,13 +85,8 @@ type color = {r : int; g : int; b : int}
 type button_state =
   | Disabled (* 2 *)
   | Neutral (* 0 *)
-  | Clicked (* 1 *)
-
-(* represents the properties of a button *)
-type button_property = {
-  mutable btn_state: button_state;
-  mutable btn_sprite: sprite;
-}
+  | Depressed (* 1 *)
+  | Clicked 
 
 (* represents the properties of a label *)
 type label_property = {
@@ -100,11 +95,19 @@ type label_property = {
   mutable font_size : int;
 }
 
+(* represents the properties of a button *)
+type button_property = {
+  mutable btn_state: button_state;
+  mutable btn_sprite: sprite;
+  mutable btn_label: label_property;
+  mutable btn_label_offset : vector2d;
+}
+
 (** [ui_element] represents user interface elements
  * that the player can interact with using the mouse.
  *)
 type ui_element =
- | Button of button_property * vector2d * bounds
+ | Button of button_property * vector2d * bounds * string option
  | Label of label_property * vector2d * bounds
  | Panel of sprite * vector2d * bounds
 
@@ -126,11 +129,13 @@ type interface = (string * (ui_element ref)) list
 (* represents everything representable on the screen, including state
 *)
 type scene = {
+  mutable name : string;
   mutable state : state ;
   mutable interface : interface;
   mutable input : input;
   mutable highlight_towers : int list;
   mutable next : string option;
+  mutable background : sprite;
 }
 
 (* represents the effect of a skill *)

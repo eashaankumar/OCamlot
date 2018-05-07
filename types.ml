@@ -93,12 +93,10 @@ type color = {r:int;g:int;b:int}
 type button_state =
   | Disabled
   | Neutral
+  | Depressed
   | Clicked
 
-type button_property = {
-  mutable btn_state: button_state;
-  mutable btn_sprite: sprite;
-}
+
 
 type label_property = {
   mutable text : string;
@@ -106,8 +104,15 @@ type label_property = {
   mutable font_size : int;
 }
 
+type button_property = {
+  mutable btn_state: button_state;
+  mutable btn_sprite: sprite;
+  mutable btn_label: label_property;
+  mutable btn_label_offset : vector2d;
+}
+
 type ui_element =
-  | Button of button_property * vector2d * bounds
+  | Button of button_property * vector2d * bounds * string option
   | Label of label_property * vector2d * bounds
   | Panel of sprite * vector2d * bounds
 
@@ -124,9 +129,11 @@ type state = {
 type interface = (string * (ui_element ref)) list
 
 type scene = {
+  mutable name : string;
   mutable state : state ;
   mutable interface : interface;
   mutable input : input;
   mutable highlight_towers : int list;
   mutable next : string option;
+  mutable background : sprite;
 }

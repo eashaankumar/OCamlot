@@ -20,15 +20,15 @@ val new_state : state -> command -> state
 val new_state_plus_delta : state -> command -> float -> state
 
 (**
- * [check_transition sc] checks if the current scene [sc] has ended.
+ * [next_scene sc] checks if the current scene [sc] has ended.
  * A scene is determined to have "ended" based on button clicks in the
  * scene's interface or game logic in its state. If [sc] has ended,
  * the scene's [next] field will be set to the next scene the game must
  * transition to.
  * returns: [scene] with the next optional scene to transition to
- * effects: [sc]
+ * effects: nothing
  *)
-val check_transition : scene -> scene
+val next_scene : scene -> string option
 
 (**
  * [gameover] is a boolean value that denotes whether the game

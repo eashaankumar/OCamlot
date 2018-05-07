@@ -85,29 +85,54 @@ let init_input = {
 
 (* Initialize scenes *)
 let game_scene = {
+  name = "Game";
   state = init_state;
   interface = [("fps",ref Ui.fps_label);
-               ("Start", ref Ui.menu_button1);];
+               ];
   input = init_input;
   highlight_towers = [];
   next = None;
+  background = Sprite.grass_background;
 }
 
 let game_over_scene = {
+  name = "Game Over";
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("game_over",ref Ui.gameover_label)];
   input = init_input;
   highlight_towers = [];
   next = None;
+  background = Sprite.grass_background;
+}
+
+let intro_scene = {
+  name = "Intro";
+  state = empty_state;
+  interface = [("fps",ref Ui.fps_label);
+               ("start",ref (
+                 Button ({btn_state = Neutral; btn_sprite = Sprite.menu_btn_sprite1; 
+                          btn_label = {
+                            text = "Start"; color = {r=0; g=0; b=0}; font_size = 30
+                          }; btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
+                                                                 },
+                           {x=Renderer.width /. 2. -. 100.;y= 300.},
+                           {w=200.;h=70.},
+                           Some "Game")
+               ));];
+  input = init_input;
+  highlight_towers = [];
+  next = None;
+  background = Sprite.grass_background;
 }
 
 let scene_dict = [
-  ("Game", game_scene);
-  ("Game Over", game_over_scene);
+  (intro_scene.name, intro_scene);
+  (game_scene.name, game_scene);
+  (game_over_scene.name, game_over_scene);
 ]
 
-let current_scene = ref game_scene
+let current_scene = ref intro_scene
 
 (* Pref mouse state *)
 let prev_mouse_state = ref Moved
@@ -194,15 +219,14 @@ let mouse_move event =
   Js._true
 
 (**
- * [scene_transition unit] transitions [current_scene] to [next] scene.
+ * [scene_transition scid] transitions [current_scene] to [next] scene.
  * returns: [unit]
  * effects: [current_scene]
  *)
-let scene_transition () =
-  let scene = !current_scene in
+let scene_transition scid =
   let _ =
     begin
-      match scene.next with
+      match scid with
       | None -> ()
       | Some(nxt) ->
         begin
@@ -228,14 +252,13 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   let rec helper () =
-    scene_transition ();
     let scene = !current_scene in
     scene.input <- enforce_one_frame_mouse ();
     scene.interface <- Ui.tick scene.interface scene.input;
     scene.state <- State.update scene scene.input;
     Renderer.render context scene;
-    scene = State.check_transition scene;
-    current_scene := scene;
+    let next_scene_id = State.next_scene scene in
+    scene_transition (next_scene_id);
     ignore (
       Html.window##requestAnimationFrame(
         Js.wrap_callback (fun t ->
