@@ -96,11 +96,17 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,70.) (242.,70.)
                   |> add_animation_frame (0.,140.) (242.,70.)
 
-let troops_example_exprite = init_sprite "images/ocamlot_sprites.png" 0.08
+let blue_troop1_right = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (0.,144.02) (72.19,71.63)
                   |> add_animation_frame (72.19,144.02) (72.19,71.63)
                   |> add_animation_frame (143.92,144.02) (72.19,71.63)
                   |> add_animation_frame (216.21,144.02) (72.19,71.63)
+
+let blue_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (287.84,144.02) (72.19,71.63)
+                  |> add_animation_frame (360.03,144.02) (72.19,71.63)
+                  |> add_animation_frame (431.75,144.02) (72.19,71.63)
+                  |> add_animation_frame (504.04,144.02) (72.19,71.63)
 
 let grass_background = init_sprite "images/grass.jpg" 0.
                   |> add_animation_frame (0.,0.) (1280.,700.)

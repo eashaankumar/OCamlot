@@ -108,16 +108,18 @@ let draw_entities context scene =
   (* Draw troops *)
   List.iter (fun mvmt ->
     let size = {w=50.;h=50.} in
-    let vec = Physics.get_movement_coord mvmt scene.state 
-      |> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
-      |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.})in
-    let fs = 15. in
-    let x = vec.x +. 50./.2. -. (fs) in
-    let y = vec.y +. 10. in
-    let (color)= {r=0;g=0;b=0;a=1.} in
-    draw_sprite_sheet context mvmt.mvmt_sprite vec size;
-    draw_sprite_sheet context Sprite.mvmt_troop_count_sprite {x=x;y=y -. 25.} {w=fs *. 2.;h=20.};
-    draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs-.25.} color (int_of_float fs);
+    if mvmt.progress > 0.975 || mvmt.progress < 0.125 then () else (
+      let vec = Physics.get_movement_coord mvmt scene.state 
+        |> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
+        |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.})in
+      let fs = 15. in
+      let x = vec.x +. 50./.2. -. (fs) in
+      let y = vec.y +. 10. in
+      let (color)= {r=0;g=0;b=0;a=1.} in
+      draw_sprite_sheet context mvmt.mvmt_sprite vec size;
+      draw_sprite_sheet context Sprite.mvmt_troop_count_sprite {x=x;y=y -. 25.} {w=fs *. 2.;h=20.};
+      draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs-.25.} color (int_of_float fs);
+    )
   ) (scene.state.movements);
   (* Draw towers *)
   Array.iter (fun t ->

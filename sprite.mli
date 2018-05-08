@@ -20,7 +20,9 @@ val tower_base : sprite
 
 val tower_type1 : sprite
 
-val troops_example_exprite : sprite
+val blue_troop1_right : sprite
+
+val blue_troop1_left : sprite
 
 val menu_btn_sprite1 : sprite
 

@@ -55,7 +55,26 @@ let get_scores st =
     )
     (0,0) st.towers
 
-
+(**
+ * [get_troop_direction_sprite team towers starti endi] returns the appropriate
+ * troop sprite accounting for the troop's direction.
+ * returns: [sprite]
+ *)
+let get_troop_direction_sprite team towers starti endi = 
+  let start_tower = towers.(starti) in
+  let end_tower = towers.(endi) in
+  match team with
+  | Player -> 
+    begin
+      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
+      else Sprite.blue_troop1_left
+    end
+  | Enemy -> 
+    begin
+      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
+      else Sprite.blue_troop1_left
+    end
+  | _ -> Sprite.blue_troop1_left (* This should never happen *)
 
 (****** Helpers ******)
 
@@ -121,8 +140,9 @@ let new_state st (c : command) =
               }
             end in
           (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
+          let sp = get_troop_direction_sprite ts_team_original st.towers start finish in
           let new_mvmt = new_movement
-              start finish !mvmt_troop_count Sprite.troops_example_exprite ts_team_original in
+              start finish !mvmt_troop_count sp ts_team_original in
           let new_towers =
             Array.mapi (fun i e -> if i = start then ts' else e) st.towers in
           {st with
