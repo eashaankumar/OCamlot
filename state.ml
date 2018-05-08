@@ -365,7 +365,7 @@ let manage_mouse_input (ipt : input) (sc : scene) : command ref =
             destination.to_tower <- Some t.twr_id;
             (* Create new Command *)
             match (destination.from_tower, destination.to_tower) with
-            | (Some(a),Some(b)) ->
+            | (Some a, Some b) ->
               begin
                 command := Move (Player, a,b);
               end
