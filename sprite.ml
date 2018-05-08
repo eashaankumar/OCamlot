@@ -84,8 +84,8 @@ let tick sp delta =
 let tower_base = init_sprite "images/towers/tower1.png" 0.5
                   |> add_animation_frame (0.,0.) (200.,345.) 
 
-let tower_type1 = init_sprite "images/towers/tower2.png" 0.
-                  |> add_animation_frame (0.,0.) (200.,320.) 
+let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (0.,0.) (72.19,72.19) 
 
 let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
@@ -103,4 +103,7 @@ let troops_example_exprite = init_sprite "images/ocamlot_sprites.png" 0.08
 
 let grass_background = init_sprite "images/grass.jpg" 0.
                   |> add_animation_frame (0.,0.) (1280.,700.)
+
+let tower_highlight = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (0.,575.74) (143.92,104.46)
 

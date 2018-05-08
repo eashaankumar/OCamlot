@@ -28,6 +28,8 @@ val troops_example_exprite : sprite
 
 val grass_background : sprite
 
+val tower_highlight : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the 
  * starting frame.

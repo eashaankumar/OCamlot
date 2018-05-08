@@ -14,6 +14,8 @@ let last_update_time = ref 0.
 let frames_count = ref 0
 let time_count = ref 0.
 
+let start_tower_highlight_sprite = ref Sprite.tower_highlight
+
 module Html = Dom_html
 let js = Js.string
 let document = Html.document
@@ -109,26 +111,32 @@ let draw_entities context scene =
     let vec = Physics.get_movement_coord mvmt scene.state 
       |> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
       |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.})in
-    (*let fs = 15. in
+    let fs = 15. in
     let x = vec.x +. 50./.2. -. (fs) in
-    let y = vec.y +. 10. in*)
+    let y = vec.y +. 10. in
    (*let (twr_label_path,color) = begin
       match mvmt.mvmt_team with
       | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.}
       | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100;a=1.}
       | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0;a=1.}
     end in*)
-    let troop_ratio = ((float_of_int mvmt.mvmt_troops) /. 10.) in
-    let troop_size = size |> Physics.scalar_mult_bounds troop_ratio |> Physics.set_min_bounds (30.,30.)  |> Physics.set_max_bounds (70., 70.) in
-    draw_sprite_sheet context mvmt.mvmt_sprite vec troop_size;
-    (*draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
-    draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);*)
+    let (twr_label_path,color)= "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.} in
+    (*let troop_ratio = ((float_of_int mvmt.mvmt_troops) /. 10.) in
+    let troop_size = size |> Physics.scalar_mult_bounds troop_ratio |> Physics.set_min_bounds (30.,30.)  |> Physics.set_max_bounds (70., 70.) in *)
+    draw_sprite_sheet context mvmt.mvmt_sprite vec size;
+    draw_image context twr_label_path {x=x;y=y -. 25.} (50.,50.) {w=fs *. 2.;h=20.};
+    draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs-.25.} color (int_of_float fs);
   ) (scene.state.movements);
   (* Draw towers *)
   Array.iter (fun t ->
     (* Add glow *)
-    let _ = if List.mem t.twr_id scene.highlight_towers then
-      draw_image context "images/towers/selector.png" (Physics.add_vector2d t.twr_pos t.selector_offset) (100.,100.) {w=t.twr_size.w;h=t.twr_size.w};
+    let _ = if List.mem t.twr_id scene.highlight_towers then (
+      draw_sprite_sheet context !start_tower_highlight_sprite 
+        (t.twr_pos |> Physics.add_vector2d t.selector_offset 
+                   |> Physics.add_vector2d {x=(-1.) *. (t.twr_size.w/.2.); y=(-1.) *. 25.}) 
+        {w=t.twr_size.w *. 2.;h=t.twr_size.w};
+    )
+      (*draw_image context "images/ocamlot_sprites.png" (Physics.add_vector2d t.twr_pos t.selector_offset) (0.,575.74) {w=143.92;h=104.46};*)
     in
     draw_sprite_sheet context t.twr_sprite t.twr_pos t.twr_size;
     let fs = 15. in
