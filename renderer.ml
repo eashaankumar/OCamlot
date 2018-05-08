@@ -108,10 +108,10 @@ let draw_entities context scene =
   (* Draw troops *)
   List.iter (fun mvmt ->
     let size = {w=50.;h=50.} in
-    if mvmt.progress > 0.975 || mvmt.progress < 0.125 then () else (
+    if mvmt.progress > 0.99 || mvmt.progress < 0.01 then () else (
       let vec = Physics.get_movement_coord mvmt scene.state 
-        |> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
-        |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.})in
+        (*|> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
+        |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.})*)in
       let fs = 15. in
       let x = vec.x +. 50./.2. -. (fs) in
       let y = vec.y +. 10. in

@@ -26,7 +26,7 @@ let get_movement_coord mvmt st =
   let ts = st.towers.(ts_index) in
   let te = st.towers.(te_index) in
   let progress = mvmt.progress in
-  let start_vector = ts.twr_pos in
-  let end_vector = te.twr_pos in
+  let start_vector = add_vector2d ts.twr_pos ts.selector_offset in
+  let end_vector = add_vector2d te.twr_pos ts.selector_offset in
   add_vector2d (scalar_mult_vector2d (1.0 -. progress) start_vector)
     (scalar_mult_vector2d progress end_vector)
