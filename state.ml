@@ -338,73 +338,21 @@ let update_towers (towers : tower array) : tower array =
       }
     ) towers
 
-(* [manage_mouse_input ipt sc] highlights towers and returns the
-   appropriate command based on the mouse input.
+(* [manage_mouse_input ipt sc] returns a command based on [ipt] and updates
+   the scene's visual elements (e.g.: highlighting).
 *)
 let manage_mouse_input (ipt : input) (sc : scene) : command ref =
   let command = ref Null in (* Dummy Command *)
   let _ = begin
-  match ipt.mouse_state with
-  | Pressed ->
-    begin
-      (* Find selected tower *)
-      Array.iter (fun t ->
-          if Physics.point_inside ipt.mouse_pos t.twr_pos t.twr_size then (
-            sc.highlight_towers <- t.twr_id::sc.highlight_towers;
-            destination.from_tower <- Some t.twr_id
-          ) else ()
-        ) sc.state.towers
-    end
-  | Released ->
-    begin
-      (* Unhighlight all towers *)
-      sc.highlight_towers <- [];
-      (* Create movement *)
-      Array.iter (fun t ->
-          if Physics.point_inside ipt.mouse_pos t.twr_pos t.twr_size then (
-            destination.to_tower <- Some t.twr_id;
-            (* Create new Command *)
-            match (destination.from_tower, destination.to_tower) with
-            | (Some a, Some b) ->
-              begin
-                command := Move (Player, a,b);
-              end
-            | _ -> ()
-          );
-        ) sc.state.towers;
-      (* Reset destination *)
-      destination.from_tower <- None;
-      destination.to_tower <- None
-    end
-  | Moved -> ()
-end in command
-
-let update sc input =
-  (* let command = ref Null in (* Dummy Command *) *)
-  (* Tick troop sprites *)
-  let updated_towers = update_towers sc.state.towers
-    (* begin
-      Array.map (fun t ->
-        (* Update troop sprite *)
-        let new_twr_sprite = Sprite.tick t.twr_sprite !Renderer.delta in
-        (* Update troop count *)
-        (* Return updated tower *)
-        {t with twr_sprite = new_twr_sprite;}
-      ) sc.state.towers
-       end*) in
-  (* Tower selection *)
-  let command = manage_mouse_input input sc
-  (* let _ =
-  begin
-    match input.mouse_state with
+    match ipt.mouse_state with
     | Pressed ->
       begin
         (* Find selected tower *)
         Array.iter (fun t ->
-          if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
-            sc.highlight_towers <- t.twr_id::sc.highlight_towers;
-            destination.from_tower <- Some t.twr_id
-          ) else ()
+            if Physics.point_inside ipt.mouse_pos t.twr_pos t.twr_size then (
+              sc.highlight_towers <- t.twr_id::sc.highlight_towers;
+              destination.from_tower <- Some t.twr_id
+            ) else ()
           ) sc.state.towers
       end
     | Released ->
@@ -413,23 +361,29 @@ let update sc input =
         sc.highlight_towers <- [];
         (* Create movement *)
         Array.iter (fun t ->
-          if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
-            destination.to_tower <- Some t.twr_id;
-            (* Create new Command *)
-            match (destination.from_tower, destination.to_tower) with
-            | (Some(a),Some(b)) ->
-              begin
-                command := Move (Player, a,b);
-              end
-            | _ -> ()
-          );
-        ) sc.state.towers;
+            if Physics.point_inside ipt.mouse_pos t.twr_pos t.twr_size then (
+              destination.to_tower <- Some t.twr_id;
+              (* Create new Command *)
+              match (destination.from_tower, destination.to_tower) with
+              | (Some a, Some b) ->
+                begin
+                  command := Move (Player, a,b);
+                end
+              | _ -> ()
+            );
+          ) sc.state.towers;
         (* Reset destination *)
         destination.from_tower <- None;
         destination.to_tower <- None
       end
     | Moved -> ()
-     end *) in
+end in command
+
+let update sc input =
+  (* Tick troop sprites *)
+  let updated_towers = update_towers sc.state.towers in
+  (* Tower selection *)
+  let command = manage_mouse_input input sc in
   (* Return new state *)
   let state' = {sc.state with towers = updated_towers} in
   new_state_plus_delta state' !command !Renderer.delta
