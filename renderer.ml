@@ -114,17 +114,9 @@ let draw_entities context scene =
     let fs = 15. in
     let x = vec.x +. 50./.2. -. (fs) in
     let y = vec.y +. 10. in
-   (*let (twr_label_path,color) = begin
-      match mvmt.mvmt_team with
-      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.}
-      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100;a=1.}
-      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0;a=1.}
-    end in*)
-    let (twr_label_path,color)= "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.} in
-    (*let troop_ratio = ((float_of_int mvmt.mvmt_troops) /. 10.) in
-    let troop_size = size |> Physics.scalar_mult_bounds troop_ratio |> Physics.set_min_bounds (30.,30.)  |> Physics.set_max_bounds (70., 70.) in *)
+    let (color)= {r=0;g=0;b=0;a=1.} in
     draw_sprite_sheet context mvmt.mvmt_sprite vec size;
-    draw_image context twr_label_path {x=x;y=y -. 25.} (50.,50.) {w=fs *. 2.;h=20.};
+    draw_sprite_sheet context Sprite.mvmt_troop_count_sprite {x=x;y=y -. 25.} {w=fs *. 2.;h=20.};
     draw_text context (string_of_int mvmt.mvmt_troops) { x=x+.fs/.2.;y=y+.fs-.25.} color (int_of_float fs);
   ) (scene.state.movements);
   (* Draw towers *)
@@ -135,21 +127,22 @@ let draw_entities context scene =
         (t.twr_pos |> Physics.add_vector2d t.selector_offset 
                    |> Physics.add_vector2d {x=(-1.) *. (t.twr_size.w/.2.); y=(-1.) *. 25.}) 
         {w=t.twr_size.w *. 2.;h=t.twr_size.w};
-    )
-      (*draw_image context "images/ocamlot_sprites.png" (Physics.add_vector2d t.twr_pos t.selector_offset) (0.,575.74) {w=143.92;h=104.46};*)
-    in
-    draw_sprite_sheet context t.twr_sprite t.twr_pos t.twr_size;
+    ) in
+    (* Make simple measurements *)
     let fs = 15. in
-    let x = t.twr_pos.x +. t.twr_size.w/.2. -. (fs) in
-    let y = t.twr_pos.y +. 10. in
-    let (twr_label_path,color) = begin
+    let pos = Physics.add_vector2d t.twr_pos t.count_label_offset in
+    let (color,index) = begin
       match t.twr_team with
-      | Neutral -> "images/towers/label3.jpg",{r=100;g=100;b=100;a=1.}
-      | Player -> "images/towers/label1.jpg", {r=0; g=0; b=100;a=1.}
-      | Enemy -> "images/towers/label2.jpg", {r=100; g=0; b=0;a=1.}
+      | Neutral -> {r=100;g=100;b=100;a=1.},0
+      | Player -> {r=0; g=0; b=0;a=1.},1
+      | Enemy -> {r=0; g=0; b=0;a=1.},2
     end in
-    draw_image context twr_label_path {x=x;y=y} (50.,50.) {w=fs *. 2.;h=20.};
-    draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=x+.fs/.2.;y=y+.fs} color (int_of_float fs);
+    let spr = {t.twr_sprite with index = index} in
+    draw_sprite_sheet context spr t.twr_pos t.twr_size;
+    if t.twr_team <> Neutral then (
+      draw_sprite_sheet context Sprite.tower_troop_count_sprite pos {w=fs *. 2.;h=20.};
+      draw_text context (string_of_int ( int_of_float t.twr_troops)) { x=pos.x+.fs/.2.;y=pos.y+.fs} color (int_of_float fs);
+    );
   ) (scene.state.towers);
   ()
 

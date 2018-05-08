@@ -16,6 +16,7 @@ let tower_base_player = {
   twr_troops_regen_speed = 1.;
   twr_team = Player;
   selector_offset = {x = 0.; y = 100.};
+  count_label_offset = {x = 0.; y = (-1.) *. 10.};
 }
 
 let tower_base_enemy = {
@@ -28,6 +29,7 @@ let tower_base_enemy = {
   twr_troops_regen_speed = 1.;
   twr_team = Enemy;
   selector_offset = {x=0.;y=100.};
+  count_label_offset = {x = 0.; y = (-1.) *. 10.};
 }
 
 (* Initialize states *)
@@ -45,6 +47,7 @@ let maps = [|
       twr_troops_regen_speed = troop_regen_speed;
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
+      count_label_offset = {x = 0.; y = (-1.) *. 10.};
     };
     {
       twr_id = 3;
@@ -56,6 +59,7 @@ let maps = [|
       twr_troops_regen_speed = troop_regen_speed;
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
+      count_label_offset = {x = 0.; y = (-1.) *. 10.};
     };
   |] ;
   num_towers = 0 ;
@@ -78,6 +82,7 @@ let maps = [|
       twr_troops_regen_speed = troop_regen_speed;
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
+      count_label_offset = {x = 0.; y = (-1.) *. 10.};
     };
   |] ;
   num_towers = 0 ;

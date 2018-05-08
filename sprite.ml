@@ -82,18 +82,19 @@ let tick sp delta =
   end
 
 let tower_base = init_sprite "images/towers/tower1.png" 0.5
-                  |> add_animation_frame (0.,0.) (200.,345.) 
+                  |> add_animation_frame (0.,0.) (200.,345.) (* Neutral *)
+                  |> add_animation_frame (0.,0.) (200.,345.) (* Player *)
+                  |> add_animation_frame (0.,0.) (200.,345.) (* Enemy *)
 
 let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
-                  |> add_animation_frame (0.,0.) (72.19,72.19) 
+                  |> add_animation_frame (0.,0.) (72.19,72.19) (* Neutral*)
+                  |> add_animation_frame (72.19,0.) (72.19,72.19) (* Player *)
+                  |> add_animation_frame (72.19,0.) (72.19,72.19) (* Enemy *)
 
 let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
                   |> add_animation_frame (0.,70.) (242.,70.)
                   |> add_animation_frame (0.,140.) (242.,70.)
-
-let stat_board_sprite = init_sprite "images/stat_bar.jpg" 0.
-                  |> add_animation_frame (0.,0.) (242.,70.)
 
 let troops_example_exprite = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (0.,144.02) (72.19,71.63)
@@ -106,4 +107,12 @@ let grass_background = init_sprite "images/grass.jpg" 0.
 
 let tower_highlight = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (0.,575.74) (143.92,104.46)
+
+
+let tower_troop_count_sprite = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (143.92,647.97) (71.96, 32.03)
+
+let mvmt_troop_count_sprite = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (143.92,575.74) (71.96, 71.63)
+
 

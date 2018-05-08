@@ -51,6 +51,7 @@ type tower = {
   twr_troops_regen_speed : float;
   twr_team: allegiance;
   selector_offset : vector2d;
+  count_label_offset : vector2d;
 }
 
 (* [movement] represents the sending of troops, with some progress towards
