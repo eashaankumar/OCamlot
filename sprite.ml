@@ -95,11 +95,11 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
 let stat_board_sprite = init_sprite "images/stat_bar.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
 
-let troops_example_exprite = init_sprite "images/test_spritesheet.png" 0.5
-                  |> add_animation_frame (0.,0.) (255.,360.)
-                  |> add_animation_frame (255.,0.) (210.,360.)
-                  |> add_animation_frame (465.,0.) (201.,360.)
-                  |> add_animation_frame (666.,0.) (222.,360.)
+let troops_example_exprite = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (0.,144.02) (72.19,71.63)
+                  |> add_animation_frame (72.19,144.02) (72.19,71.63)
+                  |> add_animation_frame (143.92,144.02) (72.19,71.63)
+                  |> add_animation_frame (216.21,144.02) (72.19,71.63)
 
 let grass_background = init_sprite "images/grass.jpg" 0.
                   |> add_animation_frame (0.,0.) (1280.,700.)

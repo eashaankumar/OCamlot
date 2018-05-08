@@ -30,12 +30,12 @@ let update_movement mvmt delta st =
   let te_index = mvmt.end_tower in
   let ts = st.towers.(ts_index) in
   let te = st.towers.(te_index) in
-  let start_vector = ts.twr_pos in
-  let end_vector = te.twr_pos in
+  let start_vector = Physics.add_vector2d ts.twr_pos ts.selector_offset in 
+  let end_vector = Physics.add_vector2d te.twr_pos te.selector_offset in
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 1000. in
+  let velocity = 100. in
   {mvmt with
    progress = mvmt.progress +. (velocity *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta

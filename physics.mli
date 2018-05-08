@@ -27,3 +27,11 @@ val add_vector2d : vector2d -> vector2d -> vector2d
  * state [st].
  *)
 val get_movement_coord : movement -> state -> vector2d
+
+val scalar_mult_vector2d : float -> vector2d -> vector2d
+
+val scalar_mult_bounds : float -> bounds -> bounds
+
+val set_min_bounds : float * float -> bounds -> bounds
+
+val set_max_bounds : float * float -> bounds -> bounds
