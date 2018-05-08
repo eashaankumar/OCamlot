@@ -81,10 +81,10 @@ let tick sp delta =
      curr_time=sp.curr_time +. delta}
   end
 
-let tower_base = init_sprite "images/towers/tower1.png" 0.5
-                  |> add_animation_frame (0.,0.) (200.,345.) (* Neutral *)
-                  |> add_animation_frame (0.,0.) (200.,345.) (* Player *)
-                  |> add_animation_frame (0.,0.) (200.,345.) (* Enemy *)
+let tower_base = init_sprite "images/ocamlot_sprites.png" 0.5
+                  |> add_animation_frame (143.68,0.) (72.19,144.38) (* Neutral *)
+                  |> add_animation_frame (143.68,0.) (72.19,144.38) (* Player *)
+                  |> add_animation_frame (143.68,0.) (72.19,144.38) (* Enemy *)
 
 let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (0.,0.) (72.19,72.19) (* Neutral*)

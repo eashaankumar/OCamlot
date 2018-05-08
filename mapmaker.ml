@@ -9,14 +9,14 @@ let troop_regen_speed = 1.
 let tower_base_player = {
   twr_id = 0;
   twr_pos = {x=0.;y=0.};
-  twr_size = {w=80.;h=136.} ;
+  twr_size = {w=72.;h=136.} ;
   twr_sprite = Sprite.tower_base;
   twr_troops = 1.;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
   twr_team = Player;
   selector_offset = {x = 0.; y = 100.};
-  count_label_offset = {x = 0.; y = (-1.) *. 10.};
+  count_label_offset = {x = 10.; y = 5.};
 }
 
 let tower_base_enemy = {
