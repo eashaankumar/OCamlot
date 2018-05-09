@@ -52,7 +52,7 @@ let intro_scene = {
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("start",ref (
-                 Button ({btn_state = Neutral; btn_sprite = Sprite.menu_btn_sprite1; 
+                 Button ({btn_state = Neutral; btn_sprite = Sprite.menu_btn_sprite1;
                           btn_label = {
                             text = "Start"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
                           }; btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
@@ -153,7 +153,7 @@ let mouse_move event =
   current_scene := scene;
   Js._true
 
-let get_scene_from_name name = 
+let get_scene_from_name name =
   match name with
   | "Intro" -> intro_scene
   | "Game" -> game_scene
@@ -178,20 +178,20 @@ let schedule_transition scid =
     end in
   ()
 
-let scene_transition () = 
+let scene_transition () =
   if List.length !current_scene.tasks > 0 then (
     match List.hd !current_scene.tasks with
-    | SwitchScene(nxt) -> 
+    | SwitchScene(nxt) ->
       begin
         if nxt = "Game" then (
           (* Go back to start screen *)
           if Mapmaker.all_states_completed () then (
-            Mapmaker.reset_states_counter (); 
+            Mapmaker.reset_states_counter ();
             let next_scene = get_scene_from_name "Intro" in
             current_scene := next_scene;
             current_scene := {!current_scene with tasks = [FadeIn (0.,2., 1.);]}
           )
-          (* Generate new map if more levels remaining *) 
+          (* Generate new map if more levels remaining *)
           else (
             current_scene := {
               name = "Game";
@@ -230,8 +230,23 @@ let game_loop context running =
     {!current_scene with
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
-         *)
+  *)
+  let last_move_time = ref (Sys.time ()) in
+  let next_move_step = ref (2. +. (Random.float 1.)) in
   let rec helper () =
+
+    let new_time = Sys.time () in
+    if new_time -. !last_move_time > !next_move_step then
+      begin
+        last_move_time := new_time;
+        next_move_step := (2. +. (Random.float 1.));
+      let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
+      current_scene :=
+        {!current_scene with
+         state = State.new_state_plus_delta
+             !current_scene.state cm !Renderer.delta}
+    end;
+
     !current_scene.input <- enforce_one_frame_mouse ();
     !current_scene.interface <- Ui.tick !current_scene.interface !current_scene.input;
     (* Only update if task is Update *)

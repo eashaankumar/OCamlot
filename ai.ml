@@ -126,7 +126,7 @@ module MCTS_AI : AI = struct
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
-  let iterations = 400
+  let iterations = 500
 
   let max_random_iters = ref 100
 
