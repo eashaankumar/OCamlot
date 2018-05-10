@@ -81,6 +81,7 @@ let tick sp delta =
      curr_time=sp.curr_time +. delta}
   end
 
+(* Towers *)
 let tower_base = init_sprite "images/ocamlot_sprites.png" 0.5
                   |> add_animation_frame (143.68,0.) (72.19,144.38) (* Neutral *)
                   |> add_animation_frame (143.68,0.) (72.19,144.38) (* Player *)
@@ -89,13 +90,9 @@ let tower_base = init_sprite "images/ocamlot_sprites.png" 0.5
 let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (0.,0.) (72.19,72.19) (* Neutral*)
                   |> add_animation_frame (72.19,0.) (72.19,72.19) (* Player *)
-                  |> add_animation_frame (72.19,0.) (72.19,72.19) (* Enemy *)
+                  |> add_animation_frame (72.19,72.19) (72.19,72.19) (* Enemy *)
 
-let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
-                  |> add_animation_frame (0.,0.) (242.,70.)
-                  |> add_animation_frame (0.,70.) (242.,70.)
-                  |> add_animation_frame (0.,140.) (242.,70.)
-
+(* Troops *)
 let blue_troop1_right = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (0.,144.02) (72.19,71.63)
                   |> add_animation_frame (72.19,144.02) (72.19,71.63)
@@ -108,9 +105,23 @@ let blue_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (431.75,144.02) (72.19,71.63)
                   |> add_animation_frame (504.04,144.02) (72.19,71.63)
 
+let red_troop1_right = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (0.,215.65) (72.19,71.63)
+                  |> add_animation_frame (72.19,215.65) (72.19,71.63)
+                  |> add_animation_frame (143.92,215.65) (72.19,71.63)
+                  |> add_animation_frame (216.21,215.65) (72.19,71.63)
+
+let red_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (287.84,215.65) (72.19,71.63)
+                  |> add_animation_frame (360.03,215.65) (72.19,71.63)
+                  |> add_animation_frame (431.75,215.65) (72.19,71.63)
+                  |> add_animation_frame (504.04,215.65) (72.19,71.63)
+
+(* Backgrounds *)
 let grass_background = init_sprite "images/grass.jpg" 0.
                   |> add_animation_frame (0.,0.) (1280.,700.)
 
+(* UI *)
 let tower_highlight = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (0.,575.74) (143.92,104.46)
 
@@ -122,3 +133,7 @@ let mvmt_troop_count_sprite = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (143.92,575.74) (71.96, 71.63)
 
 
+let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
+                  |> add_animation_frame (0.,0.) (242.,70.)
+                  |> add_animation_frame (0.,70.) (242.,70.)
+                  |> add_animation_frame (0.,140.) (242.,70.)

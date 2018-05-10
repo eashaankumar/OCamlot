@@ -24,6 +24,10 @@ val blue_troop1_right : sprite
 
 val blue_troop1_left : sprite
 
+val red_troop1_right : sprite
+
+val red_troop1_left : sprite
+
 val menu_btn_sprite1 : sprite
 
 val grass_background : sprite

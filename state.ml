@@ -35,7 +35,7 @@ let update_movement mvmt delta st =
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 100. in
+  let velocity = 50. in
   {mvmt with
    progress = mvmt.progress +. (velocity *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
@@ -71,8 +71,8 @@ let get_troop_direction_sprite team towers starti endi =
     end
   | Enemy ->
     begin
-      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
-      else Sprite.blue_troop1_left
+      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop1_right
+      else Sprite.red_troop1_left
     end
   | _ -> Sprite.blue_troop1_left (* This should never happen *)
 
