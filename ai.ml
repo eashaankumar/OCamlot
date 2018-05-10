@@ -172,9 +172,9 @@ module MCTS_AI : AI = struct
       if iters > !max_random_iters then 0.4 +. (Random.float 0.2) else
       if State.gameover st then
         if st.player_score > st.enemy_score then
-          0.0
+          0.0 +. 0.3 *. (float_of_int iters) /. 100.
         else
-          1.0
+          1.0 -. 0.3 *. (float_of_int iters) /. 100.
       else
         if max_bool then
           let cm = get_random_command st Enemy in
