@@ -55,7 +55,7 @@ let reset_to_first_frame sprite =
     curr_time= sprite.curr_time;
   }
 
-let tick sp delta = 
+let tick (sp:sprite) delta = 
   (* switch frames *)
   if sp.curr_time >= sp.time_delay then begin
     (* Wrap around *)
@@ -85,7 +85,7 @@ let tick sp delta =
 let tower_base = init_sprite "images/ocamlot_sprites.png" 0.5
                   |> add_animation_frame (143.68,0.) (72.19,144.38) (* Neutral *)
                   |> add_animation_frame (143.68,0.) (72.19,144.38) (* Player *)
-                  |> add_animation_frame (143.68,0.) (72.19,144.38) (* Enemy *)
+                  |> add_animation_frame (215.87,0.) (72.19,144.38) (* Enemy *)
 
 let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (0.,0.) (72.19,72.19) (* Neutral*)
@@ -137,3 +137,8 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,0.) (242.,70.)
                   |> add_animation_frame (0.,70.) (242.,70.)
                   |> add_animation_frame (0.,140.) (242.,70.)
+
+let spell_btn_sprite = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (216.01,575.74) (71.96, 71.63) (*Disable*)
+                  |> add_animation_frame (288.2,575.74) (71.96, 71.63) (*Neutral*)
+                  |> add_animation_frame (360.19,575.74) (71.96, 71.63) (*Clicked*)

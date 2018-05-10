@@ -90,6 +90,7 @@ let maps = [|
   player_score = 1 ;
   enemy_score = 1 ;
   movements = [] ;
+  skills = [];
   player_mana = 0 ;
   enemy_mana = 0;
 };
@@ -113,6 +114,7 @@ let maps = [|
   player_score = 1 ;
   enemy_score = 1 ;
   movements = [] ;
+  skills = [];
   player_mana = 0 ;
   enemy_mana = 0;
 };

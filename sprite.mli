@@ -38,6 +38,8 @@ val tower_troop_count_sprite : sprite
 
 val mvmt_troop_count_sprite : sprite
 
+val spell_btn_sprite : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the
  * starting frame.

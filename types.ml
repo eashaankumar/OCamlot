@@ -57,14 +57,16 @@ type effect =
   | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
   | Kill of int
 
-type skill_side =
-  | Buff
-  | Attack
+type timer = {
+  curr_time : float;
+  speed : float;
+  limit : float;
+}
 
 type skill = {
   mana_cost : int ;
   effect : effect ;
-  side : skill_side
+  stay_time : timer;
 }
 
 type move = {
@@ -116,6 +118,7 @@ type ui_element =
   | Button of button_property * vector2d * bounds * string option
   | Label of label_property * vector2d * bounds
   | Panel of sprite * vector2d * bounds
+  | SpellBox of button_property * vector2d * bounds * skill
 
 type state = {
   towers : tower array;
@@ -123,6 +126,7 @@ type state = {
   player_score : int;
   enemy_score : int;
   movements : movement list;
+  skills : skill list;
   player_mana : int;
   enemy_mana : int
 }

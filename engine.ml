@@ -12,6 +12,7 @@ let empty_state = {
   player_score = 0 ;
   enemy_score = 0 ;
   movements = [] ;
+  skills = [];
   player_mana = 0 ;
   enemy_mana = 0;
 }
@@ -21,12 +22,30 @@ let init_input = {
   mouse_state = Moved;
 }
 
+(* Skills *)
+let arrow_skill = {
+  mana_cost = 0 ;
+  effect = Kill(10) ;
+  stay_time = {curr_time = 0.; speed = 0.; limit = 10.}
+}
+
 (* Initialize scenes *)
 let game_scene = {
   name = "Game";
   tasks = [];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
+               ("arrow_spell", ref (
+                 SpellBox ({btn_state = Neutral; btn_sprite = Sprite.spell_btn_sprite;
+                          btn_label = {
+                            text = "->"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                          }; btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
+                                                                 },
+                           {x=Renderer.width /. 2. -. 100.;y= 300.},
+                           {w=72.;h=72.},
+                           (* Skill *)
+                           arrow_skill)
+               ));
                ];
   input = init_input;
   highlight_towers = [];
@@ -193,7 +212,7 @@ let scene_transition () =
           )
           (* Generate new map if more levels remaining *)
           else (
-            current_scene := {
+            (*current_scene := {
               name = "Game";
               tasks = [FadeIn (0.,2., 1.);];
               state = Mapmaker.next_state ();
@@ -203,7 +222,10 @@ let scene_transition () =
               highlight_towers = [];
               next = None;
               background = Sprite.grass_background;
-            };
+            };*)
+            current_scene := {game_scene with
+                              tasks = [FadeIn (0.,2., 1.);];
+                              state = Mapmaker.next_state ();};
           )
         )
         (* Otherwise get the desired scene from tuple list *)

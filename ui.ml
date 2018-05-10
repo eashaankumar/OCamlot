@@ -43,6 +43,10 @@ let tick interface input =
         u := Panel (new_sprite, pos, size);
         ()
       end
+    | SpellBox (prop, pos, size, skill) -> 
+      begin
+        ()
+      end
   ) interface;
   (* Update stats *)
   let ref_fps_label = find_ui_ref interface "fps" in

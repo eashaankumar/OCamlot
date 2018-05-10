@@ -21,6 +21,16 @@ let new_movement ts_index te_index troops sprite side = {
   progress = 0.
 }
 
+(**
+ * [update_skill] takes in a skill, [skill], a
+  time step, [delta], and a state [st], and progresses the skill according
+  to its  speed of the troops and the distance from one tower
+  to the next
+ *)
+let update_skill skill delta st = 
+  (* Skill  *)
+  skill
+
 (*[update_movement] takes in a movement, [mvmt], a
   time step, [delta], and a state [st], and progresses the movement according
   to the speed of the troops and the distance from one tower
@@ -35,7 +45,7 @@ let update_movement mvmt delta st =
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 50. in
+  let velocity = 35. in
   {mvmt with
    progress = mvmt.progress +. (velocity *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
@@ -155,7 +165,7 @@ let new_state st (c : command) =
                   }
         end
     end
-  | Skill (team,{mana_cost = mp; effect; side}, tower) -> begin
+  | Skill (team,{mana_cost = mp; effect}, tower) -> begin
       let has_enough_mana =
         match team with
         | Neutral -> false (*should fail*)
@@ -166,7 +176,23 @@ let new_state st (c : command) =
       else
         let new_towers = Array.copy st.towers in
         let tower_team = new_towers.(tower).twr_team in
-        match side with
+        match effect with
+        | Stun (duration) -> 
+          begin
+            print_endline ("Stunned");
+            st
+          end
+        | Regen_incr (troop_update_direction) -> 
+          begin
+            print_endline ("Regeneration");
+            st
+          end
+        | Kill (n) -> 
+          begin
+            print_endline ("Kill");
+            st
+          end
+        (*match side with
         | Buff -> begin
             if team <> tower_team then
               st
@@ -202,7 +228,7 @@ let new_state st (c : command) =
               end
               | Regen_incr f -> st
               | Stun s -> st
-          end
+          end*)
     end
     | Null -> st
 
@@ -228,6 +254,7 @@ let update_troop_count tower =
 let new_state_plus_delta st c d =
   let st' = new_state st c in
   let mvmts = List.map (fun m -> update_movement m d st) st'.movements in
+  let skills = List.map(fun s -> update_skill s d st) st'.skills in
   (* begin
     let rec mvmtlst l acc =
       match l with

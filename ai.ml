@@ -345,7 +345,7 @@ module MCTS_AI : AI = struct
       match !node with
       | Node(_,_,_,_,chldrn,_,_) -> chldrn
       | Leaf _ -> [||] in
-    print_endline ("Children length: "^(string_of_int (Array.length children)));
+    (*print_endline ("Children length: "^(string_of_int (Array.length children)));*)
     Array.fold_left
       (fun acc child -> if (func (win_pctg child) (win_pctg acc)) then child else acc)
       (Array.get children 0) children
@@ -384,9 +384,9 @@ module MCTS_AI : AI = struct
 
   let get_move st =
     let t = create_tree st iterations in
-    print_endline (to_string !t);
+    (*print_endline (to_string !t);*)
     let child = get_highest_percentage t in
-    print_endline ("Win %: "^(string_of_float (win_pctg child)));
+    (*print_endline ("Win %: "^(string_of_float (win_pctg child)));*)
     match !child with
     | Node(_,cm,_,_,_,_,_) -> cm
     | Leaf(cm,_) -> cm

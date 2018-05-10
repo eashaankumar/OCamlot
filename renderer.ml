@@ -108,7 +108,7 @@ let draw_entities context scene =
   (* Draw troops *)
   List.iter (fun mvmt ->
     let size = {w=50.;h=50.} in
-    if mvmt.progress > 0.98 || mvmt.progress < 0.02 then () else (
+    if mvmt.progress > 0.975 || mvmt.progress < 0.025 then () else (
       let vec = Physics.get_movement_coord mvmt scene.state 
                 |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.}) in
         (*|> Physics.add_vector2d (scene.state.towers.(mvmt.end_tower).selector_offset)  
@@ -177,7 +177,19 @@ let draw_ui context scene =
         draw_sprite_sheet context sprite pos size;
         ()
       end
-  ) scene.interface;
+    | SpellBox (btn_prop, pos, size, _) -> begin
+        let sprite_to_draw = (
+          match btn_prop.btn_state with
+            | Neutral -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
+            | Depressed -> btn_prop.btn_sprite |> Sprite.set_animation_frame 1
+            | Disabled -> btn_prop.btn_sprite |> Sprite.set_animation_frame 2
+            | Clicked -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
+        ) in
+        draw_sprite_sheet context sprite_to_draw pos size;
+        draw_text context btn_prop.btn_label.text (Physics.add_vector2d pos btn_prop.btn_label_offset) btn_prop.btn_label.color btn_prop.btn_label.font_size;
+        ()
+      end
+    ) scene.interface;
   ()
 
 let render context scene =
