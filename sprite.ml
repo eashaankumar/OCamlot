@@ -139,6 +139,7 @@ let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
                   |> add_animation_frame (0.,140.) (242.,70.)
 
 let spell_btn_sprite = init_sprite "images/ocamlot_sprites.png" 0.
-                  |> add_animation_frame (216.01,575.74) (71.96, 71.63) (*Disable*)
-                  |> add_animation_frame (288.2,575.74) (71.96, 71.63) (*Neutral*)
-                  |> add_animation_frame (360.19,575.74) (71.96, 71.63) (*Clicked*)
+                  |> add_animation_frame (215.01,575.74) (71.96, 71.63) (*Neutral*)
+                  |> add_animation_frame (288.2,575.74) (71.96, 71.63) (*Selected*)
+                  |> add_animation_frame (360.19,575.74) (71.96, 71.63) (*Regenerating*)
+                  |> add_animation_frame (432.15,575.74) (71.96, 71.63) (*Disable*)

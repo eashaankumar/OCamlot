@@ -177,16 +177,24 @@ let draw_ui context scene =
         draw_sprite_sheet context sprite pos size;
         ()
       end
-    | SpellBox (btn_prop, pos, size, _) -> begin
+    | SpellBox (prop, pos, size, _) -> begin
         let sprite_to_draw = (
-          match btn_prop.btn_state with
-            | Neutral -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
-            | Depressed -> btn_prop.btn_sprite |> Sprite.set_animation_frame 1
-            | Disabled -> btn_prop.btn_sprite |> Sprite.set_animation_frame 2
-            | Clicked -> btn_prop.btn_sprite |> Sprite.set_animation_frame 0
+          match prop.spell_box_state with
+            | Neutral -> prop.spell_box_sprite |> Sprite.set_animation_frame 0
+            | Selected -> prop.spell_box_sprite |> Sprite.set_animation_frame 1
+            | Regenerating -> prop.spell_box_sprite |> Sprite.set_animation_frame 2
+            | Disabled -> prop.spell_box_sprite |> Sprite.set_animation_frame 3
         ) in
         draw_sprite_sheet context sprite_to_draw pos size;
-        draw_text context btn_prop.btn_label.text (Physics.add_vector2d pos btn_prop.btn_label_offset) btn_prop.btn_label.color btn_prop.btn_label.font_size;
+        (* Draw top image *)
+        let _ =  (
+          match prop.spell_box_front_image with
+          | None -> ()
+          | Some (front_sprite) -> 
+            begin
+              draw_sprite_sheet context front_sprite (Physics.add_vector2d pos prop.spell_box_front_image_offset) size;
+            end
+        ) in
         ()
       end
     ) scene.interface;

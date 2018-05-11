@@ -87,7 +87,24 @@ let get_troop_direction_sprite team towers starti endi =
   | _ -> Sprite.blue_troop1_left (* This should never happen *)
 
 (****** Helpers ******)
-
+(**
+ * [get_tower_under_mouse towers input] returns the id of any tower that
+ * is currently located under the mouse position.
+ * returns: [Some id] if there is a tower underneath the mouse,
+ *          [None] otherwise
+ *)
+let get_tower_under_mouse towers input = 
+  Array.fold_left (fun acc t -> 
+    if acc = None then (
+      if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
+        Some(t.twr_id)
+      )
+      else None
+    )
+    else (
+      acc
+    )
+  ) None towers
 let possible_commands st side =
   let side_twr_list = (Array.fold_left
       (fun acc e -> if e.twr_team = side then e.twr_id::acc else acc)
@@ -406,9 +423,78 @@ let manage_mouse_input (ipt : input) (sc : scene) : command ref =
     | Moved -> ()
 end in command
 
+(**
+ * [update_spell_boxes scene input] updates the state of each spell box 
+ * in the interface.
+ * returns: [unit]
+ # effects: [scene.interface]
+ *)
+let update_spell_boxes scene input = 
+  List.iter (fun (id,uref) ->
+    match !uref with
+    | SpellBox (prop, pos, size, skill) -> 
+      begin
+        let _ =  
+          begin
+            if prop.spell_box_state = Regenerating then (
+              let timer' = {skill.regen_timer with curr_time = skill.regen_timer.curr_time +. !Renderer.delta *. skill.regen_timer.speed} in
+              (* Skill has done regenerating, box is neutral, timer is reset *)
+              if timer'.curr_time >= timer'.limit then (
+                let reset_timer = {timer' with curr_time = 0.} in
+                prop.spell_box_state <- Neutral;
+                uref:= SpellBox(prop, pos, size, {skill with regen_timer = reset_timer})
+              )
+              (* Skill has not done regenerating...update its regeneration timer *)
+              else (
+                uref := SpellBox(prop, pos, size, {skill with regen_timer = timer'})
+              )
+            ) 
+            else if skill.mana_cost > scene.state.player_mana then (
+              prop.spell_box_state <- Disabled;
+              uref := SpellBox(prop, pos, size, skill)
+            )
+            else if prop.spell_box_state = Neutral && Physics.point_inside input.mouse_pos pos size && input.mouse_state = Pressed then (
+              prop.spell_box_state <- Selected;
+              uref := SpellBox(prop, pos, size, skill)
+            )
+            else if prop.spell_box_state = Selected then (
+              if input.mouse_state = Released then (
+                (* Check if mouse was released over a tower *)
+                let tidopt = get_tower_under_mouse scene.state.towers input in
+                match tidopt with
+                | None -> (* Nothing happens *)
+                  begin
+                    prop.spell_box_state <- Neutral;
+                    uref := SpellBox(prop, pos, size, skill)
+                  end
+                | Some (tid) -> 
+                  begin
+                    print_endline("Casting spell on "^(string_of_int tid));
+                    prop.spell_box_state <- Regenerating;
+                    uref := SpellBox(prop, pos, size, skill)
+                  end
+              )
+              else if input.mouse_state = Moved then(
+                prop.spell_box_state <- Selected;
+                uref := SpellBox(prop, pos, size, skill)
+              )
+            )
+            else (
+              prop.spell_box_state <- Neutral;
+              uref := SpellBox(prop, pos, size, skill)
+            )
+          end in
+          ();
+      end
+    | _ -> ()
+  ) scene.interface;
+  ()
+        
 let update sc input =
   (* Tick troop sprites *)
   let updated_towers = update_towers sc.state.towers in
+  (* Skill Selection *)
+  update_spell_boxes sc input;
   (* Tower selection *)
   let command = manage_mouse_input input sc in
   (* Return new state *)

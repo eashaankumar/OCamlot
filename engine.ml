@@ -26,7 +26,7 @@ let init_input = {
 let arrow_skill = {
   mana_cost = 0 ;
   effect = Kill(10) ;
-  stay_time = {curr_time = 0.; speed = 0.; limit = 10.}
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 2.}
 }
 
 (* Initialize scenes *)
@@ -36,13 +36,10 @@ let game_scene = {
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("arrow_spell", ref (
-                 SpellBox ({btn_state = Neutral; btn_sprite = Sprite.spell_btn_sprite;
-                          btn_label = {
-                            text = "->"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                          }; btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
-                                                                 },
-                           {x=Renderer.width /. 2. -. 100.;y= 300.},
-                           {w=72.;h=72.},
+                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+                          spell_box_front_image = None; spell_box_front_image_offset = {x=0.;y=0.};},
+                           {x=100.;y= Renderer.height -. 75.},
+                           {w=50.;h=50.},
                            (* Skill *)
                            arrow_skill)
                ));

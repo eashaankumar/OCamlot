@@ -10,8 +10,8 @@ let get_label_prop label : label_property=
 
 let tick interface input =
   (* make updates to interface *)
-  List.iter (fun (id,u) ->
-    match !u with
+  List.iter (fun (id,uref) ->
+    match !uref with
     | Button (prop, pos, size, nsc) -> begin
         (* If button is disabled, then ignore it *)
         if prop.btn_state = Disabled then
@@ -30,22 +30,22 @@ let tick interface input =
           else 
             prop.btn_state <- Neutral
           in
-          u := Button (prop, pos, size, nsc);
+          uref := Button (prop, pos, size, nsc);
           ()
         end
       end
     | Label (label_prop, pos, size) -> begin
-        u := Label (label_prop, pos, size);
+        uref := Label (label_prop, pos, size);
         ()
       end
     | Panel (sprite, pos, size) -> begin
         let new_sprite = Sprite.tick sprite !Renderer.delta in
-        u := Panel (new_sprite, pos, size);
+        uref := Panel (new_sprite, pos, size);
         ()
       end
     | SpellBox (prop, pos, size, skill) -> 
       begin
-        ()
+        () (* Will be handled in state *)
       end
   ) interface;
   (* Update stats *)

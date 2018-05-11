@@ -66,7 +66,7 @@ type timer = {
 type skill = {
   mana_cost : int ;
   effect : effect ;
-  stay_time : timer;
+  regen_timer : timer;
 }
 
 type move = {
@@ -99,8 +99,6 @@ type button_state =
   | Depressed
   | Clicked
 
-
-
 type label_property = {
   mutable text : string;
   mutable color : color;
@@ -114,11 +112,24 @@ type button_property = {
   mutable btn_label_offset : vector2d;
 }
 
+type spell_box_state = 
+  | Neutral
+  | Selected
+  | Regenerating
+  | Disabled
+
+type spell_box_property = {
+  mutable spell_box_state : spell_box_state;
+  mutable spell_box_sprite : sprite;
+  mutable spell_box_front_image : sprite option;
+  mutable spell_box_front_image_offset : vector2d;
+}
+
 type ui_element =
   | Button of button_property * vector2d * bounds * string option
   | Label of label_property * vector2d * bounds
   | Panel of sprite * vector2d * bounds
-  | SpellBox of button_property * vector2d * bounds * skill
+  | SpellBox of spell_box_property * vector2d * bounds * skill
 
 type state = {
   towers : tower array;
