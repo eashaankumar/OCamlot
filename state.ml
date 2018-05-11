@@ -21,16 +21,6 @@ let new_movement ts_index te_index troops sprite side = {
   progress = 0.
 }
 
-(**
- * [update_skill] takes in a skill, [skill], a
-  time step, [delta], and a state [st], and progresses the skill according
-  to its  speed of the troops and the distance from one tower
-  to the next
- *)
-let update_skill skill delta st = 
-  (* Skill  *)
-  skill
-
 (*[update_movement] takes in a movement, [mvmt], a
   time step, [delta], and a state [st], and progresses the movement according
   to the speed of the troops and the distance from one tower
@@ -143,8 +133,9 @@ let possible_commands st side =
 *)
 let new_state st (c : command) =
   match c with
-  | Move (team,start,finish) -> 
+  | Move (team,start,finish) ->
     begin
+      print_endline("Move");
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
       if ts_team_original = Neutral || start = finish then (
@@ -185,6 +176,7 @@ let new_state st (c : command) =
     end
   | Skill (team,{mana_cost = mp; effect}, tower) -> 
     begin
+      print_endline("Skill");
       let has_enough_mana =
         match team with
         | Neutral -> false (*should fail*)
@@ -251,7 +243,6 @@ let update_troop_count tower =
 let new_state_plus_delta st c d =
   let st' = new_state st c in
   let mvmts = List.map (fun m -> update_movement m d st) st'.movements in
-  let skills = List.map(fun s -> update_skill s d st) st'.skills in
   (* begin
     let rec mvmtlst l acc =
       match l with
@@ -443,9 +434,8 @@ let update_spell_boxes scene input : command =
  * returns: [command] to be processed in this frame
  *)
 let manage_mouse_input (ipt : input) (sc : scene) : command =
-  let command = ref Null in (* Dummy Command *)
+  let command = ref (update_spell_boxes sc ipt ) in (* Dummy Command *)
   (* Skill Selection *)
-  (*command := update_spell_boxes sc ipt;*)
   let _ = 
     begin
       match ipt.mouse_state with
@@ -481,8 +471,7 @@ let manage_mouse_input (ipt : input) (sc : scene) : command =
           destination.to_tower <- None
         end
       | Moved -> ()
-    end 
-  in
+    end in
   !command
         
 let update sc input =
