@@ -83,7 +83,7 @@ let tick (sp:sprite) delta =
 
 (* Towers *)
 let tower_base = init_sprite "images/ocamlot_sprites.png" 0.5
-                  |> add_animation_frame (143.68,0.) (72.19,144.38) (* Neutral *)
+                  |> add_animation_frame (0.,0.) (72.19,72.19) (* Neutral *)
                   |> add_animation_frame (143.68,0.) (72.19,144.38) (* Player *)
                   |> add_animation_frame (215.87,0.) (72.19,144.38) (* Enemy *)
 
@@ -143,3 +143,15 @@ let spell_btn_sprite = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (288.2,575.74) (71.96, 71.63) (*Selected*)
                   |> add_animation_frame (360.19,575.74) (71.96, 71.63) (*Regenerating*)
                   |> add_animation_frame (432.15,575.74) (71.96, 71.63) (*Disable*)
+
+(* Spells *)
+let sprite_lightning = init_sprite "images/lightning.png" 0.05
+                  |> add_animation_frame (0., 0.) (74.5, 127.)
+                  |> add_animation_frame (74.5, 0.) (74.5, 127.)
+                  |> add_animation_frame (149., 0.) (74.5, 127.)
+                  |> add_animation_frame (223.5, 0.) (74.5, 127.)
+                  |> add_animation_frame (298., 0.) (74.5, 127.)
+                  |> add_animation_frame (372.5, 0.) (74.5, 127.)
+
+let sprite_lightning_icon = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (504.11, 575.74) (71.96, 71.63)

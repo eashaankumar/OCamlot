@@ -178,19 +178,20 @@ let draw_ui context scene =
         ()
       end
     | SpellBox (prop, pos, size, _) -> begin
-        let sprite_to_draw = (
+        let (sprite_to_draw, draw_icon) = (
           match prop.spell_box_state with
-            | Neutral -> prop.spell_box_sprite |> Sprite.set_animation_frame 0
-            | Selected -> prop.spell_box_sprite |> Sprite.set_animation_frame 1
-            | Regenerating -> prop.spell_box_sprite |> Sprite.set_animation_frame 2
-            | Disabled -> prop.spell_box_sprite |> Sprite.set_animation_frame 3
+            | Neutral -> prop.spell_box_sprite |> Sprite.set_animation_frame 0, true
+            | Selected -> prop.spell_box_sprite |> Sprite.set_animation_frame 1, true
+            | Regenerating -> prop.spell_box_sprite |> Sprite.set_animation_frame 2, false
+            | Disabled -> prop.spell_box_sprite |> Sprite.set_animation_frame 3, true
         ) in
         draw_sprite_sheet context sprite_to_draw pos size;
         (* Draw top image *)
         let _ =  (
-          match prop.spell_box_front_image with
-          | None -> ()
-          | Some (front_sprite) -> 
+          match draw_icon,prop.spell_box_front_image with
+          | false, _ -> ()
+          | _, None -> ()
+          | true, Some (front_sprite) -> 
             begin
               draw_sprite_sheet context front_sprite (Physics.add_vector2d pos prop.spell_box_front_image_offset) size;
             end
@@ -200,6 +201,16 @@ let draw_ui context scene =
     ) scene.interface;
   ()
 
+let draw_spells context scene =
+  match scene.state.player_skill with
+  | None -> ()
+  | Some(skl) -> 
+    begin
+      let tower = scene.state.towers.(skl.tower_id) in
+      draw_sprite_sheet context skl.sprite tower.twr_pos skl.sprite.frames.(0).bounds;
+      ()
+    end
+(*render*)
 let render context scene =
   (* House Keeping *)
   update_delta ();
@@ -215,9 +226,10 @@ let render context scene =
   draw_sprite_sheet context scene.background {x=0.;y=0.} {w=width;h=height};
   (* Draw entities *)
   draw_entities context scene;
+  (* Draw spells *)
+  draw_spells context scene;
   (* Draw ui *)
   draw_ui context scene;
-  print_endline("Number of skills: "^(string_of_int (List.length scene.state.skills)));
   ()
 
 let manage_tasks context scene = 

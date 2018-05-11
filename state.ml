@@ -192,31 +192,41 @@ let new_state st (c : command) =
         | Neutral -> st (* This should never happen *)
         | Player -> 
           begin
-            {st with player_mana = st.player_mana - skill.mana_cost; skills = skill::st.skills}
+            {st with player_mana = st.player_mana - skill.mana_cost; player_skill = (if st.player_skill = None then (Some skill) else st.player_skill)}
           end
         | Enemy -> 
           begin
-            {st with enemy_mana = st.enemy_mana - skill.mana_cost; skills = skill::st.skills}
+            {st with enemy_mana = st.enemy_mana - skill.mana_cost; (* TODO: Add player skill *)}
           end
-        (*let new_towers = Array.copy st.towers in
-        let tower_team = new_towers.(tower).twr_team in
-        match effect with
-        | Stun (duration) -> 
-          begin
-            print_endline ("Stunned");
-            st
-          end
-        | Regen_incr (troop_update_direction) -> 
-          begin
-            print_endline ("Regeneration");
-            st
-          end
-        | Kill (n) -> 
-          begin
-            {st with
+      )
+    end
+    | Null -> st
+
+(**
+ * [update_skill state] updates towers based on the effects of player/enemy
+ * [skill] and returns the updated state if it hasn't finished its effects.
+ * returns: [Some state] is effects are remaining, [None] otherwise
+ *)
+let update_skill st : state = 
+  match st.player_skill with
+  | None -> st
+  | Some(sk) -> 
+    begin 
+      let new_towers = Array.copy st.towers in
+      let tower = sk.tower_id in
+      (*let tower_team = new_towers.(tower).twr_team in*)
+      match sk.effect with
+      | Stun (secs) -> st
+      | Regen_incr (incr_rate) -> st
+      | Kill (n) -> 
+        begin
+          (* If animation done, then remove troops *)
+          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+            {st with 
+              player_skill = None;
               towers = 
               begin
-                let new_troop_count = max 0. st.towers.(tower).twr_troops -. float_of_int n in
+                let new_troop_count = max 0. (st.towers.(tower).twr_troops -. float_of_int n) in
                 new_towers.(tower) <- {st.towers.(tower) with 
                   twr_troops = new_troop_count; 
                   twr_team = begin
@@ -225,15 +235,24 @@ let new_state st (c : command) =
                     else
                       st.towers.(tower).twr_team
                   end
-                };
-                new_towers
+                }; new_towers
               end
             }
-          end*)
-      )
-    end
-    | Null -> st
-
+          )
+          (* Otherwise play animation *)
+          else (
+            {st with 
+              player_skill = 
+              Some {sk with
+                sprite = Sprite.tick sk.sprite !Renderer.delta;
+                anim_timer = {sk.anim_timer with
+                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. !Renderer.delta;
+                }
+              }
+            }
+          )
+        end
+      end
 (**
  * [update_troop_count tower] updates the troop count in [tower]
  * returns: new troop [count]
@@ -263,7 +282,7 @@ let new_state_plus_delta st c d =
       | h::t -> mvmtlst t ((update_movement h d st)::acc) in
     mvmtlst st.movements []
   end in *)
-  let temp_state =
+  let st'' =
     {st' with
       towers = List.fold_left (fun acc e ->
         if e.progress <= 1. then acc
@@ -317,8 +336,11 @@ let new_state_plus_delta st c d =
     movements = List.filter (fun m -> m.progress < 1.) mvmts;
     } in
 
-  let (pl_score, en_score) = get_scores temp_state in
+  let (pl_score, en_score) = get_scores st'' in
 
+  (* Update skills *)
+  let temp_state = update_skill st'' in
+      
   {temp_state with
     (* Update score and regenerated troops *)
     towers = begin
@@ -328,18 +350,29 @@ let new_state_plus_delta st c d =
       ) temp_state.towers
     end;
     player_score = pl_score;
-    enemy_score = en_score
+    enemy_score = en_score;
   }
 
+(**
+ * [contains_troops_with_team state team] checks if there are any troops 
+ * from a particular team in transit from one tower to another. This is 
+ * helpful when one player loses posession of all towers but is still
+ * in the game is his players are in transit.
+ * returns: [true] if there exists a movement in [state] of [team], else [false]
+ *)
+let contains_troops_with_team state team = 
+  List.fold_left (fun acc mvmt -> 
+    if mvmt.mvmt_team = team then true else acc
+  ) false state.movements
 
 let next_scene sc =
   match sc.name with
   | "Game" ->
-    if sc.state.player_score = 0 then (
+    if sc.state.player_score = 0 && not (contains_troops_with_team sc.state Player) then (
       print_endline "GameOver";
       Some "Game Over"
     )
-    else if sc.state.enemy_score = 0 then (
+    else if sc.state.enemy_score = 0 && not (contains_troops_with_team sc.state Enemy) then (
       Some "Game"
     )
     else None

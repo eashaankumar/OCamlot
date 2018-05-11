@@ -40,6 +40,10 @@ val mvmt_troop_count_sprite : sprite
 
 val spell_btn_sprite : sprite
 
+val sprite_lightning : sprite
+
+val sprite_lightning_icon : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the
  * starting frame.

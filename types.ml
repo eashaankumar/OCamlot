@@ -53,7 +53,7 @@ type movement = {
 }
 
 type effect =
-  | Stun of float (* An attack *)
+  | Stun of float(* An attack *)
   | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
   | Kill of int
 
@@ -69,6 +69,8 @@ type skill = {
   effect : effect ;
   regen_timer : timer;
   tower_id : int;
+  sprite: sprite;
+  anim_timer : timer;
 }
 
 type move = {
@@ -139,7 +141,7 @@ type state = {
   player_score : int;
   enemy_score : int;
   movements : movement list;
-  skills : skill list;
+  player_skill : skill option;
   player_mana : int;
   enemy_mana : int
 }

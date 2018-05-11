@@ -12,7 +12,7 @@ let empty_state = {
   player_score = 0 ;
   enemy_score = 0 ;
   movements = [] ;
-  skills = [];
+  player_skill = None;
   player_mana = 0 ;
   enemy_mana = 0;
 }
@@ -23,12 +23,14 @@ let init_input = {
 }
 
 (* Skills *)
-let arrow_skill = {
+let lightning_skill = {
   allegiance = Player;
   mana_cost = 0 ;
   effect = Kill(10) ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
   tower_id = 0;
+  sprite = Sprite.sprite_lightning;
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 2.};
 }
 
 (* Initialize scenes *)
@@ -39,11 +41,11 @@ let game_scene = {
   interface = [("fps",ref Ui.fps_label);
                ("arrow_spell", ref (
                  SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
-                          spell_box_front_image = None; spell_box_front_image_offset = {x=0.;y=0.};},
+                          spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
                            {x=100.;y= Renderer.height -. 75.},
                            {w=50.;h=50.},
                            (* Skill *)
-                           arrow_skill)
+                           lightning_skill)
                ));
                ];
   input = init_input;

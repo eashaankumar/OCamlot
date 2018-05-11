@@ -11,6 +11,9 @@ Run index.html in browser
 - theme image
 http://www.baltana.com/backgrounds/vintage-background-hd-desktop-wallpaper-16551.html
 
+- Lightning spell
+http://spritefx.blogspot.fr/2013/04/sprite-lightning.html
+
 ## Problems
 
 - Wrong towers
