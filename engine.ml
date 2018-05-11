@@ -22,11 +22,21 @@ let init_input = {
   mouse_state = Moved;
 }
 
+let stun_skill = {
+  allegiance = Player;
+  mana_cost = 0;
+  effect = Stun 3.5;
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  tower_id = 0;
+  sprite = Sprite.sprite_lightning;
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.5};
+}
+
 (* Skills *)
 let lightning_skill = {
   allegiance = Player;
   mana_cost = 0 ;
-  effect = Kill(10) ;
+  effect = Kill (10) ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
   tower_id = 0;
   sprite = Sprite.sprite_lightning;

@@ -37,10 +37,11 @@ type tower = {
   twr_sprite : sprite;
   twr_troops : float;
   twr_troops_max : float;
-  twr_troops_regen_speed : float;
+  mutable twr_troops_regen_speed : float;
   twr_team : allegiance;
   selector_offset : vector2d;
   count_label_offset : vector2d;
+  mutable is_disabled : bool
 }
 
 type movement = {

@@ -121,13 +121,6 @@ let possible_commands st side =
 
   Array.of_list (Null::move_list)
 
-
-
-
-
-
-
-
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
 *)
@@ -137,7 +130,8 @@ let new_state st (c : command) =
     begin
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
-      if ts_team_original = Neutral || start = finish || ts_team_original <> team then (
+      if ts_team_original = Neutral || start = finish ||
+         ts_team_original <> team || st.towers.(start).is_disabled then (
         st
       ) else
         begin
@@ -175,7 +169,6 @@ let new_state st (c : command) =
     end
   | Skill (skill) ->
     begin
-      print_endline("Skill");
       let has_enough_mana =
         match skill.allegiance with
         | Neutral -> false (*should fail*)
@@ -183,7 +176,6 @@ let new_state st (c : command) =
         | Enemy -> st.enemy_mana >= skill.mana_cost in
       (* Deny spell if can't be afforded *)
       if not has_enough_mana then (
-        print_endline("Not enough mana!!!");
         st
       )
       (* Otherwise add the skill to state *)
@@ -205,19 +197,79 @@ let new_state st (c : command) =
 (**
  * [update_skill state] updates towers based on the effects of player/enemy
  * [skill] and returns the updated state if it hasn't finished its effects.
- * returns: [Some state] is effects are remaining, [None] otherwise
+ * returns: [Some state] if effects are remaining, [None] otherwise
  *)
-let update_skill st : state =
+let update_skill st d : state =
   match st.player_skill with
   | None -> st
-  | Some(sk) ->
+  | Some (sk) ->
     begin
       let new_towers = Array.copy st.towers in
       let tower = sk.tower_id in
-      (*let tower_team = new_towers.(tower).twr_team in*)
+      (* let tower_team = new_towers.(tower).twr_team in *)
       match sk.effect with
-      | Stun (secs) -> st
-      | Regen_incr (incr_rate) -> st
+      | Stun (secs) ->
+        begin
+          (* If animation done, stun the tower *)
+          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+            if secs <= 0. then
+              {st with
+               player_skill = None;
+               towers = begin
+                 new_towers.(tower).is_disabled <- false; new_towers
+               end
+              }
+            else
+            {st with
+             player_skill = Some (
+                 {sk with
+                  mana_cost = 0;
+                  effect = Stun (secs -. d);
+                 }
+          );
+             towers =
+               begin
+                 new_towers.(tower).is_disabled <- true; new_towers
+               end
+            }
+          )
+          else (
+            {st with
+              player_skill =
+              Some {sk with
+                sprite = Sprite.tick sk.sprite d;
+                anim_timer = {sk.anim_timer with
+                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                }
+              }
+            }
+          )
+        end
+      | Regen_incr (incr_rate) ->
+        begin
+          (* if animation done, then increase the regeneration speed *)
+          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+            {st with
+             player_skill = None;
+             towers =
+               let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
+               begin
+                 new_towers.(tower).twr_troops_regen_speed <- new_regen
+               end; new_towers
+            }
+          )
+          else (
+            {st with
+             player_skill =
+               Some {sk with
+                     sprite = Sprite.tick sk.sprite d;
+                     anim_timer = {sk.anim_timer with
+                                   curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                                  }
+                    }
+            }
+          )
+        end
       | Kill (n) ->
         begin
           (* If animation done, then remove troops *)
@@ -244,9 +296,9 @@ let update_skill st : state =
             {st with
               player_skill =
               Some {sk with
-                sprite = Sprite.tick sk.sprite !Renderer.delta;
+                sprite = Sprite.tick sk.sprite d;
                 anim_timer = {sk.anim_timer with
-                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. !Renderer.delta;
+                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
                 }
               }
             }
@@ -261,6 +313,7 @@ let update_troop_count tower =
   match tower.twr_team with
   | Neutral -> 0.
   | _ ->
+    if tower.is_disabled then 0. else
     begin
       let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
       if dir = 0 then
@@ -275,7 +328,6 @@ let update_troop_count tower =
 let new_state_plus_delta st c d =
   let st' = new_state st c in
   let mvmts = List.map (fun m -> update_movement m d st) st'.movements in
-
   let st'' =
     {st' with
       towers = List.fold_left (fun acc e ->
@@ -329,12 +381,9 @@ let new_state_plus_delta st c d =
       ) (Array.copy st'.towers) mvmts;
     movements = List.filter (fun m -> m.progress < 1.) mvmts;
     } in
-
   let (pl_score, en_score) = get_scores st'' in
-
   (* Update skills *)
-  let temp_state = update_skill st'' in
-
+  let temp_state = update_skill st'' d in
   {temp_state with
     (* Update score and regenerated troops *)
     towers = begin
@@ -396,7 +445,7 @@ let update_towers (towers : tower array) : tower array =
 (**
  * [update_spell_boxes scene input] updates the state of each spell box
  * in the interface.
- * returns: [unit]
+ * returns: a command
  # effects: [scene.interface]
  *)
 let update_spell_boxes scene input : command =
@@ -441,7 +490,6 @@ let update_spell_boxes scene input : command =
                 | Some (tid) ->
                   (* Add new spell to state *)
                   begin
-                    print_endline("Casting spell on "^(string_of_int tid));
                     prop.spell_box_state <- Regenerating;
                     uref := SpellBox(prop, pos, size, skill);
                     (*scene.state <- {scene.state with skills = skill::scene.state.skills};*)
@@ -470,7 +518,7 @@ let update_spell_boxes scene input : command =
  * returns: [command] to be processed in this frame
  *)
 let manage_mouse_input (ipt : input) (sc : scene) : command =
-  let command = ref (update_spell_boxes sc ipt ) in (* Dummy Command *)
+  let command = ref (update_spell_boxes sc ipt) in (* Dummy Command *)
   (* Skill Selection *)
   let _ =
     begin
