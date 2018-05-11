@@ -135,10 +135,9 @@ let new_state st (c : command) =
   match c with
   | Move (team,start,finish) ->
     begin
-      print_endline("Move");
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
-      if ts_team_original = Neutral || start = finish then (
+      if ts_team_original = Neutral || start = finish || ts_team_original <> team then (
         st
       ) else
         begin
@@ -174,18 +173,32 @@ let new_state st (c : command) =
                   }
         end
     end
-  | Skill (team,{mana_cost = mp; effect}, tower) -> 
+  | Skill (skill) -> 
     begin
       print_endline("Skill");
       let has_enough_mana =
-        match team with
+        match skill.allegiance with
         | Neutral -> false (*should fail*)
-        | Player -> st.player_mana >= mp
-        | Enemy -> st.enemy_mana >= mp in
-      if not has_enough_mana then
+        | Player -> st.player_mana >= skill.mana_cost
+        | Enemy -> st.enemy_mana >= skill.mana_cost in
+      (* Deny spell if can't be afforded *)
+      if not has_enough_mana then (
+        print_endline("Not enough mana!!!");
         st
-      else
-        let new_towers = Array.copy st.towers in
+      )
+      (* Otherwise add the skill to state *)
+      else (
+        match skill.allegiance with
+        | Neutral -> st (* This should never happen *)
+        | Player -> 
+          begin
+            {st with player_mana = st.player_mana - skill.mana_cost; skills = skill::st.skills}
+          end
+        | Enemy -> 
+          begin
+            {st with enemy_mana = st.enemy_mana - skill.mana_cost; skills = skill::st.skills}
+          end
+        (*let new_towers = Array.copy st.towers in
         let tower_team = new_towers.(tower).twr_team in
         match effect with
         | Stun (duration) -> 
@@ -201,23 +214,23 @@ let new_state st (c : command) =
         | Kill (n) -> 
           begin
             {st with
-              towers = begin
-                let new_troop_count =
-                  max 0. st.towers.(tower).twr_troops -. float_of_int n in
-              new_towers.(tower) <-
-                {st.towers.(tower) with
-                  twr_troops =
-                    new_troop_count;
-                twr_team = begin
-                  if new_troop_count = 0. then
-                    Neutral
-                  else
-                    st.towers.(tower).twr_team
-                end};
-              new_towers
-            end
+              towers = 
+              begin
+                let new_troop_count = max 0. st.towers.(tower).twr_troops -. float_of_int n in
+                new_towers.(tower) <- {st.towers.(tower) with 
+                  twr_troops = new_troop_count; 
+                  twr_team = begin
+                    if new_troop_count = 0. then
+                      Neutral
+                    else
+                      st.towers.(tower).twr_team
+                  end
+                };
+                new_towers
+              end
             }
-          end
+          end*)
+      )
     end
     | Null -> st
 
@@ -353,10 +366,6 @@ let update_towers (towers : tower array) : tower array =
       }
     ) towers
 
-(* [manage_mouse_input ipt sc] returns a command based on [ipt] and updates
-   the scene's visual elements (e.g.: highlighting).
-*)
-
 (**
  * [update_spell_boxes scene input] updates the state of each spell box 
  * in the interface.
@@ -409,7 +418,7 @@ let update_spell_boxes scene input : command =
                     prop.spell_box_state <- Regenerating;
                     uref := SpellBox(prop, pos, size, skill);
                     (*scene.state <- {scene.state with skills = skill::scene.state.skills};*)
-                    command := Skill(Player, skill, tid);
+                    command := Skill({skill with allegiance = Player; tower_id = tid});
                   end
               )
               else if input.mouse_state = Moved then(

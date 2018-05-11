@@ -64,9 +64,11 @@ type timer = {
 }
 
 type skill = {
+  allegiance : allegiance;
   mana_cost : int ;
   effect : effect ;
   regen_timer : timer;
+  tower_id : int;
 }
 
 type move = {
@@ -77,7 +79,7 @@ type move = {
 
 type command =
   | Move of allegiance * int * int (* tuple of tower indices*)
-  | Skill of allegiance * skill * int
+  | Skill of skill
   | Null
 
 type mouse_state =
@@ -114,7 +116,7 @@ type button_property = {
 
 type spell_box_state = 
   | Neutral
-  | Selected
+  | Selected (* Depressed *)
   | Regenerating
   | Disabled
 

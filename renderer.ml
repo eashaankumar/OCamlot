@@ -217,6 +217,7 @@ let render context scene =
   draw_entities context scene;
   (* Draw ui *)
   draw_ui context scene;
+  print_endline("Number of skills: "^(string_of_int (List.length scene.state.skills)));
   ()
 
 let manage_tasks context scene = 

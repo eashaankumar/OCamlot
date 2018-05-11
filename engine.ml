@@ -24,9 +24,11 @@ let init_input = {
 
 (* Skills *)
 let arrow_skill = {
+  allegiance = Player;
   mana_cost = 0 ;
   effect = Kill(10) ;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 2.}
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
+  tower_id = 0;
 }
 
 (* Initialize scenes *)
