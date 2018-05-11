@@ -35,7 +35,7 @@ let update_movement mvmt delta st =
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 35. in
+  let velocity = 50. in
   {mvmt with
    progress = mvmt.progress +. (velocity *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
@@ -83,8 +83,8 @@ let get_troop_direction_sprite team towers starti endi =
  * returns: [Some id] if there is a tower underneath the mouse,
  *          [None] otherwise
  *)
-let get_tower_under_mouse towers input = 
-  Array.fold_left (fun acc t -> 
+let get_tower_under_mouse towers input =
+  Array.fold_left (fun acc t ->
     if acc = None then (
       if Physics.point_inside input.mouse_pos t.twr_pos t.twr_size then (
         Some(t.twr_id)
@@ -173,7 +173,7 @@ let new_state st (c : command) =
                   }
         end
     end
-  | Skill (skill) -> 
+  | Skill (skill) ->
     begin
       print_endline("Skill");
       let has_enough_mana =
@@ -190,11 +190,11 @@ let new_state st (c : command) =
       else (
         match skill.allegiance with
         | Neutral -> st (* This should never happen *)
-        | Player -> 
+        | Player ->
           begin
             {st with player_mana = st.player_mana - skill.mana_cost; player_skill = (if st.player_skill = None then (Some skill) else st.player_skill)}
           end
-        | Enemy -> 
+        | Enemy ->
           begin
             {st with enemy_mana = st.enemy_mana - skill.mana_cost; (* TODO: Add player skill *)}
           end
@@ -207,28 +207,28 @@ let new_state st (c : command) =
  * [skill] and returns the updated state if it hasn't finished its effects.
  * returns: [Some state] is effects are remaining, [None] otherwise
  *)
-let update_skill st : state = 
+let update_skill st : state =
   match st.player_skill with
   | None -> st
-  | Some(sk) -> 
-    begin 
+  | Some(sk) ->
+    begin
       let new_towers = Array.copy st.towers in
       let tower = sk.tower_id in
       (*let tower_team = new_towers.(tower).twr_team in*)
       match sk.effect with
       | Stun (secs) -> st
       | Regen_incr (incr_rate) -> st
-      | Kill (n) -> 
+      | Kill (n) ->
         begin
           (* If animation done, then remove troops *)
           if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
-            {st with 
+            {st with
               player_skill = None;
-              towers = 
+              towers =
               begin
                 let new_troop_count = max 0. (st.towers.(tower).twr_troops -. float_of_int n) in
-                new_towers.(tower) <- {st.towers.(tower) with 
-                  twr_troops = new_troop_count; 
+                new_towers.(tower) <- {st.towers.(tower) with
+                  twr_troops = new_troop_count;
                   twr_team = begin
                     if new_troop_count = 0. then
                       Neutral
@@ -241,8 +241,8 @@ let update_skill st : state =
           )
           (* Otherwise play animation *)
           else (
-            {st with 
-              player_skill = 
+            {st with
+              player_skill =
               Some {sk with
                 sprite = Sprite.tick sk.sprite !Renderer.delta;
                 anim_timer = {sk.anim_timer with
@@ -275,13 +275,7 @@ let update_troop_count tower =
 let new_state_plus_delta st c d =
   let st' = new_state st c in
   let mvmts = List.map (fun m -> update_movement m d st) st'.movements in
-  (* begin
-    let rec mvmtlst l acc =
-      match l with
-      | [] -> acc
-      | h::t -> mvmtlst t ((update_movement h d st)::acc) in
-    mvmtlst st.movements []
-  end in *)
+
   let st'' =
     {st' with
       towers = List.fold_left (fun acc e ->
@@ -340,7 +334,7 @@ let new_state_plus_delta st c d =
 
   (* Update skills *)
   let temp_state = update_skill st'' in
-      
+
   {temp_state with
     (* Update score and regenerated troops *)
     towers = begin
@@ -354,14 +348,14 @@ let new_state_plus_delta st c d =
   }
 
 (**
- * [contains_troops_with_team state team] checks if there are any troops 
- * from a particular team in transit from one tower to another. This is 
+ * [contains_troops_with_team state team] checks if there are any troops
+ * from a particular team in transit from one tower to another. This is
  * helpful when one player loses posession of all towers but is still
  * in the game is his players are in transit.
  * returns: [true] if there exists a movement in [state] of [team], else [false]
  *)
-let contains_troops_with_team state team = 
-  List.fold_left (fun acc mvmt -> 
+let contains_troops_with_team state team =
+  List.fold_left (fun acc mvmt ->
     if mvmt.mvmt_team = team then true else acc
   ) false state.movements
 
@@ -400,18 +394,18 @@ let update_towers (towers : tower array) : tower array =
     ) towers
 
 (**
- * [update_spell_boxes scene input] updates the state of each spell box 
+ * [update_spell_boxes scene input] updates the state of each spell box
  * in the interface.
  * returns: [unit]
  # effects: [scene.interface]
  *)
-let update_spell_boxes scene input : command = 
+let update_spell_boxes scene input : command =
   let command = ref Null in
   List.iter (fun (id,uref) ->
     match !uref with
-    | SpellBox (prop, pos, size, skill) -> 
+    | SpellBox (prop, pos, size, skill) ->
       begin
-        let _ =  
+        let _ =
           begin
             if prop.spell_box_state = Regenerating then (
               let timer' = {skill.regen_timer with curr_time = skill.regen_timer.curr_time +. !Renderer.delta *. skill.regen_timer.speed} in
@@ -425,7 +419,7 @@ let update_spell_boxes scene input : command =
               else (
                 uref := SpellBox(prop, pos, size, {skill with regen_timer = timer'})
               )
-            ) 
+            )
             else if skill.mana_cost > scene.state.player_mana then (
               prop.spell_box_state <- Disabled;
               uref := SpellBox(prop, pos, size, skill)
@@ -444,7 +438,7 @@ let update_spell_boxes scene input : command =
                     prop.spell_box_state <- Neutral;
                     uref := SpellBox(prop, pos, size, skill)
                   end
-                | Some (tid) -> 
+                | Some (tid) ->
                   (* Add new spell to state *)
                   begin
                     print_endline("Casting spell on "^(string_of_int tid));
@@ -478,7 +472,7 @@ let update_spell_boxes scene input : command =
 let manage_mouse_input (ipt : input) (sc : scene) : command =
   let command = ref (update_spell_boxes sc ipt ) in (* Dummy Command *)
   (* Skill Selection *)
-  let _ = 
+  let _ =
     begin
       match ipt.mouse_state with
       | Pressed ->
@@ -515,7 +509,7 @@ let manage_mouse_input (ipt : input) (sc : scene) : command =
       | Moved -> ()
     end in
   !command
-        
+
 let update sc input =
   (* Tick troop sprites *)
   let updated_towers = update_towers sc.state.towers in

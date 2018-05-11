@@ -24,7 +24,7 @@ let tower_base_enemy = {
   twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.136.};
   twr_size = {w=80.;h=136.} ;
   twr_sprite = Sprite.tower_base ;
-  twr_troops = 1. ;
+  twr_troops = 10. ;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
   twr_team = Enemy;
@@ -85,12 +85,36 @@ let maps = [|
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
     };
+    {
+      twr_id = 6;
+      twr_pos = {x=700.;y=100.};
+      twr_size = {w=72.;h=72.} ;
+      twr_sprite = Sprite.tower_type1 ;
+      twr_troops = 0. ;
+      twr_troops_max = 15.;
+      twr_troops_regen_speed = troop_regen_speed;
+      twr_team = Neutral;
+      selector_offset = {x=0.;y=50.};
+      count_label_offset = {x = 0.; y = (-1.) *. 10.};
+    };
+    {
+      twr_id = 7;
+      twr_pos = {x=Renderer.width-.700.;y=Renderer.height-.100.};
+      twr_size = {w=72.;h=72.} ;
+      twr_sprite = Sprite.tower_type1 ;
+      twr_troops = 0. ;
+      twr_troops_max = 15.;
+      twr_troops_regen_speed = troop_regen_speed;
+      twr_team = Neutral;
+      selector_offset = {x=0.;y=50.};
+      count_label_offset = {x = 0.; y = (-1.) *. 10.};
+    };
   |] ;
   num_towers = 0 ;
   player_score = 1 ;
   enemy_score = 1 ;
   movements = [] ;
-  player_skill = None;
+  player_skill = None ;
   player_mana = 0 ;
   enemy_mana = 0;
 };
@@ -114,7 +138,7 @@ let maps = [|
   player_score = 1 ;
   enemy_score = 1 ;
   movements = [] ;
-  player_skill = None;
+  player_skill = None ;
   player_mana = 0 ;
   enemy_mana = 0;
 };

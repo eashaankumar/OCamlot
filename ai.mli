@@ -11,8 +11,10 @@ module type AI = sig
         team to be Enemy.
      [st] - the state from which the AI will choose a legal
         command
+     [difficulty] - the level of the computer player.
+        ( Easy, Medium, or Hard)
    *)
-  val get_move : Types.state -> Types.command
+  val get_move : Types.state -> Types.difficulty -> Types.command
 
 end
 

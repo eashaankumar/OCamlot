@@ -254,16 +254,23 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   *)
+  let ai_difficulty = Easy in
   let last_move_time = ref (Sys.time ()) in
-  let next_move_step = ref (5. +. (Random.float 1.)) in
+  let base_step_length =
+    match ai_difficulty with
+    | Easy -> 6.
+    | Medium -> 4.
+    | Hard -> 2. in
+  let next_move_step = ref (base_step_length +. (Random.float 1.)) in
+
   let rec helper () =
 
     let new_time = Sys.time () in
     if new_time -. !last_move_time > !next_move_step then
       begin
         last_move_time := new_time;
-        next_move_step := (5. +. (Random.float 1.));
-      let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
+        next_move_step := (base_step_length +. (Random.float 1.));
+      let cm = Ai.MCTS_AI.get_move (!current_scene.state) ai_difficulty in
       current_scene :=
         {!current_scene with
          state = State.new_state_plus_delta

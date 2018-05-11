@@ -3,7 +3,7 @@ open State
 
 module type AI = sig
 
-  val get_move : Types.state -> Types.command
+  val get_move : Types.state -> Types.difficulty -> Types.command
 
 end
 
@@ -102,7 +102,7 @@ module MiniMax_AI : AI = struct
   		loop 0 (Array.length moves) value
 
 
-  let get_move st =
+  let get_move st difficulty =
     let best_move = ref Null in
     let best_score = ref (0.0 -. max_float) in
     let moves = State.possible_commands st Enemy in
@@ -126,7 +126,9 @@ module MCTS_AI : AI = struct
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
-  let iterations = 10
+  let easy_iterations = 50
+  let medium_iterations = 150
+  let hard_iterations = 300
 
   let max_random_iters = ref 100
 
@@ -382,8 +384,12 @@ module MCTS_AI : AI = struct
     let str = str ^ (Array.fold_left (fun acc e -> acc^(to_str_node !e)) "" chldrn) in
     str
 
-  let get_move st =
-    let t = create_tree st iterations in
+  let get_move st difficulty =
+    let t =
+      match difficulty with
+      | Easy -> create_tree st easy_iterations
+      | Medium -> create_tree st medium_iterations
+      | Hard -> create_tree st hard_iterations in
     (*print_endline (to_string !t);*)
     let child = get_highest_percentage t in
     (*print_endline ("Win %: "^(string_of_float (win_pctg child)));*)
