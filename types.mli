@@ -1,4 +1,3 @@
-
 type vector2d = {
   x:float;
   y:float
@@ -41,7 +40,7 @@ type tower = {
   twr_team : allegiance;
   selector_offset : vector2d;
   count_label_offset : vector2d;
-  mutable is_disabled : bool
+  mutable is_disabled : bool;
 }
 
 type movement = {
@@ -54,8 +53,8 @@ type movement = {
 }
 
 type effect =
-  | Stun of float(* An attack *)
-  | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
+  | Stun of float (* An attack *)
+  | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0*)
   | Kill of int
 
 type timer = {
@@ -103,6 +102,8 @@ type button_state =
   | Neutral
   | Depressed
   | Clicked
+
+
 
 type label_property = {
   mutable text : string;

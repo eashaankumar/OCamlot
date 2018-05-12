@@ -1,5 +1,7 @@
 open Types
 
+val difficulty_level : difficulty ref
+
 (* [possible_moves st team] is an array of [command] instances denoting
    all of the moves that a player with allegiance [team] can make in state [st].
 *)

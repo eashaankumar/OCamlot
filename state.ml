@@ -490,16 +490,48 @@ let next_scene sc =
     )
     else None
   (* Go through all buttons and check if they are clicked *)
-  | _ -> List.fold_left (fun acc (id, ui_ref) ->
-    match !ui_ref with
-    | Button (bprop, _, _, Some scid) -> begin
-        if bprop.btn_state = Clicked then
-          Some scid
-        else
-          acc
-      end
-    | _ -> acc
-  ) None sc.interface
+  | "Select Difficulty" -> 
+    begin
+      (* Update global difficulty level *)
+      List.fold_left (fun acc (id, ui_ref) ->
+      match !ui_ref with
+      | Button (bprop, _, _, Some scid) -> 
+        begin
+          if bprop.btn_state = Clicked then
+          (* Check if button of iterest *)
+          let _ = (
+            if id = "easy" then (
+              difficulty_level := Easy;
+            )
+            else if id = "medium" then (
+              difficulty_level := Medium;
+            )
+            else (
+              difficulty_level := Hard;
+            )
+          ) in
+            Some scid
+          else
+            acc
+        end
+      | _ -> acc
+      ) None sc.interface
+    end
+  | _ -> 
+    begin
+      (* Update global difficulty level *)
+      List.fold_left (fun acc (id, ui_ref) ->
+      match !ui_ref with
+      | Button (bprop, _, _, Some scid) -> 
+        begin
+          if bprop.btn_state = Clicked then
+            Some scid
+          else
+            acc
+        end
+      | _ -> acc
+      ) None sc.interface
+    end
 
 let gameover st =
   st.player_score = 0 || st.enemy_score = 0

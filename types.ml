@@ -54,7 +54,7 @@ type movement = {
 
 type effect =
   | Stun of float (* An attack *)
-  | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0. *)
+  | Regen_incr of float (* A buff if > 1.0, an attack if < 1.0*)
   | Kill of int
 
 type timer = {

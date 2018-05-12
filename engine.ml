@@ -34,7 +34,7 @@ let lightning_skill = {
   anim_timer = {curr_time = 0.; speed = 1.; limit = 2.};
 }
 
-let stun_skill = {
+let freeze_skill = {
   allegiance = Neutral;
   mana_cost = 0;
   effect = Stun 3.5;
@@ -44,7 +44,83 @@ let stun_skill = {
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
+let health_skill = {
+  allegiance = Neutral;
+  mana_cost = 0;
+  effect = Regen_incr (3.);
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  tower_id = -1;
+  sprite = Sprite.sprite_freeze;
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+}
+
 (* Initialize scenes *)
+let difficulty_selection_scene = {
+  name = "Select Difficulty";
+  tasks = [];
+  state = empty_state;
+  interface = [("fps",ref Ui.fps_label);
+               ("difficulty_label", ref (
+                 Label (
+                   {
+                      text = "Choose Difficulty";
+                      color = {r=0;g=0;b=0;a=1.};
+                      font_size = 40;
+                   },
+                   {x=Renderer.width /. 2. -. 260.; y = 200.},
+                   {w=800.;h=70.};
+                 )
+               ));
+               ("easy",ref (
+                 Button (
+                   {
+                      btn_state = Neutral;
+                      btn_sprite = Sprite.menu_btn_sprite1;
+                      btn_label = {
+                        text = "Easy"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                      }; 
+                      btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
+                    },
+                    {x=Renderer.width /. 2. -. 100.;y= 300.},
+                    {w=200.;h=70.},
+                    Some "Game")
+               ));
+               ("medium",ref (
+                 Button (
+                   {
+                      btn_state = Neutral;
+                      btn_sprite = Sprite.menu_btn_sprite1;
+                      btn_label = {
+                        text = "Medium"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                      }; 
+                      btn_label_offset = {x=10.;y=30./.2. +. 70./.2.};
+                    },
+                    {x=Renderer.width /. 2. -. 100.;y= 400.},
+                    {w=200.;h=70.},
+                    Some "Game")
+               ));
+               ("hard",ref (
+                 Button (
+                   {
+                      btn_state = Neutral;
+                      btn_sprite = Sprite.menu_btn_sprite1;
+                      btn_label = {
+                        text = "Hard"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                      }; 
+                      btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
+                    },
+                    {x=Renderer.width /. 2. -. 100.;y= 500.},
+                    {w=200.;h=70.},
+                    Some "Game")
+               ));
+              
+              ];
+  input = init_input;
+  highlight_towers = [];
+  next = None;
+  background = Sprite.grass_background;
+}
+
 let game_scene = {
   name = "Game";
   tasks = [];
@@ -53,19 +129,27 @@ let game_scene = {
                ("lightning_spell", ref (
                  SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
                           spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-                           {x=100.;y= Renderer.height -. 75.},
+                           {x=0.;y= Renderer.height -. 50.},
                            {w=50.;h=50.},
                            (* Skill *)
                            lightning_skill)
                ));
                ("freeze_spell", ref (
                  SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
-                          spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-                           {x=150.;y= Renderer.height -. 75.},
+                          spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+                           {x=50.;y= Renderer.height -. 50.},
                            {w=50.;h=50.},
                            (* Skill *)
-                           stun_skill)
-               ))
+                           freeze_skill)
+               ));
+               ("health_spell", ref (
+                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+                          spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+                           {x=100.;y= Renderer.height -. 50.},
+                           {w=50.;h=50.},
+                           (* Skill *)
+                           health_skill)
+               ));
                ];
   input = init_input;
   highlight_towers = [];
@@ -91,15 +175,31 @@ let intro_scene = {
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("start",ref (
-                 Button ({btn_state = Neutral; btn_sprite = Sprite.menu_btn_sprite1;
-                          btn_label = {
-                            text = "Start"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                          }; btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
-                                                                 },
-                           {x=Renderer.width /. 2. -. 100.;y= 300.},
-                           {w=200.;h=70.},
-                           Some "Game")
-               ));];
+                 Button (
+                   {
+                      btn_state = Neutral; 
+                      btn_sprite = Sprite.menu_btn_sprite1;
+                      btn_label = {
+                        text = "Begin"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                      }; 
+                      btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
+                    },
+                    {x=Renderer.width /. 2. -. 100.;y= 400.},
+                    {w=200.;h=70.},
+                    Some "Select Difficulty")
+               ));
+               ("title_label", ref (
+                 Label (
+                   {
+                      text = "OCAMLOT";
+                      color = {r=0;g=0;b=0;a=1.};
+                      font_size = 75;
+                   },
+                   {x=Renderer.width /. 2. -. 297.5; y = 200.},
+                   {w=525.;h=70.};
+                 )
+               ));
+               ];
   input = init_input;
   highlight_towers = [];
   next = None;
@@ -197,6 +297,7 @@ let get_scene_from_name name =
   | "Intro" -> intro_scene
   | "Game" -> game_scene
   | "Game Over" -> game_over_scene
+  | "Select Difficulty" -> difficulty_selection_scene
   | _ -> intro_scene
 (**
  * [schedule_transition scid] transitions [current_scene] to [next] scene.
@@ -251,7 +352,8 @@ let scene_transition () =
         (* Otherwise get the desired scene from tuple list *)
         else (
           let next_scene = get_scene_from_name nxt in
-          current_scene := next_scene;
+          current_scene := {next_scene with
+                            tasks = [FadeIn (0.,2.,1.)];};
         );
         ()
       end
@@ -273,23 +375,26 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   *)
-  let ai_difficulty = Hard in
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
-    match ai_difficulty with
+    match !State.difficulty_level with
     | Easy -> 6.
     | Medium -> 4.
     | Hard -> 2. in
   let next_move_step = ref (base_step_length +. (Random.float 1.)) in
 
   let rec helper () =
-
+    
+    (*let _ = (match !State.difficulty_level with
+    | Easy -> print_endline "Easy"
+    | Medium -> print_endline "Medium"
+    | Hard -> print_endline "Hard") in*)
     let new_time = Sys.time () in
     if new_time -. !last_move_time > !next_move_step then
       begin
         last_move_time := new_time;
         next_move_step := (base_step_length +. (Random.float 1.));
-      let cm = Ai.MCTS_AI.get_move (!current_scene.state) ai_difficulty in
+      let cm = Ai.MCTS_AI.get_move (!current_scene.state) !State.difficulty_level in
       current_scene :=
         {!current_scene with
          state = State.new_state_plus_delta

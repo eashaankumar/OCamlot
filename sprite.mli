@@ -46,6 +46,12 @@ val sprite_lightning_icon : sprite
 
 val sprite_freeze : sprite
 
+val sprite_freeze_icon : sprite
+
+val sprite_heart : sprite
+
+val sprite_heart_icon : sprite
+
 (**
  * [reset_to_first_frame sp] sets the animation frame to the
  * starting frame.

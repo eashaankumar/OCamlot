@@ -118,8 +118,8 @@ let red_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (504.04,215.65) (72.19,71.63)
 
 (* Backgrounds *)
-let grass_background = init_sprite "images/grass.jpg" 0.
-                  |> add_animation_frame (0.,0.) (1280.,700.)
+let grass_background = init_sprite "images/bkgs/grass_field.jpg" 0.
+                  |> add_animation_frame (0.,0.) (540.,340.)
 
 (* UI *)
 let tower_highlight = init_sprite "images/ocamlot_sprites.png" 0.
@@ -133,10 +133,10 @@ let mvmt_troop_count_sprite = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (143.92,575.74) (71.96, 71.63)
 
 
-let menu_btn_sprite1 = init_sprite "images/MenuButtons.jpg" 0.
-                  |> add_animation_frame (0.,0.) (242.,70.)
-                  |> add_animation_frame (0.,70.) (242.,70.)
-                  |> add_animation_frame (0.,140.) (242.,70.)
+let menu_btn_sprite1 = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (0.,503.79) (143.92,71.96)
+                  |> add_animation_frame (143.76,503.79) (143.92,71.96)
+                  |> add_animation_frame (0.,503.79) (143.92,71.96)
 
 let spell_btn_sprite = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (215.01,575.74) (71.96, 71.63) (*Neutral*)
@@ -158,3 +158,12 @@ let sprite_lightning_icon = init_sprite "images/ocamlot_sprites.png" 0.
 
 let sprite_freeze = init_sprite "images/freeze_spell.png" 0.05
                   |> add_animation_frame (0., 0.) (556., 640.)
+
+let sprite_freeze_icon = init_sprite "images/ocamlot_sprites.png" 0.05
+                  |> add_animation_frame (576.07, 575.74) (71.96, 71.63)
+
+let sprite_heart = init_sprite "images/freeze_spell.png" 0.05
+                  |> add_animation_frame (0., 0.) (556., 640.)
+
+let sprite_heart_icon = init_sprite "images/ocamlot_sprites.png" 0.05
+                  |> add_animation_frame (648.03, 575.74) (71.96, 71.63)
