@@ -14,8 +14,8 @@ let empty_state = {
   movements = [] ;
   player_skill = None;
   enemy_skill = None;
-  player_mana = 0;
-  enemy_mana = 0;
+  player_mana = 0.;
+  enemy_mana = 0.;
 }
 (* Initialize input *)
 let init_input = {
@@ -26,9 +26,9 @@ let init_input = {
 (* Skills *)
 let lightning_skill = {
   allegiance = Neutral;
-  mana_cost = 0 ;
-  effect = Kill 100 ;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
+  mana_cost = 70 ;
+  effect = Kill 15 ;
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = -1;
   sprite = Sprite.sprite_lightning;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 2.};
@@ -36,9 +36,9 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 0;
-  effect = Stun 3.5;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  mana_cost = 170;
+  effect = Stun 7.;
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
@@ -46,14 +46,52 @@ let freeze_skill = {
 
 let health_skill = {
   allegiance = Neutral;
-  mana_cost = 0;
+  mana_cost = 200;
   effect = Regen_incr (3.);
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
+(* Spell Bar *)
+let spell_bar = [
+  ("lightning_spell", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=0.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              lightning_skill)
+  ));
+  ("freeze_spell", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=50.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              freeze_skill)
+  ));
+  ("health_spell", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=100.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              health_skill)
+  ));
+  ("player_mana_label", ref (
+    Label (
+      {
+        text = "mana: ";
+        color = {r=255;g=255;b=255;a=1.};
+        font_size = 20;
+      },
+      {x=170.; y = Renderer.height -. 10.},
+      {w=160.;h=70.};
+    )
+  ));
+]
 (* Initialize scenes *)
 let difficulty_selection_scene = {
   name = "Select Difficulty";
@@ -118,39 +156,15 @@ let difficulty_selection_scene = {
   input = init_input;
   highlight_towers = [];
   next = None;
-  background = Sprite.grass_background;
+  background = Sprite.cracked_background;
 }
 
 let game_scene = {
   name = "Game";
   tasks = [];
   state = empty_state;
-  interface = [("fps",ref Ui.fps_label);
-               ("lightning_spell", ref (
-                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
-                          spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-                           {x=0.;y= Renderer.height -. 50.},
-                           {w=50.;h=50.},
-                           (* Skill *)
-                           lightning_skill)
-               ));
-               ("freeze_spell", ref (
-                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
-                          spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-                           {x=50.;y= Renderer.height -. 50.},
-                           {w=50.;h=50.},
-                           (* Skill *)
-                           freeze_skill)
-               ));
-               ("health_spell", ref (
-                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
-                          spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-                           {x=100.;y= Renderer.height -. 50.},
-                           {w=50.;h=50.},
-                           (* Skill *)
-                           health_skill)
-               ));
-               ];
+  interface = [("fps",ref Ui.fps_label);               
+               ] @ spell_bar;
   input = init_input;
   highlight_towers = [];
   next = None;
@@ -166,7 +180,7 @@ let game_over_scene = {
   input = init_input;
   highlight_towers = [];
   next = None;
-  background = Sprite.grass_background;
+  background = Sprite.cracked_background;
 }
 
 let intro_scene = {
@@ -203,10 +217,10 @@ let intro_scene = {
                  Label (
                    {
                       text = "Read Instructions Below";
-                      color = {r=0;g=0;b=0;a=0.5};
+                      color = {r=0;g=0;b=0;a=0.7};
                       font_size = 20;
                    },
-                   {x=Renderer.width /. 2. -. 175.; y = 650.},
+                   {x=Renderer.width /. 2. -. 175.; y = 600.},
                    {w=460.;h=70.};
                  )
                ));
@@ -214,7 +228,7 @@ let intro_scene = {
   input = init_input;
   highlight_towers = [];
   next = None;
-  background = Sprite.grass_background;
+  background = Sprite.cracked_background;
 }
 
 let current_scene = ref intro_scene

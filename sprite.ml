@@ -105,6 +105,16 @@ let blue_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (431.75,144.02) (72.19,71.63)
                   |> add_animation_frame (504.04,144.02) (72.19,71.63)
 
+let blue_troop2_left = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (576.23,144.02) (72.19,71.63)
+                  |> add_animation_frame (648.42,144.02) (72.19,71.63)
+                  |> add_animation_frame (720.61,144.02) (72.19,71.63)
+
+let blue_troop2_right = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (792.80,144.02) (72.19,71.63)
+                  |> add_animation_frame (864.99,144.02) (72.19,71.63)
+                  |> add_animation_frame (937.18,144.02) (72.19,71.63)
+
 let red_troop1_right = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (0.,215.65) (72.19,71.63)
                   |> add_animation_frame (72.19,215.65) (72.19,71.63)
@@ -117,8 +127,21 @@ let red_troop1_left = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (431.75,215.65) (72.19,71.63)
                   |> add_animation_frame (504.04,215.65) (72.19,71.63)
 
+
+let red_troop2_left = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (576.23,215.65) (72.19,71.63)
+                  |> add_animation_frame (648.42,215.65) (72.19,71.63)
+                  |> add_animation_frame (720.61,215.65) (72.19,71.63)
+
+let red_troop2_right = init_sprite "images/ocamlot_sprites.png" 0.08
+                  |> add_animation_frame (792.80,215.65) (72.19,71.63)
+                  |> add_animation_frame (864.99,215.65) (72.19,71.63)
+                  |> add_animation_frame (937.18,215.65) (72.19,71.63)
+
 (* Backgrounds *)
 let grass_background = init_sprite "images/bkgs/grass_field.jpg" 0.
+                  |> add_animation_frame (0.,0.) (540.,340.)
+let cracked_background = init_sprite "images/bkgs/cracked_wall.png" 0.
                   |> add_animation_frame (0.,0.) (540.,340.)
 
 (* UI *)

@@ -28,12 +28,23 @@ type sprite = {
   curr_time : float
 }
 
+type troop_type = 
+  | Foot
+  | Cavalry
+
+type troop = {
+  trp_type : troop_type;
+  trp_damage : float;
+  trp_speed : float;
+}
+
 (* requires: tower id be position in tower array in state *)
 type tower = {
   twr_id : int;
   twr_pos : vector2d;
   twr_size : bounds;
   twr_sprite : sprite;
+  twr_troop_info : troop;
   twr_troops : float;
   twr_troops_max : float;
   mutable twr_troops_regen_speed : float;
@@ -49,7 +60,9 @@ type movement = {
   mvmt_troops : int;
   mvmt_sprite : sprite;
   mvmt_team : allegiance;
-  progress : float
+  progress : float;
+  damage : float;
+  speed : float;
 }
 
 type effect =
@@ -145,8 +158,8 @@ type state = {
   movements : movement list;
   player_skill : skill option;
   enemy_skill : skill option;
-  player_mana : int;
-  enemy_mana : int
+  player_mana : float;
+  enemy_mana : float
 }
 
 type interface = (string * (ui_element ref)) list

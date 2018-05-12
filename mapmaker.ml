@@ -5,12 +5,26 @@ let map_index = ref (-1)
 (* Base values *)
 let troop_regen_speed = 1.
 
+(* Troops *)
+let troop_foot_soldier = {
+  trp_type = Foot;
+  trp_damage = 1.;
+  trp_speed = 50.;
+}
+
+let troop_cavalry = {
+  trp_type = Cavalry;
+  trp_damage = 2.;
+  trp_speed = 100.;
+}
+
 (* Intialize tower types *)
 let tower_base_player = {
   twr_id = 0;
   twr_pos = {x=0.;y=0.};
   twr_size = {w=72.;h=136.} ;
   twr_sprite = Sprite.tower_base;
+  twr_troop_info = troop_foot_soldier;
   twr_troops = 1.;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
@@ -25,6 +39,7 @@ let tower_base_enemy = {
   twr_pos = {x=Renderer.width-.80.;y=Renderer.height-.136.};
   twr_size = {w=80.;h=136.} ;
   twr_sprite = Sprite.tower_base ;
+  twr_troop_info = troop_foot_soldier;
   twr_troops = 10. ;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
@@ -44,6 +59,7 @@ let maps = [|
       twr_pos = {x=300.;y=200.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_foot_soldier;
       twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -57,6 +73,7 @@ let maps = [|
       twr_pos = {x=Renderer.width-.300.;y=Renderer.height-.200.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_foot_soldier;
       twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -70,6 +87,7 @@ let maps = [|
       twr_pos = {x=600.;y=200.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_foot_soldier;
       twr_troops = 0. ;
       twr_troops_max = 30.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -83,6 +101,7 @@ let maps = [|
       twr_pos = {x=Renderer.width-.600.;y=Renderer.height-.200.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_foot_soldier;
       twr_troops = 0. ;
       twr_troops_max = 30.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -96,6 +115,7 @@ let maps = [|
       twr_pos = {x=700.;y=100.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_cavalry;
       twr_troops = 0. ;
       twr_troops_max = 15.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -109,6 +129,7 @@ let maps = [|
       twr_pos = {x=Renderer.width-.700.;y=Renderer.height-.100.};
       twr_size = {w=72.;h=72.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_cavalry;
       twr_troops = 0. ;
       twr_troops_max = 15.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -118,14 +139,14 @@ let maps = [|
       is_disabled = false
     };
   |] ;
-  num_towers = 0 ;
+  num_towers = 8 ;
   player_score = 1 ;
   enemy_score = 1 ;
   movements = [] ;
   player_skill = None ;
   enemy_skill = None ;
-  player_mana = 0 ;
-  enemy_mana = 0;
+  player_mana = 0. ;
+  enemy_mana = 0. ;
 };
 (* MAP 2 *)
 {
@@ -135,6 +156,7 @@ let maps = [|
       twr_pos = {x=300.;y=200.};
       twr_size = {w=50.;h=85.} ;
       twr_sprite = Sprite.tower_type1 ;
+      twr_troop_info = troop_foot_soldier;
       twr_troops = 0. ;
       twr_troops_max = 20.;
       twr_troops_regen_speed = troop_regen_speed;
@@ -150,8 +172,8 @@ let maps = [|
   movements = [] ;
   player_skill = None ;
   enemy_skill = None;
-  player_mana = 0 ;
-  enemy_mana = 0;
+  player_mana = 0. ;
+  enemy_mana = 0. ;
 };
 |]
 

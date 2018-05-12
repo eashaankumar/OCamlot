@@ -1,7 +1,11 @@
 open Types
 
 let find_ui_ref interface id =
-  List.assoc id interface
+  if List.mem_assoc id interface then (
+    Some (List.assoc id interface)
+  ) else (
+    None
+  )
 
 let get_label_prop label : label_property=
   match label with
@@ -48,9 +52,6 @@ let tick interface input =
         () (* Will be handled in state *)
       end
   ) interface;
-  (* Update stats *)
-  let ref_fps_label = find_ui_ref interface "fps" in
-  (get_label_prop !ref_fps_label).text <- string_of_int !Renderer.fps;
   interface
 
 let fps_label = Label ({text="0";color={r=0;g=0;b=0;a=0.25};font_size=20},

@@ -217,7 +217,7 @@ let render context scene =
   update_fps ();
   (* Draw canvas background *)
   context##clearRect (0., 0., width, height);
-  context##fillStyle <- color_to_hex {r=255;g=255;b=255;a=1.0};
+  context##fillStyle <- color_to_hex {r=0;g=0;b=0;a=1.0};
   (* Transition begin *)
   (*context##fillStyle <- color_to_hex {r=0;g=0;b=0;a=0.2 *. !fade_amt};
   context##fillRect (0., 0., width, height);*)

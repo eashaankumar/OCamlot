@@ -19,13 +19,15 @@ let difficulty_level = ref Easy
 let destination = {to_tower = None; from_tower = None}
 
 (* initializes a movement with no progress. *)
-let new_movement ts_index te_index troops sprite side = {
+let new_movement ts_index te_index troops sprite side damage speed = {
   start_tower = ts_index;
   end_tower  = te_index;
   mvmt_troops = troops;
   mvmt_sprite = sprite;
   mvmt_team = side;
-  progress = 0.
+  progress = 0.;
+  damage = damage;
+  speed = speed;
 }
 
 (*[update_movement] takes in a movement, [mvmt], a
@@ -42,9 +44,8 @@ let update_movement mvmt delta st =
   let distance = sqrt ((start_vector.x -. end_vector.x)**2. +.
                        (start_vector.y -. end_vector.y)**2.) in
   (*TODO make velocity not hard-coded*)
-  let velocity = 50. in
   {mvmt with
-   progress = mvmt.progress +. (velocity *. delta)/.distance;
+   progress = mvmt.progress +. (mvmt.speed *. delta)/.distance;
    mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
   }
 
@@ -73,13 +74,31 @@ let get_troop_direction_sprite team towers starti endi =
   match team with
   | Player ->
     begin
-      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
-      else Sprite.blue_troop1_left
+      match start_tower.twr_troop_info.trp_type with
+      | Foot -> 
+        begin
+          if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
+          else Sprite.blue_troop1_left
+        end
+      | Cavalry -> 
+        begin
+          if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop2_right
+          else Sprite.blue_troop2_left
+        end
     end
   | Enemy ->
     begin
-      if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop1_right
-      else Sprite.red_troop1_left
+      match start_tower.twr_troop_info.trp_type with
+      | Foot -> 
+        begin
+          if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop1_right
+          else Sprite.red_troop1_left
+        end
+      | Cavalry -> 
+        begin
+          if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop2_right
+          else Sprite.red_troop2_left
+        end
     end
   | _ -> Sprite.blue_troop1_left (* This should never happen *)
 
@@ -107,7 +126,7 @@ let possible_commands st side =
     match side with
     | Enemy -> st.enemy_mana
     | Player -> st.player_mana
-    | Neutral -> 0 in
+    | Neutral -> 0. in
 
   let side_twr_list = (Array.fold_left
        (fun acc e -> if e.twr_team = side && (not e.is_disabled)
@@ -140,7 +159,7 @@ let possible_commands st side =
 
   let command_list = (Null::move_list) in
 
-  let kill_list = if mana_points < 0 then [] else
+  let kill_list = if mana_points < 0. then [] else
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
@@ -151,7 +170,7 @@ let possible_commands st side =
       anim_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
     })) opp_twr_list in
 
-  let stun_list = if mana_points < 0 then [] else
+  let stun_list = if mana_points < 0. then [] else
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
@@ -162,7 +181,7 @@ let possible_commands st side =
       anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.};
     })) opp_twr_list in
 
-  let regen_buff_list = if mana_points < 0 then [] else
+  let regen_buff_list = if mana_points < 0. then [] else
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
@@ -173,7 +192,7 @@ let possible_commands st side =
       anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
     })) side_twr_list in
 
-  let regen_attack_list = if mana_points < 0 then [] else
+  let regen_attack_list = if mana_points < 0. then [] else
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
@@ -220,7 +239,7 @@ let new_state st (c : command) : state =
             end in
           let sp = get_troop_direction_sprite ts_team_original st.towers start finish in
           let new_mvmt = new_movement
-              start finish !mvmt_troop_count sp ts_team_original in
+              start finish !mvmt_troop_count sp ts_team_original (st.towers.(start).twr_troop_info.trp_damage) (st.towers.(start).twr_troop_info.trp_speed) in
           let new_towers =
             Array.mapi (fun i e -> if i = start then ts' else e) st.towers in
           {st with
@@ -238,8 +257,8 @@ let new_state st (c : command) : state =
       let has_enough_mana =
         match skill.allegiance with
         | Neutral -> false (*should fail*)
-        | Player -> st.player_mana >= skill.mana_cost
-        | Enemy -> st.enemy_mana >= skill.mana_cost in
+        | Player -> int_of_float st.player_mana >= skill.mana_cost
+        | Enemy -> int_of_float st.enemy_mana >= skill.mana_cost in
       (* Deny spell if can't be afforded *)
       if not has_enough_mana then (
         st
@@ -250,13 +269,13 @@ let new_state st (c : command) : state =
         | Neutral -> st (* This should never happen *)
         | Player ->
           begin
-            {st with player_mana = st.player_mana - skill.mana_cost;
+            {st with player_mana = st.player_mana -. (float_of_int skill.mana_cost);
                      player_skill = (if st.player_skill = None then (Some skill)
                                      else st.player_skill)}
           end
         | Enemy ->
           begin
-            {st with enemy_mana = st.enemy_mana - skill.mana_cost;
+            {st with enemy_mana = st.enemy_mana -. (float_of_int skill.mana_cost);
                      enemy_skill = (if st.enemy_skill = None then (Some skill)
                                      else st.enemy_skill)}
           end
@@ -412,7 +431,7 @@ let new_state_plus_delta st c d =
               begin
                 acc.(e.end_tower) <-
                   begin
-                    let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                    let new_count = te.twr_troops -. (float_of_int e.mvmt_troops) *. e.damage in
                     let new_team = (
                       if int_of_float new_count = 0 then (Neutral:allegiance)
                       else if new_count < 0. then Enemy
@@ -427,7 +446,7 @@ let new_state_plus_delta st c d =
               end
             | (Player,Enemy) -> begin
                 acc.(e.end_tower) <-
-                  let new_count = te.twr_troops -. float_of_int e.mvmt_troops in
+                  let new_count = te.twr_troops -. (float_of_int e.mvmt_troops) *. e.damage in
                   let new_team = (
                     if int_of_float new_count = 0 then (Neutral:allegiance) else
                     if new_count < 0. then Player else Enemy
@@ -440,7 +459,7 @@ let new_state_plus_delta st c d =
               end
             | (team,_) -> begin
                   acc.(e.end_tower) <-
-                    let new_count = te.twr_troops +. float_of_int e.mvmt_troops in
+                    let new_count = te.twr_troops +. (float_of_int e.mvmt_troops) in
                     {te with
                     twr_troops = new_count;
                     twr_team = team
@@ -571,7 +590,7 @@ let update_spell_boxes scene input : command =
                 uref := SpellBox(prop, pos, size, {skill with regen_timer = timer'})
               )
             )
-            else if skill.mana_cost > scene.state.player_mana then (
+            else if skill.mana_cost > int_of_float scene.state.player_mana then (
               prop.spell_box_state <- Disabled;
               uref := SpellBox(prop, pos, size, skill)
             )
@@ -660,11 +679,49 @@ let manage_mouse_input (ipt : input) (sc : scene) : command =
     end in
   !command
 
+let update_mana state team = 
+  let speed = 3. in
+  match team with
+  | Player -> 
+    begin
+      let multiplier = (float_of_int state.player_score ) /. (float_of_int state.num_towers) in
+      state.player_mana +. speed *. !Renderer.delta *. multiplier
+    end
+  | Enemy -> 
+    begin
+      let multiplier = (float_of_int state.enemy_score ) /. (float_of_int state.num_towers) in
+      state.enemy_mana +. speed *. !Renderer.delta *. multiplier
+    end
+  | _ -> 0.
+
 let update sc input =
   (* Tick troop sprites *)
   let updated_towers = update_towers sc.state.towers in
   (* Tower selection *)
   let command = manage_mouse_input input sc in
+  (* Mana update *)
+  let pmana = update_mana sc.state Player in
+  let emana = update_mana sc.state Enemy in
   (* Return new state *)
-  let state' = {sc.state with towers = updated_towers} in
-  new_state_plus_delta state' command !Renderer.delta
+  let state' = {sc.state with towers = updated_towers; player_mana = pmana; enemy_mana = emana} in
+  let ans_state = new_state_plus_delta state' command !Renderer.delta in
+  (* Update gui text fields *)
+  (* fps *)
+  let _ = 
+    begin
+      match Ui.find_ui_ref sc.interface "fps" with
+      | Some (ref_fps_label) -> 
+        (Ui.get_label_prop !ref_fps_label).text <- string_of_int !Renderer.fps;
+      | None -> ()
+    end
+  in
+  (* mana *)
+  let _ = 
+    begin
+      match Ui.find_ui_ref sc.interface "player_mana_label" with
+      | Some(ref_mana_label) -> 
+        (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.player_mana);
+      | None -> ()
+    end
+  in
+  ans_state
