@@ -263,6 +263,18 @@ let new_state st (c : command) : state =
       if not has_enough_mana then (
         st
       )
+      (* Deny spell if cannot be applied to tower *)
+      else if  (
+        match skill.effect with
+        | Kill (_) -> 
+          begin
+            skill.allegiance = st.towers.(skill.tower_id).twr_team
+          end
+        | Regen_incr (_) -> false
+        | Stun (_) -> false
+      ) then (
+        st
+      )
       (* Otherwise add the skill to state *)
       else (
         match skill.allegiance with

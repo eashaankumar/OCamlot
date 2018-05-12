@@ -5,6 +5,8 @@ module Html = Dom_html
 let js = Js.string
 let document = Html.document
 
+(* Scene transitions *)
+
 (* Generic empty state *)
 let empty_state = {
   towers = [||];
