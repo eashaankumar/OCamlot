@@ -20,6 +20,8 @@ val tower_base : sprite
 
 val tower_type1 : sprite
 
+val tower_type2 : sprite
+
 val blue_troop1_right : sprite
 
 val blue_troop1_left : sprite

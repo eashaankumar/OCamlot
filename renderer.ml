@@ -107,7 +107,7 @@ let draw_text ctx text pos (color:color) font_size : unit =
 let draw_entities context scene =
   (* Draw troops *)
   List.iter (fun mvmt ->
-    let size = {w=50.;h=50.} in
+    let size = {w=40.;h=40.} in
     if mvmt.progress > 0.975 || mvmt.progress < 0.025 then () else (
       let vec = Physics.get_movement_coord mvmt scene.state 
                 |> Physics.add_vector2d ({x = 0.; y = (-1.) *. size.h/.2.}) in

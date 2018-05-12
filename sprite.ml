@@ -92,6 +92,11 @@ let tower_type1 = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (72.19,0.) (72.19,72.19) (* Player *)
                   |> add_animation_frame (72.19,72.19) (72.19,72.19) (* Enemy *)
 
+let tower_type2 = init_sprite "images/ocamlot_sprites.png" 0.
+                  |> add_animation_frame (0.,72.19) (72.19,72.19) (* Neutral*)
+                  |> add_animation_frame (288.06,0.) (72.19,72.19) (* Player *)
+                  |> add_animation_frame (288.06,72.19) (72.19,72.19) (* Enemy *)
+
 (* Troops *)
 let blue_troop1_right = init_sprite "images/ocamlot_sprites.png" 0.08
                   |> add_animation_frame (0.,144.02) (72.19,71.63)
