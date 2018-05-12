@@ -313,7 +313,7 @@ let update_troop_count tower =
   match tower.twr_team with
   | Neutral -> 0.
   | _ ->
-    if tower.is_disabled then 0. else
+    if tower.is_disabled then tower.twr_troops else
     begin
       let dir = int_of_float tower.twr_troops - int_of_float tower.twr_troops_max in
       if dir = 0 then

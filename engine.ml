@@ -22,25 +22,25 @@ let init_input = {
   mouse_state = Moved;
 }
 
-let stun_skill = {
-  allegiance = Player;
-  mana_cost = 0;
-  effect = Stun 3.5;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
-  tower_id = 0;
-  sprite = Sprite.sprite_lightning;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.5};
-}
-
 (* Skills *)
 let lightning_skill = {
-  allegiance = Player;
+  allegiance = Neutral;
   mana_cost = 0 ;
   effect = Kill (10) ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
-  tower_id = 0;
+  tower_id = -1;
   sprite = Sprite.sprite_lightning;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 2.};
+}
+
+let stun_skill = {
+  allegiance = Neutral;
+  mana_cost = 0;
+  effect = Stun 3.5;
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  tower_id = -1;
+  sprite = Sprite.sprite_lightning;
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
 (* Initialize scenes *)
@@ -49,7 +49,7 @@ let game_scene = {
   tasks = [];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
-               ("arrow_spell", ref (
+               ("lightning_spell", ref (
                  SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
                           spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
                            {x=100.;y= Renderer.height -. 75.},
@@ -57,6 +57,14 @@ let game_scene = {
                            (* Skill *)
                            lightning_skill)
                ));
+               ("freeze_spell", ref (
+                 SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+                          spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+                           {x=150.;y= Renderer.height -. 75.},
+                           {w=50.;h=50.},
+                           (* Skill *)
+                           stun_skill)
+               ))
                ];
   input = init_input;
   highlight_towers = [];
