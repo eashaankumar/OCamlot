@@ -26,7 +26,7 @@ let init_input = {
 let lightning_skill = {
   allegiance = Neutral;
   mana_cost = 0 ;
-  effect = Kill (10) ;
+  effect = Kill (5) ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
   tower_id = -1;
   sprite = Sprite.sprite_lightning;
@@ -40,7 +40,7 @@ let stun_skill = {
   regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
 (* Initialize scenes *)
@@ -272,7 +272,7 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   *)
-  let ai_difficulty = Easy in
+  let ai_difficulty = Easy` in
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match ai_difficulty with
