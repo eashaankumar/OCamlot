@@ -272,7 +272,7 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   *)
-  let ai_difficulty = Easy` in
+  let ai_difficulty = Easy in
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match ai_difficulty with

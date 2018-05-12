@@ -143,6 +143,7 @@ type state = {
   enemy_score : int;
   movements : movement list;
   player_skill : skill option;
+  enemy_skill : skill option;
   player_mana : int;
   enemy_mana : int
 }

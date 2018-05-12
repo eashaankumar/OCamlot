@@ -1,12 +1,19 @@
 open Types
 open Sprite
 
+let rec (@) l1 l2 =
+  match l1 with
+  | [] -> l2
+  | h::t -> (@) t (h::l2)
+
 (* represents the tower a is pressed on and released at
  *)
 type to_from = {
   mutable to_tower : int option;
   mutable from_tower : int option;
 }
+
+let difficulty_level = ref Easy
 
 (* used to determine the start and end towers of a move command. *)
 let destination = {to_tower = None; from_tower = None}
@@ -96,8 +103,21 @@ let get_tower_under_mouse towers input =
     )
   ) None towers
 let possible_commands st side =
+
+  let mana_points =
+    match side with
+    | Enemy -> st.enemy_mana
+    | Player -> st.player_mana
+    | Neutral -> 0 in
+
   let side_twr_list = (Array.fold_left
-      (fun acc e -> if e.twr_team = side then e.twr_id::acc else acc)
+       (fun acc e -> if e.twr_team = side && (not e.is_disabled)
+         then e.twr_id::acc else acc)
+      [] st.towers) in
+
+  let opp_twr_list = (Array.fold_left
+       (fun acc e -> if e.twr_team <> side
+         then e.twr_id::acc else acc)
       [] st.towers) in
 
   let total_twr_list = (Array.fold_left
@@ -119,7 +139,55 @@ let possible_commands st side =
 
   let move_list = List.map (fun (h,t) -> Move(side,h,t)) indices_list in
 
-  Array.of_list (Null::move_list)
+  let command_list = (Null::move_list) in
+
+  let kill_list = if mana_points < 0 then [] else
+    List.map (fun id -> Skill ({
+      allegiance = side;
+      mana_cost = 0 ;
+      effect = Kill(5) ;
+      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
+      tower_id = id;
+      sprite = Sprite.sprite_lightning;
+      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
+    })) opp_twr_list in
+
+  let stun_list = if mana_points < 0 then [] else
+    List.map (fun id -> Skill ({
+      allegiance = side;
+      mana_cost = 0 ;
+      effect = Stun(3.5) ;
+      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 5.};
+      tower_id = id;
+      sprite = Sprite.sprite_freeze;
+      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.};
+    })) opp_twr_list in
+
+  let regen_buff_list = if mana_points < 0 then [] else
+    List.map (fun id -> Skill ({
+      allegiance = side;
+      mana_cost = 0 ;
+      effect = Regen_incr(1.25) ;
+      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 7.};
+      tower_id = id;
+      sprite = Sprite.sprite_lightning;
+      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
+    })) side_twr_list in
+
+  let regen_attack_list = if mana_points < 0 then [] else
+    List.map (fun id -> Skill ({
+      allegiance = side;
+      mana_cost = 0 ;
+      effect = Regen_incr(0.8) ;
+      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 7.};
+      tower_id = id;
+      sprite = Sprite.sprite_lightning;
+      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
+    })) opp_twr_list in
+
+  Array.of_list ((((command_list@kill_list)@stun_list)@regen_buff_list)@regen_attack_list)
+
+
 
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
