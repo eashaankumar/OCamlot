@@ -199,6 +199,17 @@ let intro_scene = {
                    {w=525.;h=70.};
                  )
                ));
+               ("read_intructions_below", ref (
+                 Label (
+                   {
+                      text = "Read Instructions Below";
+                      color = {r=0;g=0;b=0;a=0.5};
+                      font_size = 20;
+                   },
+                   {x=Renderer.width /. 2. -. 175.; y = 650.},
+                   {w=460.;h=70.};
+                 )
+               ));
                ];
   input = init_input;
   highlight_towers = [];
