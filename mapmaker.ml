@@ -17,7 +17,7 @@ let tower_base_player = {
   twr_team = Player;
   selector_offset = {x = 0.; y = 100.};
   count_label_offset = {x = 10.; y = 5.};
-  is_disabled = false;
+  is_disabled = false
 }
 
 let tower_base_enemy = {
@@ -31,7 +31,7 @@ let tower_base_enemy = {
   twr_team = Enemy;
   selector_offset = {x=0.;y=100.};
   count_label_offset = {x = 0.; y = (-1.) *. 10.};
-  is_disabled = false;
+  is_disabled = false
 }
 
 (* Initialize states *)
@@ -50,7 +50,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
     {
       twr_id = 3;
@@ -63,7 +63,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
     {
       twr_id = 4;
@@ -76,7 +76,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
     {
       twr_id = 5;
@@ -89,7 +89,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
     {
       twr_id = 6;
@@ -102,7 +102,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
     {
       twr_id = 7;
@@ -115,7 +115,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
   |] ;
   num_towers = 0 ;
@@ -123,6 +123,7 @@ let maps = [|
   enemy_score = 1 ;
   movements = [] ;
   player_skill = None ;
+  enemy_skill = None ;
   player_mana = 0 ;
   enemy_mana = 0;
 };
@@ -140,7 +141,7 @@ let maps = [|
       twr_team = Neutral;
       selector_offset = {x=0.;y=50.};
       count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false;
+      is_disabled = false
     };
   |] ;
   num_towers = 0 ;
@@ -148,6 +149,7 @@ let maps = [|
   enemy_score = 1 ;
   movements = [] ;
   player_skill = None ;
+  enemy_skill = None;
   player_mana = 0 ;
   enemy_mana = 0;
 };

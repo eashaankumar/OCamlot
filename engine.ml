@@ -13,6 +13,7 @@ let empty_state = {
   enemy_score = 0 ;
   movements = [] ;
   player_skill = None;
+  enemy_skill = None;
   player_mana = 0 ;
   enemy_mana = 0;
 }
