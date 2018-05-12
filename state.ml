@@ -103,7 +103,6 @@ let get_tower_under_mouse towers input =
     )
   ) None towers
 let possible_commands st side =
-
   let mana_points =
     match side with
     | Enemy -> st.enemy_mana
@@ -137,7 +136,7 @@ let possible_commands st side =
   let indices_list =
     List.filter (fun (h,t) -> h<>t) (f side_twr_list total_twr_list []) in
 
-  let move_list = List.map (fun (h,t) -> Move(side,h,t)) indices_list in
+  let move_list = List.map (fun (h,t) -> Move (side, h, t)) indices_list in
 
   let command_list = (Null::move_list) in
 
@@ -145,7 +144,7 @@ let possible_commands st side =
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
-      effect = Kill(5) ;
+      effect = Kill 100;
       regen_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
       tower_id = id;
       sprite = Sprite.sprite_lightning;
@@ -192,9 +191,9 @@ let possible_commands st side =
 (* Precondition: the command is correct, i.e.: player is not commanding the enemy.
    Assumes the amount of troops to be sent is positive.
 *)
-let new_state st (c : command) =
+let new_state st (c : command) : state =
   match c with
-  | Move (team,start,finish) ->
+  | Move (team, start, finish) ->
     begin
       let ts = st.towers.(start) in
       let ts_team_original = ts.twr_team in
@@ -219,7 +218,6 @@ let new_state st (c : command) =
                   end;
               }
             end in
-          (* TODO Sprite is REALLY hard-coded. Change to troop sprite later *)
           let sp = get_troop_direction_sprite ts_team_original st.towers start finish in
           let new_mvmt = new_movement
               start finish !mvmt_troop_count sp ts_team_original in
@@ -252,11 +250,15 @@ let new_state st (c : command) =
         | Neutral -> st (* This should never happen *)
         | Player ->
           begin
-            {st with player_mana = st.player_mana - skill.mana_cost; player_skill = (if st.player_skill = None then (Some skill) else st.player_skill)}
+            {st with player_mana = st.player_mana - skill.mana_cost;
+                     player_skill = (if st.player_skill = None then (Some skill)
+                                     else st.player_skill)}
           end
         | Enemy ->
           begin
-            {st with enemy_mana = st.enemy_mana - skill.mana_cost; (* TODO: Add player skill *)}
+            {st with enemy_mana = st.enemy_mana - skill.mana_cost;
+                     enemy_skill = (if st.enemy_skill = None then (Some skill)
+                                     else st.enemy_skill)}
           end
       )
     end
@@ -270,13 +272,13 @@ let new_state st (c : command) =
 let update_skill st d : state =
   match st.player_skill with
   | None -> st
-  | Some (sk) ->
+  | Some sk ->
     begin
       let new_towers = Array.copy st.towers in
       let tower = sk.tower_id in
       (* let tower_team = new_towers.(tower).twr_team in *)
       match sk.effect with
-      | Stun (secs) ->
+      | Stun secs ->
         begin
           (* If animation done, stun the tower *)
           if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
@@ -313,7 +315,7 @@ let update_skill st d : state =
             }
           )
         end
-      | Regen_incr (incr_rate) ->
+      | Regen_incr incr_rate ->
         begin
           (* if animation done, then increase the regeneration speed *)
           if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
@@ -338,7 +340,7 @@ let update_skill st d : state =
             }
           )
         end
-      | Kill (n) ->
+      | Kill n ->
         begin
           (* If animation done, then remove troops *)
           if sk.anim_timer.curr_time >= sk.anim_timer.limit then (

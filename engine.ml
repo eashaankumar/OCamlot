@@ -14,7 +14,7 @@ let empty_state = {
   movements = [] ;
   player_skill = None;
   enemy_skill = None;
-  player_mana = 0 ;
+  player_mana = 0;
   enemy_mana = 0;
 }
 (* Initialize input *)
@@ -27,7 +27,7 @@ let init_input = {
 let lightning_skill = {
   allegiance = Neutral;
   mana_cost = 0 ;
-  effect = Kill (5) ;
+  effect = Kill 100 ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 2.};
   tower_id = -1;
   sprite = Sprite.sprite_lightning;
@@ -273,7 +273,7 @@ let game_loop context running =
      state = State.new_state_plus_delta
          !current_scene.state cm !Renderer.delta};
   *)
-  let ai_difficulty = Easy in
+  let ai_difficulty = Hard in
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match ai_difficulty with
