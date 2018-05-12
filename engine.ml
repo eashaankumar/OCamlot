@@ -39,8 +39,8 @@ let stun_skill = {
   effect = Stun 3.5;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = -1;
-  sprite = Sprite.sprite_lightning;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  sprite = Sprite.sprite_freeze;
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 (* Initialize scenes *)

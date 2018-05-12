@@ -155,3 +155,6 @@ let sprite_lightning = init_sprite "images/lightning.png" 0.05
 
 let sprite_lightning_icon = init_sprite "images/ocamlot_sprites.png" 0.
                   |> add_animation_frame (504.11, 575.74) (71.96, 71.63)
+
+let sprite_freeze = init_sprite "images/freeze_spell.png" 0.05
+                  |> add_animation_frame (0., 0.) (556., 640.)

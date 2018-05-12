@@ -14,6 +14,9 @@ http://www.baltana.com/backgrounds/vintage-background-hd-desktop-wallpaper-16551
 - Lightning spell
 http://spritefx.blogspot.fr/2013/04/sprite-lightning.html
 
+- Freeze Spell
+https://pixabay.com/en/berg-crystal-quartz-blue-crystal-160776/
+
 ## Problems
 
 - Wrong towers

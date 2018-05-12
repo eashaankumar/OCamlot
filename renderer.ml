@@ -207,7 +207,7 @@ let draw_spells context scene =
   | Some(skl) -> 
     begin
       let tower = scene.state.towers.(skl.tower_id) in
-      draw_sprite_sheet context skl.sprite tower.twr_pos skl.sprite.frames.(0).bounds;
+      draw_sprite_sheet context skl.sprite tower.twr_pos tower.twr_size;
       ()
     end
 (*render*)
