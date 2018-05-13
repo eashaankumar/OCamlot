@@ -2,7 +2,7 @@ open Types
 
 let map_index = ref (-1)
 
-let get_state_index () = 
+let get_state_index () =
   !map_index
 
 (* Base values *)
@@ -26,19 +26,24 @@ let troop_cavalry = {
  * [base_tower id team pos] generates a base tower with given arguments
  * returns: [tower]
  *)
-let base_tower id team pos = 
+let base_tower id team pos =
+  let troop_count =
+  match team with
+  | Player -> 1.
+  | Enemy -> 10.
+  | Neutral -> 0. in
   {
   twr_id = id;
   twr_pos = pos;
   twr_size = {w=72.;h=136.} ;
   twr_sprite = Sprite.tower_base;
   twr_troop_info = troop_foot_soldier;
-  twr_troops = 1.;
+  twr_troops = troop_count;
   twr_troops_max = 50.;
   twr_troops_regen_speed = 1.;
   twr_team = team;
   selector_offset = {x = 0.; y = 100.};
-  count_label_offset = 
+  count_label_offset =
     begin
       match team with
       | Player -> {x = 10.; y = 5.}
@@ -52,7 +57,7 @@ let base_tower id team pos =
  * [tower_mini id pos] creates a tower of 20 foot soldiers.
  * returns: [tower]
  *)
-let tower_mini id team pos = 
+let tower_mini id team pos =
   {
     twr_id = id;
     twr_pos = pos;
@@ -72,7 +77,7 @@ let tower_mini id team pos =
  * [tower_medium id pos] creates a tower of 30 foot soldiers.
  * returns: [tower]
  *)
-let tower_medium id team pos = 
+let tower_medium id team pos =
   {
     twr_id = id;
     twr_pos = pos;
@@ -92,7 +97,7 @@ let tower_medium id team pos =
  * [tower_medium id pos] creates a tower of 15 cavalry soldiers.
  * returns: [tower]
  *)
-let tower_cavalry id team pos = 
+let tower_cavalry id team pos =
   {
     twr_id = id;
     twr_pos = pos;
@@ -109,10 +114,10 @@ let tower_cavalry id team pos =
   }
 
 (* Initialize maps *)
-let map1 = 
+let map1 =
   {
-    towers = [| 
-      base_tower 0 Player {x=61.;y=334.}; 
+    towers = [|
+      base_tower 0 Player {x=61.;y=334.};
       base_tower 1 Enemy {x=1015.;y=338.};
       tower_mini 2 Neutral {x=312.;y=204.};
       tower_mini 3 Neutral {x=721.;y=204.};
@@ -129,7 +134,7 @@ let map1 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -144,10 +149,10 @@ let map1 =
     );
   ]
 
-let map2 = 
+let map2 =
   {
-    towers = [| 
-      base_tower 0 Player {x=49.;y=487.}; 
+    towers = [|
+      base_tower 0 Player {x=49.;y=487.};
       base_tower 1 Enemy {x=989.;y=114.};
       tower_mini 2 Neutral {x=257.;y=259.};
       tower_mini 3 Neutral {x=540.;y=91.};
@@ -168,7 +173,7 @@ let map2 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -183,10 +188,10 @@ let map2 =
     );
   ]
 
-let map3 = 
+let map3 =
   {
-    towers = [| 
-      base_tower 0 Player {x=996.;y=276.}; 
+    towers = [|
+      base_tower 0 Player {x=996.;y=276.};
       base_tower 1 Enemy {x=76.;y=275.};
       tower_mini 2 Neutral {x=829.;y=141.};
       tower_mini 3 Neutral {x=718.;y=335.};
@@ -206,7 +211,7 @@ let map3 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -221,10 +226,10 @@ let map3 =
     );
   ]
 
-let map4 = 
+let map4 =
   {
-    towers = [| 
-      base_tower 0 Player {x=980.;y=517.}; 
+    towers = [|
+      base_tower 0 Player {x=980.;y=517.};
       base_tower 1 Enemy {x=51.;y=53.};
       tower_medium 2 Neutral {x=236.;y=153.};
       tower_medium 3 Neutral {x=130.;y=323.};
@@ -247,7 +252,7 @@ let map4 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -262,10 +267,10 @@ let map4 =
     );
   ]
 
-let map5 = 
+let map5 =
   {
-    towers = [| 
-      base_tower 0 Player {x=0.;y=50.}; 
+    towers = [|
+      base_tower 0 Player {x=0.;y=50.};
       base_tower 1 Enemy {x= Renderer.width -.72.;y= Renderer.height -. 136.};
       tower_mini 2 Neutral {x=300.;y=200.};
       tower_mini 3 Neutral {x=Renderer.width-.300.;y=Renderer.height-.200.};
@@ -283,7 +288,7 @@ let map5 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -298,10 +303,10 @@ let map5 =
     );
   ]
 
-let map6 = 
+let map6 =
   {
-    towers = [| 
-      base_tower 0 Player {x=435.;y=45.}; 
+    towers = [|
+      base_tower 0 Player {x=435.;y=45.};
       base_tower 1 Enemy {x=450.;y=494.};
       tower_medium 2 Player {x=135.;y=114.};
       tower_medium 3 Player {x=316.;y=192.};
@@ -327,7 +332,7 @@ let map6 =
     enemy_mana = 0. ;
   },
   [
-    ("difficulty_label", ref 
+    ("difficulty_label", ref
       (
         Label (
           {
@@ -342,10 +347,10 @@ let map6 =
     );
   ]
 
-let map7 = 
+let map7 =
   {
-    towers = [| 
-      base_tower 0 Player {x=60.;y=55.}; 
+    towers = [|
+      base_tower 0 Player {x=60.;y=55.};
       base_tower 1 Enemy {x=1019.;y=511.};
       tower_mini 2 Neutral {x=73.;y=405.};
       tower_mini 3 Neutral {x=241.;y=227.};
@@ -385,7 +390,7 @@ let map7 =
     enemy_mana = 0. ;
   },
   [
-    ("", ref 
+    ("", ref
       (
         Label (
           {
@@ -398,7 +403,7 @@ let map7 =
         )
       )
     );
-    ("", ref 
+    ("", ref
       (
         Label (
           {
@@ -413,12 +418,12 @@ let map7 =
     );
   ]
 
-let map8 = 
+let map8 =
   {
-    towers = [| 
-      base_tower 0 Enemy {x=67.;y=205.}; 
+    towers = [|
+      base_tower 0 Enemy {x=67.;y=205.};
       base_tower 1 Player {x=772.;y=538.};
-      base_tower 0 Enemy {x=245.;y=41.}; 
+      base_tower 0 Enemy {x=245.;y=41.};
       base_tower 1 Player {x=1000.;y=374.};
       tower_mini 2 Neutral {x=103.;y=157.};
       tower_cavalry 3 Neutral {x=149.;y=115.};
@@ -462,7 +467,7 @@ let map8 =
     enemy_mana = 0. ;
   },
   [
-    ("", ref 
+    ("", ref
       (
         Label (
           {
@@ -477,17 +482,17 @@ let map8 =
     );
   ]
 
-let map9 = 
+let map9 =
   {
-    towers = [| 
-      base_tower 0 Player {x=71.;y=87.}; 
+    towers = [|
+      base_tower 0 Player {x=71.;y=87.};
       base_tower 1 Player {x=162.;y=187.};
-      base_tower 0 Player {x=112.;y=340.}; 
+      base_tower 0 Player {x=112.;y=340.};
       base_tower 1 Player {x=77.;y=504.};
       base_tower 1 Player {x=215.;y=414.};
-      base_tower 0 Enemy {x=943.;y=539.}; 
+      base_tower 0 Enemy {x=943.;y=539.};
       base_tower 1 Enemy {x=995.;y=381.};
-      base_tower 0 Enemy {x=915.;y=249.}; 
+      base_tower 0 Enemy {x=915.;y=249.};
       base_tower 1 Enemy {x=970.;y=79.};
       base_tower 1 Enemy {x=835.;y=387.};
       tower_mini 2 Neutral {x=300.;y=287.};
@@ -517,7 +522,7 @@ let map9 =
     enemy_mana = 0. ;
   },
   [
-    ("", ref 
+    ("", ref
       (
         Label (
           {
@@ -532,18 +537,18 @@ let map9 =
     );
   ]
 
-let map10 = 
+let map10 =
   {
-    towers = [| 
-      base_tower 0 Player {x=121.;y=81.}; 
+    towers = [|
+      base_tower 0 Player {x=121.;y=81.};
       base_tower 1 Player {x=260.;y=81.};
-      base_tower 0 Player {x=414.;y=81.}; 
+      base_tower 0 Player {x=414.;y=81.};
       base_tower 1 Player {x=575.;y=81.};
       base_tower 1 Player {x=752.;y=81.};
       base_tower 1 Player {x=919.;y=81.};
-      base_tower 0 Enemy {x=121.;y=485.}; 
+      base_tower 0 Enemy {x=121.;y=485.};
       base_tower 1 Enemy {x=260.;y=485.};
-      base_tower 0 Enemy {x=414.;y=485.}; 
+      base_tower 0 Enemy {x=414.;y=485.};
       base_tower 1 Enemy {x=575.;y=485.};
       base_tower 1 Enemy {x=752.;y=485.};
       base_tower 1 Enemy {x=919.;y=485.};
@@ -556,7 +561,7 @@ let map10 =
       tower_mini 0 Neutral {x=312.;y=414.};
       tower_mini 0 Neutral {x=236.;y=415.};
       tower_mini 3 Neutral {x=148.;y=416.};
-      
+
       tower_mini 5 Neutral {x=444.;y=221.};
       tower_mini 6 Neutral {x=444.;y=300.};
       tower_mini 6 Neutral {x=444.;y=365.};
@@ -587,7 +592,7 @@ let map10 =
     enemy_mana = 0. ;
   },
   [
-    ("", ref 
+    ("", ref
       (
         Label (
           {
@@ -602,13 +607,13 @@ let map10 =
     );
   ]
 
-let fix_map (st,int) = 
+let fix_map (st,int) =
   let total_towers = Array.length st.towers in
   let player_towers = ref 0 in
   let enemy_towers = ref 0 in
   let id = ref (-1) in
-  let new_towers = 
-  Array.fold_left (fun acc t -> 
+  let new_towers =
+  Array.fold_left (fun acc t ->
     let _ = (
       match t.twr_team with
       | Neutral -> ()
@@ -631,12 +636,12 @@ let fix_map (st,int) =
   }, int
 
 let maps = [|
-  (*fix_map map1;
+  fix_map map1;
   fix_map map2;
   fix_map map3;
   fix_map map4;
   fix_map map5;
-  fix_map map6;*)
+  fix_map map6;
   fix_map map7;
   fix_map map8;
   fix_map map9;
@@ -647,7 +652,7 @@ let next_state () =
   map_index := !map_index + 1;
   fst (maps.(!map_index))
 
-let get_current_state_ending () = 
+let get_current_state_ending () =
   snd (maps.(!map_index))
 
 let all_states_completed () =

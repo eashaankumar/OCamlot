@@ -390,7 +390,7 @@ module MCTS_AI : AI = struct
       | Easy -> create_tree st easy_iterations
       | Medium -> create_tree st medium_iterations
       | Hard -> create_tree st hard_iterations in
-    print_endline (to_string !t);
+    (* print_endline (to_string !t); *)
     let child = get_highest_percentage t in
     match !child with
     | Node(_,cm,_,_,_,_,_) -> cm

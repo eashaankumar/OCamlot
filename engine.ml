@@ -250,7 +250,7 @@ let print_mouse_input () =
   let scene = !current_scene in
   let _ = (
     match scene.input.mouse_state with
-    | Pressed -> 
+    | Pressed ->
       print_endline (("{x="^string_of_float !current_scene.input.mouse_pos.x)^";y="^(string_of_float !current_scene.input.mouse_pos.y)^"}")
     | Released -> ()
     | Moved -> ()
@@ -409,10 +409,10 @@ let game_loop context running =
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match !State.difficulty_level with
-    | Easy -> 6.
-    | Medium -> 4.
-    | Hard -> 2. in
-  let next_move_step = ref (base_step_length +. (Random.float 1.)) in
+    | Easy -> 3.6
+    | Medium -> 2.0
+    | Hard -> 0.9 in
+  let next_move_step = ref (base_step_length +. (Random.float 0.4)) in
 
   let rec helper () =
 
