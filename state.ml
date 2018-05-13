@@ -75,12 +75,12 @@ let get_troop_direction_sprite team towers starti endi =
   | Player ->
     begin
       match start_tower.twr_troop_info.trp_type with
-      | Foot -> 
+      | Foot ->
         begin
           if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop1_right
           else Sprite.blue_troop1_left
         end
-      | Cavalry -> 
+      | Cavalry ->
         begin
           if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.blue_troop2_right
           else Sprite.blue_troop2_left
@@ -89,12 +89,12 @@ let get_troop_direction_sprite team towers starti endi =
   | Enemy ->
     begin
       match start_tower.twr_troop_info.trp_type with
-      | Foot -> 
+      | Foot ->
         begin
           if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop1_right
           else Sprite.red_troop1_left
         end
-      | Cavalry -> 
+      | Cavalry ->
         begin
           if start_tower.twr_pos.x < end_tower.twr_pos.x then Sprite.red_troop2_right
           else Sprite.red_troop2_left
@@ -122,11 +122,11 @@ let get_tower_under_mouse towers input =
     )
   ) None towers
 let possible_commands st side =
-  let mana_points =
+  (* let mana_points =
     match side with
     | Enemy -> st.enemy_mana
     | Player -> st.player_mana
-    | Neutral -> 0. in
+    | Neutral -> 0. in *)
 
   let side_twr_list = (Array.fold_left
        (fun acc e -> if e.twr_team = side && (not e.is_disabled)
@@ -136,12 +136,18 @@ let possible_commands st side =
   let opp_twr_list = (Array.fold_left
        (fun acc e -> if e.twr_team <> side
          then e.twr_id::acc else acc)
-      [] st.towers) in
+       [] st.towers) in
 
-  let total_twr_list = (Array.fold_left
+  let neutral_twr_list = (Array.fold_left
+       (fun acc e -> if e.twr_team = Neutral
+         then e.twr_id::acc else acc)
+       [] st.towers) in
+
+  (* let total_twr_list = (Array.fold_left
       (fun acc e -> e.twr_id::acc)
-      [] st.towers) in
+      [] st.towers) in *)
 
+  (*creates pairs of towers that represent moves*)
   let rec f lst1 lst2 acc1 =
     let rec g l1 l2 acc2 =
       match l1,l2 with
@@ -153,13 +159,17 @@ let possible_commands st side =
     | h::t -> f lst1 t ((g lst1 lst2 [])@acc1) in
 
   let indices_list =
-    List.filter (fun (h,t) -> h<>t) (f side_twr_list total_twr_list []) in
+    (* List.filter (fun (h,t) -> h<>t) (f side_twr_list total_twr_list []) in *)
+    if List.length neutral_twr_list > 0 then
+      List.filter (fun (h,t) -> h<>t) (f side_twr_list neutral_twr_list [])
+    else
+      List.filter (fun (h,t) -> h<>t) (f side_twr_list opp_twr_list []) in
 
   let move_list = List.map (fun (h,t) -> Move (side, h, t)) indices_list in
 
   let command_list = (Null::move_list) in
 
-  let kill_list = if mana_points < 0. then [] else
+  (* let kill_list = if mana_points < 0. then [] else
     List.map (fun id -> Skill ({
       allegiance = side;
       mana_cost = 0 ;
@@ -203,7 +213,8 @@ let possible_commands st side =
       anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
     })) opp_twr_list in
 
-  Array.of_list ((((command_list@kill_list)@stun_list)@regen_buff_list)@regen_attack_list)
+     Array.of_list ((((command_list@kill_list)@stun_list)@regen_buff_list)@regen_attack_list) *)
+  Array.of_list command_list
 
 
 
@@ -266,7 +277,7 @@ let new_state st (c : command) : state =
       (* Deny spell if cannot be applied to tower *)
       else if  (
         match skill.effect with
-        | Kill (_) -> 
+        | Kill (_) ->
           begin
             skill.allegiance = st.towers.(skill.tower_id).twr_team
           end
@@ -324,8 +335,8 @@ let update_skill st d : state =
             {st with
              player_skill = Some (
                  {sk with
-                  sprite = 
-                    {sk.sprite with 
+                  sprite =
+                    {sk.sprite with
                       index = (Array.length sk.sprite.frames) - 1
                     };
                   mana_cost = 0;
@@ -525,12 +536,12 @@ let next_scene sc =
     )
     else None
   (* Go through all buttons and check if they are clicked *)
-  | "Select Difficulty" -> 
+  | "Select Difficulty" ->
     begin
       (* Update global difficulty level *)
       List.fold_left (fun acc (id, ui_ref) ->
       match !ui_ref with
-      | Button (bprop, _, _, Some scid) -> 
+      | Button (bprop, _, _, Some scid) ->
         begin
           if bprop.btn_state = Clicked then
           (* Check if button of iterest *)
@@ -552,12 +563,12 @@ let next_scene sc =
       | _ -> acc
       ) None sc.interface
     end
-  | _ -> 
+  | _ ->
     begin
       (* Update global difficulty level *)
       List.fold_left (fun acc (id, ui_ref) ->
       match !ui_ref with
-      | Button (bprop, _, _, Some scid) -> 
+      | Button (bprop, _, _, Some scid) ->
         begin
           if bprop.btn_state = Clicked then
             Some scid
@@ -695,15 +706,15 @@ let manage_mouse_input (ipt : input) (sc : scene) : command =
     end in
   !command
 
-let update_mana state team = 
+let update_mana state team =
   let speed = 3. in
   match team with
-  | Player -> 
+  | Player ->
     begin
       let multiplier = (float_of_int state.player_score ) /. (float_of_int state.num_towers) in
       state.player_mana +. speed *. !Renderer.delta *. multiplier
     end
-  | Enemy -> 
+  | Enemy ->
     begin
       let multiplier = (float_of_int state.enemy_score ) /. (float_of_int state.num_towers) in
       state.enemy_mana +. speed *. !Renderer.delta *. multiplier
@@ -723,19 +734,19 @@ let update sc input =
   let ans_state = new_state_plus_delta state' command !Renderer.delta in
   (* Update gui text fields *)
   (* fps *)
-  let _ = 
+  let _ =
     begin
       match Ui.find_ui_ref sc.interface "fps" with
-      | Some (ref_fps_label) -> 
+      | Some (ref_fps_label) ->
         (Ui.get_label_prop !ref_fps_label).text <- string_of_int !Renderer.fps;
       | None -> ()
     end
   in
   (* mana *)
-  let _ = 
+  let _ =
     begin
       match Ui.find_ui_ref sc.interface "player_mana_label" with
-      | Some(ref_mana_label) -> 
+      | Some(ref_mana_label) ->
         (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.player_mana);
       | None -> ()
     end
