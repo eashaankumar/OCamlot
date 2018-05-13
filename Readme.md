@@ -26,12 +26,12 @@ https://pixabay.com/en/berg-crystal-quartz-blue-crystal-160776/
 ## Maps
 
 1. 4 small towers, More ruins to take over
-2) 8 small towers, Bigger is better.
-3) 3 small towers with 1 midsize, A powerful ruler defends ALL
-4) 10 small towers with 10 midsized, Need more horsepower...
+2. 8 small towers, Bigger is better.
+3. 3 small towers with 1 midsize, A powerful ruler defends ALL
+4. 10 mid towers , Need more horsepower...
 5. 3 small towers with 2 midsized with 1 cavalry in the middle, Rulers are *saddled with the lives of their people
-6) 8 midsized towers already taken over, 4 cavalry, There are many paths to victory
-7) 10 small with 6 mid taken over, 10 cavalry, How difficult is it to be a ruler? It's over nine-thous...
-8) 2 bases for each, 20 small, 10 mid, 5 cavalry, You must not give up now!
+6. 8 midsized towers already taken over, 4 cavalry, There are many paths to victory
+7. 10 small with 6 mid taken over, 10 cavalry, How difficult is it to be a ruler? It's over nine-thous...
+8. 2 bases for each, 20 small, 10 mid, 5 cavalry, You must not give up now!
 9) 5 bases for each, 10 small, 10 mid, 10 cavalry, I hope they remember you.
 10) 10 bases for each, all cavalry, A Winner is You!
