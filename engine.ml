@@ -261,7 +261,7 @@ let intro_scene = {
   background = Sprite.cracked_background;
 }
 
-let current_scene = ref game_over_scene
+let current_scene = ref intro_scene
 
 (* Pref mouse state *)
 let prev_mouse_state = ref Moved
