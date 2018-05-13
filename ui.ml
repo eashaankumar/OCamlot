@@ -57,7 +57,3 @@ let tick interface input =
 let fps_label = Label ({text="0";color={r=0;g=0;b=0;a=0.25};font_size=20},
                        {x=Renderer.width-.30.;y=30.;},
                        {w=30.;h=30.})
-
-let gameover_label = Label ({text="Game Over";color={r=0;g=0;b=0;a=1.};font_size=40},
-                       {x=Renderer.width/.2. -. 80.;y=100.;},
-                       {w=160.;h=40.})

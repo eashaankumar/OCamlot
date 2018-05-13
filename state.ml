@@ -394,7 +394,12 @@ let update_skill st d : state =
               player_skill = None;
               towers =
               begin
-                let new_troop_count = max 0. (st.towers.(tower).twr_troops -. float_of_int n) in
+                let new_troop_count = (
+                  if sk.allegiance = st.towers.(sk.tower_id).twr_team then
+                    st.towers.(tower).twr_troops
+                  else 
+                    max 0. (st.towers.(tower).twr_troops -. float_of_int n) 
+                )in
                 new_towers.(tower) <- {st.towers.(tower) with
                   twr_troops = new_troop_count;
                   twr_team = begin
