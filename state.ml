@@ -324,6 +324,10 @@ let update_skill st d : state =
             {st with
              player_skill = Some (
                  {sk with
+                  sprite = 
+                    {sk.sprite with 
+                      index = (Array.length sk.sprite.frames) - 1
+                    };
                   mana_cost = 0;
                   effect = Stun (secs -. d);
                  }

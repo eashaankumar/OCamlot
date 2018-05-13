@@ -6,6 +6,8 @@ let js = Js.string
 let document = Html.document
 
 (* Scene transitions *)
+let fade_in = FadeIn (0., 1., 1.)
+let fade_out = FadeOut (0., 1., 1.)
 
 (* Generic empty state *)
 let empty_state = {
@@ -38,9 +40,9 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 170;
+  mana_cost = 0(*170*);
   effect = Stun 7.;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.(*20.*)};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
@@ -175,7 +177,7 @@ let game_scene = {
 
 let game_over_scene = {
   name = "Game Over";
-  tasks = [FadeIn (0., 2., 1.)];
+  tasks = [fade_in];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("game_over",ref Ui.gameover_label)];
@@ -187,7 +189,7 @@ let game_over_scene = {
 
 let intro_scene = {
   name = "Intro";
-  tasks = [FadeIn (0., 2., 1.)];
+  tasks = [fade_in];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
                ("start",ref (
@@ -339,7 +341,7 @@ let schedule_transition scid =
       | Some(nxt) ->
         begin
           print_endline("Switching to "^(nxt));
-          current_scene := {!current_scene with tasks = [FadeOut(0.,2.,1.);SwitchScene(nxt)]};
+          current_scene := {!current_scene with tasks = [fade_out;SwitchScene(nxt)]};
           ()
         end
     end in
@@ -356,7 +358,7 @@ let scene_transition () =
             Mapmaker.reset_states_counter ();
             let next_scene = get_scene_from_name "Intro" in
             current_scene := next_scene;
-            current_scene := {!current_scene with tasks = [FadeIn (0.,2., 1.);]}
+            current_scene := {!current_scene with tasks = [fade_in]}
           )
           (* Generate new map if more levels remaining *)
           else (
@@ -372,7 +374,7 @@ let scene_transition () =
               background = Sprite.grass_background;
             };*)
             current_scene := {game_scene with
-                              tasks = [FadeIn (0.,2., 1.);];
+                              tasks = [fade_in];
                               state = Mapmaker.next_state ();};
           )
         )
@@ -380,7 +382,7 @@ let scene_transition () =
         else (
           let next_scene = get_scene_from_name nxt in
           current_scene := {next_scene with
-                            tasks = [FadeIn (0.,2.,1.)];};
+                            tasks = [fade_in];};
         );
         ()
       end
