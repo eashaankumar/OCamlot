@@ -348,4 +348,8 @@ let state_tests = [
 let tests = List.flatten [
     helper_tests;
     state_tests
-]
+  ]
+
+let alltests = "State test suite" >::: tests
+
+let _ = run_test_tt_main alltests
