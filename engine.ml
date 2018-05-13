@@ -181,7 +181,32 @@ let game_over_scene = {
   tasks = [fade_in];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
-               ("game_over",ref Ui.gameover_label)];
+               ("game_over",ref (
+                  Label (
+                    {
+                      text="Game Over";
+                      color={r=0;g=0;b=0;a=1.};
+                      font_size=40
+                    },
+                    {x=Renderer.width/.2. -. 170.;y=200.;},
+                    {w=160.;h=40.}
+                  )
+                ));
+                ("return", ref (Button (
+                  {
+                    btn_state = Neutral;
+                    btn_sprite = Sprite.menu_btn_sprite1;
+                    btn_label = {
+                      text = "Home"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
+                    };
+                    btn_label_offset = {x=40.;y=30./.2. +. 70./.2.};
+                  },
+                  {x=Renderer.width /. 2. -. 100.;y= 300.},
+                  {w=200.;h=70.},
+                  Some "Intro")
+                  
+               ));
+               ];
   input = init_input;
   highlight_towers = [];
   next = None;
@@ -236,7 +261,7 @@ let intro_scene = {
   background = Sprite.cracked_background;
 }
 
-let current_scene = ref intro_scene
+let current_scene = ref game_over_scene
 
 (* Pref mouse state *)
 let prev_mouse_state = ref Moved
