@@ -1,3 +1,4 @@
+open Types
 open State
 open OUnit2
 
