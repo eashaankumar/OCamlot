@@ -631,12 +631,12 @@ let fix_map (st,int) =
   }, int
 
 let maps = [|
-  fix_map map1;
+  (*fix_map map1;
   fix_map map2;
   fix_map map3;
   fix_map map4;
   fix_map map5;
-  fix_map map6;
+  fix_map map6;*)
   fix_map map7;
   fix_map map8;
   fix_map map9;
