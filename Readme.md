@@ -33,5 +33,5 @@ https://pixabay.com/en/berg-crystal-quartz-blue-crystal-160776/
 6. 8 midsized towers already taken over, 4 cavalry, There are many paths to victory
 7. 10 small with 6 mid taken over, 10 cavalry, How difficult is it to be a ruler? It's over nine-thous...
 8. 2 bases for each, 20 small, 10 mid, 5 cavalry, You must not give up now!
-9) 5 bases for each, 10 small, 10 mid, 10 cavalry, I hope they remember you.
+9. 5 bases for each, 10 small, 10 mid, 10 cavalry, I hope they remember you.
 10) 10 bases for each, all cavalry, A Winner is You!

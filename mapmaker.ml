@@ -116,11 +116,11 @@ let map1 =
       base_tower 1 Enemy {x=1015.;y=338.};
       tower_mini 2 Neutral {x=312.;y=204.};
       tower_mini 3 Neutral {x=721.;y=204.};
-      tower_medium 4 Neutral {x=325.;y=535.};
-      tower_medium 5 Neutral {x=757.;y=527.};
+      tower_mini 4 Neutral {x=325.;y=535.};
+      tower_mini 5 Neutral {x=757.;y=527.};
     |] ;
-    num_towers = 8 ;
-    player_score = 8 ;
+    num_towers = 6 ;
+    player_score = 0 ;
     enemy_score = 0 ;
     movements = [] ;
     player_skill = None ;
@@ -357,7 +357,7 @@ let map7 =
       tower_mini 6 Neutral {x=912.;y=562.};
       tower_mini 0 Neutral {x=690.;y=628.};
       tower_mini 0 Neutral {x=387.;y=588.};
-      tower_medium 0 Player {x=165.;y=351.};
+      tower_medium 0 Player {x=165.;y=400.};
       tower_medium 0 Player {x=346.;y=205.};
       tower_medium 0 Player {x=374.;y=329.};
       tower_medium 0 Enemy {x=839.;y=605.};
@@ -477,8 +477,170 @@ let map8 =
     );
   ]
 
+let map9 = 
+  {
+    towers = [| 
+      base_tower 0 Player {x=71.;y=87.}; 
+      base_tower 1 Player {x=162.;y=187.};
+      base_tower 0 Player {x=112.;y=340.}; 
+      base_tower 1 Player {x=77.;y=504.};
+      base_tower 1 Player {x=215.;y=414.};
+      base_tower 0 Enemy {x=943.;y=539.}; 
+      base_tower 1 Enemy {x=995.;y=381.};
+      base_tower 0 Enemy {x=915.;y=249.}; 
+      base_tower 1 Enemy {x=970.;y=79.};
+      base_tower 1 Enemy {x=835.;y=387.};
+      tower_mini 2 Neutral {x=300.;y=287.};
+      tower_mini 4 Neutral {x=431.;y=141.};
+      tower_mini 5 Neutral {x=632.;y=89.};
+      tower_mini 6 Neutral {x=811.;y=162.};
+      tower_mini 6 Neutral {x=824.;y=307.};
+      tower_mini 6 Neutral {x=846.;y=568.};
+      tower_mini 0 Neutral {x=727.;y=601.};
+      tower_mini 0 Neutral {x=551.;y=617.};
+      tower_mini 3 Neutral {x=384.;y=533.};
+      tower_mini 4 Neutral {x=270.;y=380.};
+      tower_cavalry 0 Neutral {x=492.;y=282.};
+      tower_cavalry 0 Neutral {x=711.;y=275.};
+      tower_cavalry 0 Neutral {x=488.;y=488.};
+      tower_cavalry 0 Neutral {x=744.;y=473.};
+      tower_medium 0 Neutral {x=593.;y=344.};
+
+    |] ;
+    num_towers = 8 ;
+    player_score = 8 ;
+    enemy_score = 0 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  },
+  [
+    ("", ref 
+      (
+        Label (
+          {
+            text = "You will be remembered";
+            color = {r=255;g=255;b=255;a=1.};
+            font_size = 25;
+          },
+          {x=353.; y = 407.},
+          {w=800.;h=70.};
+        )
+      )
+    );
+  ]
+
+let map10 = 
+  {
+    towers = [| 
+      base_tower 0 Player {x=121.;y=81.}; 
+      base_tower 1 Player {x=260.;y=81.};
+      base_tower 0 Player {x=414.;y=81.}; 
+      base_tower 1 Player {x=575.;y=81.};
+      base_tower 1 Player {x=752.;y=81.};
+      base_tower 1 Player {x=919.;y=81.};
+      base_tower 0 Enemy {x=121.;y=485.}; 
+      base_tower 1 Enemy {x=260.;y=485.};
+      base_tower 0 Enemy {x=414.;y=485.}; 
+      base_tower 1 Enemy {x=575.;y=485.};
+      base_tower 1 Enemy {x=752.;y=485.};
+      base_tower 1 Enemy {x=919.;y=485.};
+      tower_mini 2 Neutral {x=148.;y=221.};
+      tower_mini 4 Neutral {x=236.;y=221.};
+      tower_mini 5 Neutral {x=312.;y=221.};
+      tower_mini 6 Neutral {x=312.;y=300.};
+      tower_mini 6 Neutral {x=230.;y=325.};
+      tower_mini 6 Neutral {x=312.;y=365.};
+      tower_mini 0 Neutral {x=312.;y=414.};
+      tower_mini 0 Neutral {x=236.;y=415.};
+      tower_mini 3 Neutral {x=148.;y=416.};
+      
+      tower_mini 5 Neutral {x=444.;y=221.};
+      tower_mini 6 Neutral {x=444.;y=300.};
+      tower_mini 6 Neutral {x=444.;y=365.};
+      tower_mini 0 Neutral {x=444.;y=414.};
+
+      tower_mini 5 Neutral {x=586.;y=221.};
+      tower_mini 6 Neutral {x=586.;y=300.};
+      tower_mini 6 Neutral {x=586.;y=365.};
+      tower_mini 0 Neutral {x=586.;y=414.};
+
+      tower_mini 2 Neutral {x=748.;y=221.};
+      tower_mini 4 Neutral {x=836.;y=221.};
+      tower_mini 5 Neutral {x=912.;y=221.};
+      tower_mini 6 Neutral {x=748.;y=325.};
+      tower_mini 6 Neutral {x=912.;y=325.};
+      tower_mini 0 Neutral {x=912.;y=414.};
+      tower_mini 0 Neutral {x=836.;y=415.};
+      tower_mini 3 Neutral {x=748.;y=416.};
+
+    |] ;
+    num_towers = 8 ;
+    player_score = 8 ;
+    enemy_score = 0 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  },
+  [
+    ("", ref 
+      (
+        Label (
+          {
+            text = "A Winner is You!";
+            color = {r=255;g=255;b=255;a=1.};
+            font_size = 25;
+          },
+          {x=393.; y = 407.},
+          {w=800.;h=70.};
+        )
+      )
+    );
+  ]
+
+let fix_map (st,int) = 
+  let total_towers = Array.length st.towers in
+  let player_towers = ref 0 in
+  let enemy_towers = ref 0 in
+  let id = ref (-1) in
+  let new_towers = 
+  Array.fold_left (fun acc t -> 
+    let _ = (
+      match t.twr_team with
+      | Neutral -> ()
+      | Player -> player_towers := !player_towers + 1;
+      | Enemy -> enemy_towers := !enemy_towers + 1;
+    ) in
+    id := !id + 1;
+    Array.append acc [|{t with twr_id = !id}|]
+  ) [||] st.towers in
+  {
+    towers = new_towers;
+    num_towers = total_towers;
+    player_score = !player_towers;
+    enemy_score = !enemy_towers;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  }, int
+
 let maps = [|
-  map8
+  fix_map map1;
+  fix_map map2;
+  fix_map map3;
+  fix_map map4;
+  fix_map map5;
+  fix_map map6;
+  fix_map map7;
+  fix_map map8;
+  fix_map map9;
+  fix_map map10;
 |]
 
 let next_state () =
