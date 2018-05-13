@@ -343,6 +343,10 @@ let state_tests = [
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_enemy_valid2) delta);
                          init_state_copy));
+
+  (* TODO: test_state is not running tests *)
+  "testing" >:: (fun _ -> assert_equal   (print_endline ("Hi"); true) false);
+
 ]
 
 let tests = List.flatten [

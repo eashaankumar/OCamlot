@@ -390,7 +390,7 @@ module MCTS_AI : AI = struct
       | Easy -> create_tree st easy_iterations
       | Medium -> create_tree st medium_iterations
       | Hard -> create_tree st hard_iterations in
-    print_endline (to_string !t);
+    (*print_endline (to_string !t);*)
     let child = get_highest_percentage t in
     (*print_endline ("Win %: "^(string_of_float (win_pctg child)));*)
     match !child with

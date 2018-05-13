@@ -2,6 +2,9 @@ open Types
 
 let map_index = ref (-1)
 
+let get_state_index () = 
+  !map_index
+
 (* Base values *)
 let troop_regen_speed = 1.
 
@@ -105,63 +108,122 @@ let tower_cavalry id pos =
     is_disabled = false
   }
 
-(* Initialize states *)
+(* Initialize maps *)
+let map1 = 
+  {
+    towers = [| 
+      base_tower 0 Player {x=61.;y=334.}; 
+      base_tower 1 Enemy {x=1015.;y=338.};
+      tower_mini 2 {x=312.;y=204.};
+      tower_mini 3 {x=721.;y=204.};
+      tower_medium 4 {x=325.;y=535.};
+      tower_medium 5 {x=757.;y=527.};
+    |] ;
+    num_towers = 8 ;
+    player_score = 8 ;
+    enemy_score = 0 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  },
+  [
+    ("difficulty_label", ref 
+      (
+        Label (
+          {
+            text = "More ruins to take over";
+            color = {r=255;g=255;b=255;a=1.};
+            font_size = 25;
+          },
+          {x=332.;y=382.},
+          {w=800.;h=70.};
+        )
+      )
+    );
+  ]
+
+let map2 = 
+  {
+    towers = [| 
+      base_tower 0 Player {x=61.;y=334.}; 
+      base_tower 1 Enemy {x=1015.;y=338.};
+      tower_mini 2 {x=312.;y=204.};
+      tower_mini 3 {x=721.;y=204.};
+      tower_medium 4 {x=325.;y=535.};
+      tower_medium 5 {x=757.;y=527.};
+    |] ;
+    num_towers = 8 ;
+    player_score = 8 ;
+    enemy_score = 0 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  },
+  [
+    ("difficulty_label", ref 
+      (
+        Label (
+          {
+            text = "More ruins to take over";
+            color = {r=255;g=255;b=255;a=1.};
+            font_size = 25;
+          },
+          {x=332.;y=382.},
+          {w=800.;h=70.};
+        )
+      )
+    );
+  ]
+
+let map5 = 
+  {
+    towers = [| 
+      base_tower 0 Player {x=0.;y=50.}; 
+      base_tower 1 Enemy {x= Renderer.width -.72.;y= Renderer.height -. 136.};
+      tower_mini 2 {x=300.;y=200.};
+      tower_mini 3 {x=Renderer.width-.300.;y=Renderer.height-.200.};
+      tower_medium 4 {x=600.;y=200.};
+      tower_medium 5 {x=Renderer.width-.600.;y=Renderer.height-.200.};
+      tower_cavalry 6 {x=554.;y=374.};
+    |] ;
+    num_towers = 8 ;
+    player_score = 8 ;
+    enemy_score = 0 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 0. ;
+    enemy_mana = 0. ;
+  },
+  [
+    ("difficulty_label", ref 
+      (
+        Label (
+          {
+            text = "Rulers are saddled with the lives of their people";
+            color = {r=255;g=255;b=255;a=1.};
+            font_size = 25;
+          },
+          {x=106.; y = 407.},
+          {w=800.;h=70.};
+        )
+      )
+    );
+  ]
 let maps = [|
-(* MAP 1*)
-{
-  towers = [| 
-    base_tower 0 Player {x=0.;y=50.}; 
-    base_tower 1 Enemy {x= Renderer.width -.72.;y= Renderer.height -. 136.};
-    tower_mini 2 {x=300.;y=200.};
-    tower_mini 3 {x=Renderer.width-.300.;y=Renderer.height-.200.};
-    tower_medium 4 {x=600.;y=200.};
-    tower_medium 5 {x=Renderer.width-.600.;y=Renderer.height-.200.};
-    tower_cavalry 6 {x=700.;y=100.};
-    tower_cavalry 7 {x=Renderer.width-.700.;y=Renderer.height-.100.};
-  |] ;
-  num_towers = 8 ;
-  player_score = 1 ;
-  enemy_score = 1 ;
-  movements = [] ;
-  player_skill = None ;
-  enemy_skill = None ;
-  player_mana = 0. ;
-  enemy_mana = 0. ;
-};
-(* MAP 2 *)
-{
-  towers = [| 
-    base_tower 0 Player {x=0.;y=136.}; 
-    base_tower 0 Enemy {x= Renderer.width -.72.;y= Renderer.height -. 136.};
-    {
-      twr_id = 2;
-      twr_pos = {x=300.;y=200.};
-      twr_size = {w=50.;h=85.} ;
-      twr_sprite = Sprite.tower_type1 ;
-      twr_troop_info = troop_foot_soldier;
-      twr_troops = 0. ;
-      twr_troops_max = 20.;
-      twr_troops_regen_speed = troop_regen_speed;
-      twr_team = Neutral;
-      selector_offset = {x=0.;y=50.};
-      count_label_offset = {x = 0.; y = (-1.) *. 10.};
-      is_disabled = false
-    };
-  |] ;
-  num_towers = 0 ;
-  player_score = 1 ;
-  enemy_score = 1 ;
-  movements = [] ;
-  player_skill = None ;
-  enemy_skill = None;
-  player_mana = 0. ;
-  enemy_mana = 0. ;
-};
+  map2
 |]
 
 let next_state () =
   map_index := !map_index + 1;
-  maps.(!map_index)
+  fst (maps.(!map_index))
+
+let get_current_state_ending () = 
+  snd (maps.(!map_index))
 
 let all_states_completed () =
   !map_index >= (Array.length maps) - 1

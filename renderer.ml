@@ -154,7 +154,7 @@ let draw_entities context scene =
  * while taking into considering their [ui_state]
  * returns: unit
  *)
-let draw_ui context scene =
+let draw_ui context interface =
   List.iter (fun (id, ui_elmt) ->
     match !ui_elmt with
     | Button (btn_prop, pos, size, _) -> begin
@@ -198,7 +198,7 @@ let draw_ui context scene =
         ) in
         ()
       end
-    ) scene.interface;
+    ) interface;
   ()
 
 let draw_spells context scene =
@@ -229,7 +229,7 @@ let render context scene =
   (* Draw spells *)
   draw_spells context scene;
   (* Draw ui *)
-  draw_ui context scene;
+  draw_ui context scene.interface;
   ()
 
 let manage_tasks context scene = 
@@ -252,8 +252,6 @@ let manage_tasks context scene =
           scene.tasks <- (FadeIn(cur',lim,amag)::t);
         )
       end
-    | Wait(cur, lim)::t -> begin
-      end
     | FadeOut (cur,lim,amag)::t -> 
       begin
         if (cur >= lim) then (
@@ -262,6 +260,14 @@ let manage_tasks context scene =
           let cur' = cur +. !delta *. 1. in
           scene.tasks <- (FadeOut(cur',lim,amag)::t);
         )      
+      end
+    | Victory (time,interface)::t ->
+      begin
+        if time > 0. then (
+          scene.tasks <- Victory(time -. !delta,interface)::t
+        ) else (
+          scene.tasks <- t
+        )
       end
     | _ -> ()
   end in
@@ -294,9 +300,12 @@ let manage_tasks context scene =
         context##fillRect (0., 0., width, height);
         ()
       end
-    | Wait (cur, lim) -> 
+    | Victory (_, interface) -> 
       begin
-        ()
+        context##fillStyle <- color_to_hex {r=0;g=0;b=0;a= 0.5};
+        context##fillRect (0., 0., width, height);
+        draw_text context "Victory" {x=width/.2. -. 100.;y=100.} {r=255;g=255;b=255;a=1.} 40;
+        draw_ui context interface; 
       end
     | _ -> ()
   end in

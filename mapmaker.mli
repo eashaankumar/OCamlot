@@ -23,3 +23,7 @@ val all_states_completed : unit -> bool
  * returns: [unit]
  *)
 val reset_states_counter : unit -> unit
+
+val get_state_index : unit -> int
+
+val get_current_state_ending : unit -> interface

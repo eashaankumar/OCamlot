@@ -166,7 +166,7 @@ type interface = (string * (ui_element ref)) list
 
 (* Transitions *)
 type task =
-| Wait of float * float
+| Victory of float * interface
 | FadeIn of float * float * float
 | Update
 | FadeOut of float * float * float

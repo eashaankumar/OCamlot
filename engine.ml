@@ -8,6 +8,7 @@ let document = Html.document
 (* Scene transitions *)
 let fade_in = FadeIn (0., 1., 1.)
 let fade_out = FadeOut (0., 1., 1.)
+let fade_out_alpha_0_5 = FadeOut (0.5, 1., 1.)
 
 (* Generic empty state *)
 let empty_state = {
@@ -40,7 +41,7 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 0(*170*);
+  mana_cost = 170;
   effect = Stun 7.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 0.(*20.*)};
   tower_id = -1;
@@ -245,12 +246,16 @@ let canvas = ref ( Html.createCanvas document )
 
 (****** Helpers ******)
 let print_mouse_input () =
-  (*print_string ((string_of_float input.mouse_pos.x)^" "^(string_of_float input.mouse_pos.y)^" ");*)
+
   let scene = !current_scene in
-  match scene.input.mouse_state with
-  | Pressed -> "Pressed "
-  | Released -> "Released "
-  | Moved -> "Moved "^(string_of_float !Renderer.delta)
+  let _ = (
+    match scene.input.mouse_state with
+    | Pressed -> 
+      print_endline (("{x="^string_of_float !current_scene.input.mouse_pos.x)^";y="^(string_of_float !current_scene.input.mouse_pos.y)^"}")
+    | Released -> ()
+    | Moved -> ()
+  ) in
+  ()
 
 let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) =
   let rect = (!canvas)##getBoundingClientRect () in
@@ -341,7 +346,15 @@ let schedule_transition scid =
       | Some(nxt) ->
         begin
           print_endline("Switching to "^(nxt));
-          current_scene := {!current_scene with tasks = [fade_out;SwitchScene(nxt)]};
+          let tasks = (
+            if nxt = "Game" && Mapmaker.get_state_index () <> (-1) then (
+              [Victory(4.,Mapmaker.get_current_state_ending ());fade_out_alpha_0_5]
+            )
+            else (
+              [fade_out]
+            )
+          ) in
+          current_scene := {!current_scene with tasks = tasks@[SwitchScene(nxt)]};
           ()
         end
     end in
@@ -362,17 +375,6 @@ let scene_transition () =
           )
           (* Generate new map if more levels remaining *)
           else (
-            (*current_scene := {
-              name = "Game";
-              tasks = [FadeIn (0.,2., 1.);];
-              state = Mapmaker.next_state ();
-              interface = [("fps",ref Ui.fps_label);
-                          ];
-              input = init_input;
-              highlight_towers = [];
-              next = None;
-              background = Sprite.grass_background;
-            };*)
             current_scene := {game_scene with
                               tasks = [fade_in];
                               state = Mapmaker.next_state ();};
@@ -431,6 +433,7 @@ let game_loop context running =
     end;
 
     !current_scene.input <- enforce_one_frame_mouse ();
+    print_mouse_input ();
     !current_scene.interface <- Ui.tick !current_scene.interface !current_scene.input;
     (* Only update if task is Update *)
     if (List.length !current_scene.tasks > 0) && List.hd !current_scene.tasks = Update then (
