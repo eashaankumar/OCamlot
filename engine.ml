@@ -43,7 +43,7 @@ let freeze_skill = {
   allegiance = Neutral;
   mana_cost = 170;
   effect = Stun 7.;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.(*20.*)};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
