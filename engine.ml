@@ -348,7 +348,7 @@ let schedule_transition scid =
           print_endline("Switching to "^(nxt));
           let tasks = (
             if nxt = "Game" && Mapmaker.get_state_index () <> (-1) then (
-              [Victory(100.,Mapmaker.get_current_state_ending ());fade_out_alpha_0_5]
+              [Victory(4.,Mapmaker.get_current_state_ending ());fade_out_alpha_0_5]
             )
             else (
               [fade_out]
