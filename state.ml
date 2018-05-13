@@ -163,7 +163,7 @@ let possible_commands st side =
     if List.length neutral_twr_list > 0 then
       List.filter (fun (h,t) -> h<>t) (f side_twr_list neutral_twr_list [])
     else
-      List.filter (fun (h,t) -> h<>t) (f side_twr_list opp_twr_list []) in
+      List.filter (fun (h,t) -> h<>t) (f side_twr_list (opp_twr_list@side_twr_list) []) in
 
   let move_list = List.map (fun (h,t) -> Move (side, h, t)) indices_list in
 
@@ -397,8 +397,8 @@ let update_skill st d : state =
                 let new_troop_count = (
                   if sk.allegiance = st.towers.(sk.tower_id).twr_team then
                     st.towers.(tower).twr_troops
-                  else 
-                    max 0. (st.towers.(tower).twr_troops -. float_of_int n) 
+                  else
+                    max 0. (st.towers.(tower).twr_troops -. float_of_int n)
                 )in
                 new_towers.(tower) <- {st.towers.(tower) with
                   twr_troops = new_troop_count;

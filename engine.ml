@@ -204,7 +204,7 @@ let game_over_scene = {
                   {x=Renderer.width /. 2. -. 100.;y= 300.},
                   {w=200.;h=70.},
                   Some "Intro")
-                  
+
                ));
                ];
   input = init_input;
@@ -435,8 +435,8 @@ let game_loop context running =
   let base_step_length =
     match !State.difficulty_level with
     | Easy -> 3.6
-    | Medium -> 2.0
-    | Hard -> 0.9 in
+    | Medium -> 1.9
+    | Hard -> 0.7 in
   let next_move_step = ref (base_step_length +. (Random.float 0.4)) in
 
   let rec helper () =
