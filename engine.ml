@@ -120,7 +120,7 @@ let difficulty_selection_scene = {
                       btn_sprite = Sprite.menu_btn_sprite1;
                       btn_label = {
                         text = "Easy"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                      }; 
+                      };
                       btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
                     },
                     {x=Renderer.width /. 2. -. 100.;y= 300.},
@@ -134,7 +134,7 @@ let difficulty_selection_scene = {
                       btn_sprite = Sprite.menu_btn_sprite1;
                       btn_label = {
                         text = "Medium"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                      }; 
+                      };
                       btn_label_offset = {x=10.;y=30./.2. +. 70./.2.};
                     },
                     {x=Renderer.width /. 2. -. 100.;y= 400.},
@@ -148,14 +148,14 @@ let difficulty_selection_scene = {
                       btn_sprite = Sprite.menu_btn_sprite1;
                       btn_label = {
                         text = "Hard"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                      }; 
+                      };
                       btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
                     },
                     {x=Renderer.width /. 2. -. 100.;y= 500.},
                     {w=200.;h=70.},
                     Some "Game")
                ));
-              
+
               ];
   input = init_input;
   highlight_towers = [];
@@ -167,7 +167,7 @@ let game_scene = {
   name = "Game";
   tasks = [];
   state = empty_state;
-  interface = [("fps",ref Ui.fps_label);               
+  interface = [("fps",ref Ui.fps_label);
                ] @ spell_bar;
   input = init_input;
   highlight_towers = [];
@@ -195,11 +195,11 @@ let intro_scene = {
                ("start",ref (
                  Button (
                    {
-                      btn_state = Neutral; 
+                      btn_state = Neutral;
                       btn_sprite = Sprite.menu_btn_sprite1;
                       btn_label = {
                         text = "Begin"; color = {r=0; g=0; b=0; a=1.}; font_size = 30
-                      }; 
+                      };
                       btn_label_offset = {x=50.;y=30./.2. +. 70./.2.};
                     },
                     {x=Renderer.width /. 2. -. 100.;y= 400.},
@@ -413,7 +413,7 @@ let game_loop context running =
   let next_move_step = ref (base_step_length +. (Random.float 1.)) in
 
   let rec helper () =
-    
+
     (*let _ = (match !State.difficulty_level with
     | Easy -> print_endline "Easy"
     | Medium -> print_endline "Medium"

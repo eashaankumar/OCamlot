@@ -1,5 +1,8 @@
 open Types
 
+(* intializes a new movement with no progress *)
+val new_movement : int -> int -> int -> sprite -> allegiance -> float -> float -> movement
+
 val difficulty_level : difficulty ref
 
 (* [possible_moves st team] is an array of [command] instances denoting
