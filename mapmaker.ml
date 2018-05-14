@@ -636,7 +636,7 @@ let fix_map (st,int) =
   }, int
 
 let maps = [|
-  (*fix_map map1;
+  fix_map map1;
   fix_map map2;
   fix_map map3;
   fix_map map4;
@@ -644,7 +644,7 @@ let maps = [|
   fix_map map6;
   fix_map map7;
   fix_map map8;
-  fix_map map9;*)
+  fix_map map9;
   fix_map map10;
 |]
 
@@ -661,5 +661,5 @@ let all_states_completed () =
 let reset_states_counter () =
   map_index := -1
 
-let get_current_map_index () = 
+let get_current_map_index () =
   !map_index

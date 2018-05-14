@@ -3,12 +3,37 @@ open State
 
 module type AI = sig
 
+  type tree =
+    | Leaf of command * float
+    | Node of Types.state * command * float * float * ((tree ref) array) *
+              tree ref * bool
+
+  val get_random_command : Types.state -> Types.allegiance -> Types.command
+
+  val random_playout : Types.state -> bool -> float
+
+  val get_value : tree -> bool -> float
+
+  val get_extreme_child : tree ref -> bool -> tree ref
+
+  val update_node : tree ref -> float -> unit
+
+  val update_tree : tree ref -> float -> unit
+
+  val new_node : tree ref -> Types.command -> tree ref
+
+  val beginning_node : Types.state -> tree ref
+
+  val create_tree : Types.state -> int -> tree ref
+
+  val get_highest_percentage : tree ref -> tree ref
+
   val get_move : Types.state -> Types.difficulty -> Types.command
 
 end
 
 
-module MiniMax_AI : AI = struct
+(* module MiniMax_AI : AI = struct
 
   let delta = 0.1
   let max_depth = 3
@@ -118,11 +143,11 @@ module MiniMax_AI : AI = struct
     !best_move
 
 
-end
+end *)
 
 module MCTS_AI : AI = struct
   (*Time-step*)
-  let delta = 1.8
+  let delta = 2.2
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
@@ -139,7 +164,8 @@ module MCTS_AI : AI = struct
   daughter_nodes, parent_node, is_max_state)*)
   type tree =
     | Leaf of command * float
-    | Node of Types.state * command * float * float * ((tree ref) array) * tree ref * bool
+    | Node of Types.state * command * float * float * ((tree ref) array) *
+              tree ref * bool
 
 (**
  * [to_allegiance] is the allegiance value associated with
@@ -174,9 +200,9 @@ module MCTS_AI : AI = struct
       if iters > !max_random_iters then 0.4 +. (Random.float 0.2) else
       if State.gameover st then
         if st.player_score > st.enemy_score then
-          0.0 +. 0.3 *. (float_of_int iters) /. 100.
+          0.0 +. 0.3 *. (float_of_int iters) /. (float_of_int !max_random_iters)
         else
-          1.0 -. 0.3 *. (float_of_int iters) /. 100.
+          1.0 -. 0.3 *. (float_of_int iters) /. (float_of_int !max_random_iters)
       else
         if max_bool then
           let cm = get_random_command st Enemy in
@@ -196,7 +222,7 @@ module MCTS_AI : AI = struct
   let get_times_sampled t =
     match t with
     | Node(st,cm,v,n,children,parent,_) -> n
-    | Leaf _ -> 1.0 (*so that when log doesn't blow up*)
+    | Leaf _ -> 1.0 (*so that log doesn't blow up*)
 
 (**
  * [get_value] is the value of the tree [t] used for determining

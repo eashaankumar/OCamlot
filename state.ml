@@ -310,121 +310,246 @@ let new_state st (c : command) : state =
  * [skill] and returns the updated state if it hasn't finished its effects.
  * returns: [Some state] if effects are remaining, [None] otherwise
  *)
-let update_skill st d : state =
-  match st.player_skill with
-  | None -> st
-  | Some sk ->
-    begin
-      let new_towers = Array.copy st.towers in
-      let tower = sk.tower_id in
-      (* let tower_team = new_towers.(tower).twr_team in *)
-      match sk.effect with
-      | Stun secs ->
+let update_skill st' d' : state =
+  let update_skill_helper st d team =
+    match team with
+    | Player -> begin
+      match st.player_skill with
+      | None -> st
+      | Some sk ->
         begin
-          (* If animation done, stun the tower *)
-          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
-            if secs <= 0. then
-              {st with
-               player_skill = None;
-               towers = begin
-                 new_towers.(tower).is_disabled <- false; new_towers
-               end
-              }
-            else
-            {st with
-             player_skill = Some (
-                 {sk with
-                  sprite =
-                    {sk.sprite with
-                      index = (Array.length sk.sprite.frames) - 1
-                    };
-                  mana_cost = 0;
-                  effect = Stun (secs -. d);
-                 }
-          );
-             towers =
-               begin
-                 new_towers.(tower).is_disabled <- true; new_towers
-               end
-            }
-          )
-          else (
-            {st with
-              player_skill =
-              Some {sk with
-                sprite = Sprite.tick sk.sprite d;
-                anim_timer = {sk.anim_timer with
-                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+          let new_towers = Array.copy st.towers in
+          let tower = sk.tower_id in
+          (* let tower_team = new_towers.(tower).twr_team in *)
+          match sk.effect with
+          | Stun secs ->
+            begin
+              (* If animation done, stun the tower *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                if secs <= 0. then
+                  {st with
+                   player_skill = None;
+                   towers = begin
+                     new_towers.(tower).is_disabled <- false; new_towers
+                   end
+                  }
+                else
+                {st with
+                 player_skill = Some (
+                     {sk with
+                      sprite =
+                        {sk.sprite with
+                          index = (Array.length sk.sprite.frames) - 1
+                        };
+                      mana_cost = 0;
+                      effect = Stun (secs -. d);
+                     }
+              );
+                 towers =
+                   begin
+                     new_towers.(tower).is_disabled <- true; new_towers
+                   end
                 }
-              }
-            }
-          )
-        end
-      | Regen_incr incr_rate ->
-        begin
-          (* if animation done, then increase the regeneration speed *)
-          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
-            {st with
-             player_skill = None;
-             towers =
-               let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
-               begin
-                 new_towers.(tower).twr_troops_regen_speed <- new_regen
-               end; new_towers
-            }
-          )
-          else (
-            {st with
-             player_skill =
-               Some {sk with
-                     sprite = Sprite.tick sk.sprite d;
-                     anim_timer = {sk.anim_timer with
-                                   curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
-                                  }
+              )
+              else (
+                {st with
+                  player_skill =
+                  Some {sk with
+                    sprite = Sprite.tick sk.sprite d;
+                    anim_timer = {sk.anim_timer with
+                      curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
                     }
-            }
-          )
-        end
-      | Kill n ->
-        begin
-          (* If animation done, then remove troops *)
-          if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
-            {st with
-              player_skill = None;
-              towers =
-              begin
-                let new_troop_count = (
-                  if sk.allegiance = st.towers.(sk.tower_id).twr_team then
-                    st.towers.(tower).twr_troops
-                  else
-                    max 0. (st.towers.(tower).twr_troops -. float_of_int n)
-                )in
-                new_towers.(tower) <- {st.towers.(tower) with
-                  twr_troops = new_troop_count;
-                  twr_team = begin
-                    if new_troop_count = 0. then
-                      Neutral
-                    else
-                      st.towers.(tower).twr_team
-                  end
-                }; new_towers
-              end
-            }
-          )
-          (* Otherwise play animation *)
-          else (
-            {st with
-              player_skill =
-              Some {sk with
-                sprite = Sprite.tick sk.sprite d;
-                anim_timer = {sk.anim_timer with
-                  curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                  }
                 }
-              }
-            }
-          )
+              )
+            end
+          | Regen_incr incr_rate ->
+            begin
+              (* if animation done, then increase the regeneration speed *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                {st with
+                 player_skill = None;
+                 towers =
+                   let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
+                   begin
+                     new_towers.(tower).twr_troops_regen_speed <- new_regen
+                   end; new_towers
+                }
+              )
+              else (
+                {st with
+                 player_skill =
+                   Some {sk with
+                         sprite = Sprite.tick sk.sprite d;
+                         anim_timer = {sk.anim_timer with
+                                       curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                                      }
+                        }
+                }
+              )
+            end
+          | Kill n ->
+            begin
+              (* If animation done, then remove troops *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                {st with
+                  player_skill = None;
+                  towers =
+                  begin
+                    let new_troop_count = (
+                      if sk.allegiance = st.towers.(sk.tower_id).twr_team then
+                        st.towers.(tower).twr_troops
+                      else
+                        max 0. (st.towers.(tower).twr_troops -. float_of_int n)
+                    )in
+                    new_towers.(tower) <- {st.towers.(tower) with
+                      twr_troops = new_troop_count;
+                      twr_team = begin
+                        if new_troop_count = 0. then
+                          Neutral
+                        else
+                          st.towers.(tower).twr_team
+                      end
+                    }; new_towers
+                  end
+                }
+              )
+              (* Otherwise play animation *)
+              else (
+                {st with
+                  player_skill =
+                  Some {sk with
+                    sprite = Sprite.tick sk.sprite d;
+                    anim_timer = {sk.anim_timer with
+                      curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                    }
+                  }
+                }
+              )
+            end
         end
-      end
+    end
+    | _ -> begin
+      match st.enemy_skill with
+      | None -> st
+      | Some sk ->
+        begin
+          let new_towers = Array.copy st.towers in
+          let tower = sk.tower_id in
+          (* let tower_team = new_towers.(tower).twr_team in *)
+          match sk.effect with
+          | Stun secs ->
+            begin
+              (* If animation done, stun the tower *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                if secs <= 0. then
+                  {st with
+                   enemy_skill = None;
+                   towers = begin
+                     new_towers.(tower).is_disabled <- false; new_towers
+                   end
+                  }
+                else
+                {st with
+                 enemy_skill = Some (
+                     {sk with
+                      sprite =
+                        {sk.sprite with
+                          index = (Array.length sk.sprite.frames) - 1
+                        };
+                      mana_cost = 0;
+                      effect = Stun (secs -. d);
+                     }
+              );
+                 towers =
+                   begin
+                     new_towers.(tower).is_disabled <- true; new_towers
+                   end
+                }
+              )
+              else (
+                {st with
+                  enemy_skill =
+                  Some {sk with
+                    sprite = Sprite.tick sk.sprite d;
+                    anim_timer = {sk.anim_timer with
+                      curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                    }
+                  }
+                }
+              )
+            end
+          | Regen_incr incr_rate ->
+            begin
+              (* if animation done, then increase the regeneration speed *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                {st with
+                 enemy_skill = None;
+                 towers =
+                   let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
+                   begin
+                     new_towers.(tower).twr_troops_regen_speed <- new_regen
+                   end; new_towers
+                }
+              )
+              else (
+                {st with
+                 enemy_skill =
+                   Some {sk with
+                         sprite = Sprite.tick sk.sprite d;
+                         anim_timer = {sk.anim_timer with
+                                       curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                                      }
+                        }
+                }
+              )
+            end
+          | Kill n ->
+            begin
+              (* If animation done, then remove troops *)
+              if sk.anim_timer.curr_time >= sk.anim_timer.limit then (
+                {st with
+                  enemy_skill = None;
+                  towers =
+                  begin
+                    let new_troop_count = (
+                      if sk.allegiance = st.towers.(sk.tower_id).twr_team then
+                        st.towers.(tower).twr_troops
+                      else
+                        max 0. (st.towers.(tower).twr_troops -. float_of_int n)
+                    )in
+                    new_towers.(tower) <- {st.towers.(tower) with
+                      twr_troops = new_troop_count;
+                      twr_team = begin
+                        if new_troop_count = 0. then
+                          Neutral
+                        else
+                          st.towers.(tower).twr_team
+                      end
+                    }; new_towers
+                  end
+                }
+              )
+              (* Otherwise play animation *)
+              else (
+                {st with
+                  enemy_skill =
+                  Some {sk with
+                    sprite = Sprite.tick sk.sprite d;
+                    anim_timer = {sk.anim_timer with
+                      curr_time = sk.anim_timer.curr_time +. sk.anim_timer.speed *. d;
+                    }
+                  }
+                }
+              )
+            end
+        end
+    end in
+  let pl_state = update_skill_helper st' d' Player in
+  update_skill_helper pl_state d' Enemy
+
+
+
 (**
  * [update_troop_count tower] updates the troop count in [tower]
  * returns: new troop [count]

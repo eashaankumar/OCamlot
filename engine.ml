@@ -416,6 +416,40 @@ let scene_transition () =
     | _ -> ()
   )
 
+let get_enemy_spell st =
+  let mana = st.enemy_mana in
+  let kill_cost = lightning_skill.mana_cost in
+  let health_cost = freeze_skill.mana_cost in
+  if mana > float_of_int kill_cost then
+    let kill_n =
+      match lightning_skill.effect with
+      | Kill n -> float_of_int n
+      | _ -> 0. in
+    let kill_index = Array.fold_left
+        (fun acc e -> if (e.twr_troops +. 2. < kill_n) && e.twr_team = Player
+          then e.twr_id else acc)
+        (-1)
+        st.towers in
+    if kill_index <> -1 then
+      Skill ({lightning_skill with
+              tower_id = kill_index;
+              allegiance = Enemy})
+    else
+
+      if mana > float_of_int health_cost then
+        let health_index = Array.fold_left
+            (fun (indx, troops) e ->
+               if (e.twr_troops_max > troops) && e.twr_team = Enemy
+               then (e.twr_id,e.twr_troops_max) else (indx, troops))
+            (-1,0.)
+            st.towers in
+        Skill ({health_skill with
+                tower_id = (fst health_index);
+                allegiance = Enemy})
+      else
+        Null
+  else Null
+
 let game_loop context running =
   print_endline ("State tests suite: "^OCamlotUnit2.run_tests State_test.tests);
   print_endline ("Ai tests suite: "^OCamlotUnit2.run_tests Ai_test.tests);
@@ -452,7 +486,12 @@ let game_loop context running =
         {!current_scene with
          state = State.new_state_plus_delta
              !current_scene.state cm !Renderer.delta}
-    end;
+      end;
+    let spell_cm = get_enemy_spell (!current_scene.state) in
+    current_scene :=
+      {!current_scene with
+       state = State.new_state_plus_delta
+           !current_scene.state spell_cm 0.};
 
     !current_scene.input <- enforce_one_frame_mouse ();
     print_mouse_input ();
