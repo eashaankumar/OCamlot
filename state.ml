@@ -711,7 +711,7 @@ let manage_mouse_input (ipt : input) (sc : scene) : command =
   !command
 
 let update_mana state team =
-  let speed = 3. in
+  let speed = 6.3 in
   match team with
   | Player ->
     begin

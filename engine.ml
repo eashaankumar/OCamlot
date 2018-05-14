@@ -41,7 +41,7 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 170;
+  mana_cost = 100;
   effect = Stun 7.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
@@ -417,8 +417,8 @@ let scene_transition () =
   )
 
 let game_loop context running =
-  print_endline (OCamlotUnit2.run_tests State_test.tests);
-  print_endline (OCamlotUnit2.run_tests Ai_test.tests);
+  print_endline ("State tests suite: "^OCamlotUnit2.run_tests State_test.tests);
+  print_endline ("Ai tests suite: "^OCamlotUnit2.run_tests Ai_test.tests);
   (*let start = Sys.time () in
   let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
   let finish = Sys.time () in

@@ -126,7 +126,7 @@ module MCTS_AI : AI = struct
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
-  let easy_iterations = 50
+  let easy_iterations = 100
   let medium_iterations = 150
   let hard_iterations = 200
 

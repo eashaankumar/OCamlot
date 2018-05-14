@@ -631,12 +631,12 @@ let fix_map (st,int) =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 100. ;
+    enemy_mana = 100. ;
   }, int
 
 let maps = [|
-  fix_map map1;
+  (*fix_map map1;
   fix_map map2;
   fix_map map3;
   fix_map map4;
@@ -644,7 +644,7 @@ let maps = [|
   fix_map map6;
   fix_map map7;
   fix_map map8;
-  fix_map map9;
+  fix_map map9;*)
   fix_map map10;
 |]
 
