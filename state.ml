@@ -1,5 +1,4 @@
 open Types
-open Sprite
 
 let rec (@) l1 l2 =
   match l1 with

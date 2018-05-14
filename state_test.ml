@@ -1,6 +1,6 @@
 open Types
+open OCamlotUnit2
 open State
-open OUnit2
 
 (* initial player movement of 5 troops with 100. speed and no progress
    going from tower 1 to tower 2.
@@ -243,7 +243,7 @@ let helper_tests = [
                      (new_movement 1 2 5 Sprite.blue_troop1_right Player 1. 50.));
 ]
 
-let state_tests = [
+let state_tests : test list = [
   (* This section of state tests will assert the immutability of a previous
      state after creating a new one from that previous state. *)
   "immtbl_axiom" >:: (fun _ -> assert_equal init_state init_state_copy);
@@ -343,17 +343,12 @@ let state_tests = [
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_enemy_valid2) delta);
                          init_state_copy));
-
-  (* TODO: test_state is not running tests *)
-  "testing" >:: (fun _ -> assert_equal   (print_endline ("Hi"); true) false);
-
 ]
 
+(* All test lists must be in [tests] *)
 let tests = List.flatten [
     helper_tests;
     state_tests
   ]
 
-let alltests = "State test suite" >::: tests
-
-let _ = run_test_tt_main alltests
+(*let alltests = "State test suite" >:: tests*)

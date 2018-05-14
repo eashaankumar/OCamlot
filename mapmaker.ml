@@ -660,3 +660,6 @@ let all_states_completed () =
 
 let reset_states_counter () =
   map_index := -1
+
+let get_current_map_index () = 
+  !map_index

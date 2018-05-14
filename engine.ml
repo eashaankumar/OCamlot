@@ -393,7 +393,6 @@ let scene_transition () =
         if nxt = "Game" then (
           (* Go back to start screen *)
           if Mapmaker.all_states_completed () then (
-            Mapmaker.reset_states_counter ();
             let next_scene = get_scene_from_name "Intro" in
             current_scene := next_scene;
             current_scene := {!current_scene with tasks = [fade_in]}
@@ -407,6 +406,7 @@ let scene_transition () =
         )
         (* Otherwise get the desired scene from tuple list *)
         else (
+          Mapmaker.reset_states_counter ();
           let next_scene = get_scene_from_name nxt in
           current_scene := {next_scene with
                             tasks = [fade_in];};
@@ -417,6 +417,8 @@ let scene_transition () =
   )
 
 let game_loop context running =
+  print_endline (OCamlotUnit2.run_tests State_test.tests);
+  print_endline (OCamlotUnit2.run_tests Ai_test.tests);
   (*let start = Sys.time () in
   let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
   let finish = Sys.time () in
@@ -440,11 +442,6 @@ let game_loop context running =
   let next_move_step = ref (base_step_length +. (Random.float 0.4)) in
 
   let rec helper () =
-
-    (*let _ = (match !State.difficulty_level with
-    | Easy -> print_endline "Easy"
-    | Medium -> print_endline "Medium"
-    | Hard -> print_endline "Hard") in*)
     let new_time = Sys.time () in
     if new_time -. !last_move_time > !next_move_step then
       begin

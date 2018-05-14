@@ -27,3 +27,5 @@ val reset_states_counter : unit -> unit
 val get_state_index : unit -> int
 
 val get_current_state_ending : unit -> interface
+
+val get_current_map_index : unit -> int

@@ -128,7 +128,7 @@ module MCTS_AI : AI = struct
   (*Number of times to run the algorithm*)
   let easy_iterations = 50
   let medium_iterations = 150
-  let hard_iterations = 300
+  let hard_iterations = 200
 
   let max_random_iters = ref 100
 

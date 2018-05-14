@@ -1,11 +1,9 @@
-
 build:
 	ocamlbuild -use-ocamlfind \
 		-plugin-tag "package(js_of_ocaml.ocamlbuild)" \
 		-no-links \
 		main.d.js
-	#ocamlbuild -use-ocamlfind helper.cmo types.cmo state.cmo ai.cmo command.cmo gui.cmo sprites.cmo game.cmo -r
-	ocamlbuild -use-ocamlfind types.cmo physics.cmo renderer.cmo sprite.cmo ui.cmo state.cmo test_state.cmo ai.cmo mapmaker.cmo engine.cmo -r
+	ocamlbuild -use-ocamlfind oCamlotUnit2.cmo types.cmo physics.cmo renderer.cmo sprite.cmo ui.cmo state.cmo state_test.cmo ai.cmo ai_test.cmo mapmaker.cmo engine.cmo -r
 
 clean:
 	ocamlbuild -clean
