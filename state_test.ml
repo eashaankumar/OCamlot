@@ -39,7 +39,7 @@ let troop_cavalry = {
 let base_player_tower = {
   twr_id = 0;
   twr_pos = {x = 0.; y = 50.};
-  twr_size = {w=72.;h=136.};
+  twr_size = {w=72.; h=136.};
   twr_sprite = Sprite.tower_base;
   twr_troop_info = troop_foot_soldier;
   twr_troops = base_init_troop_count;
@@ -55,7 +55,7 @@ let base_player_tower = {
 let base_player_tower_copy = {
   twr_id = 0;
   twr_pos = {x = 0.; y = 50.};
-  twr_size = {w=72.;h=136.};
+  twr_size = {w = 72.; h = 136.};
   twr_sprite = Sprite.tower_base;
   twr_troop_info = troop_foot_soldier;
   twr_troops = base_init_troop_count;
@@ -343,6 +343,9 @@ let state_tests : test list = [
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_enemy_valid2) delta);
                          init_state_copy));
+  (* Now that we have ascertained that functions updating the state don't
+     mutate the state passed into it, it's time to test some basic
+     functionality. *)
 ]
 
 (* All test lists must be in [tests] *)

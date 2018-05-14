@@ -42,7 +42,7 @@ val next_scene : scene -> string option
  *)
 val gameover : state -> bool
 
-(* [update sc ipt] take state [st] from [sc] and creates a [st']
+(* [update sc ipt] takes state [st] from [sc] and creates a [st']
    by ticking animation sprites once. It then creates the
    appropriate command [c] based on input [ipt]. The entire result
    is new_state_plus_delta [st' c d] where [d] is from Renderer.
