@@ -1,0 +1,1280 @@
+commit 24e1fe180f8865c7e93ecc7cc32f7b1072107cfd
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 16:19:49 2018 -0400
+
+    EVERYTHING IS DONE
+
+commit 9a39e906c99d0a4871f612e6f5156ef48c66f90a
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 15:49:38 2018 -0400
+
+    updates
+
+commit cb2e5309496cc35eed16097b56679c876d04adc2
+Merge: 40736e6 cf20eaa
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 15:02:34 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit 40736e6b7a0fb035dd302f3fcbc6aa665ff4baa3
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 15:02:22 2018 -0400
+
+    updates
+
+commit cf20eaab9054b64b80d4bf3906428c54a60562ee
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 14:09:04 2018 -0400
+
+    Minor changes to AI difficulty
+
+commit 46c1de3657f50f4e6f15575a25632e2151db3f9c
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 14:08:52 2018 -0400
+
+    Minor changes to AI difficulty
+
+commit e83d383b309c13615ea4f9417c92d978a48a2cd4
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 14:07:07 2018 -0400
+
+    fixing heart sprite
+
+commit 70c0765a0c392858e85658f7174cdd906d94e0a0
+Merge: f78750d 4e2bcf7
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 13:47:41 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit f78750dfbcc6dd5992336c83b06769d088ca0cbc
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 13:47:25 2018 -0400
+
+    Worked on writing AI tests
+
+commit 4e2bcf70d45f7df4a4d7b18b82bce844809ac2af
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 13:12:22 2018 -0400
+
+    fixing map stuttering
+
+commit f7e069eacb5fb8c635a06b2f4828f817f63f3cd7
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 12:08:19 2018 -0400
+
+    made more tests
+
+commit a0c6dd14b9ab80560884720a20079031ec9b9fc7
+Merge: afe5346 6b27c40
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:31:16 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit afe5346a6383f05647faffc70d372bb497f35ee0
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:30:41 2018 -0400
+
+    made state immutable and test cases now pass
+
+commit 6b27c408d040deda3caff2ae8a7f4418e2a0736d
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:26:33 2018 -0400
+
+    Changed the length of stun and changed the starting mana to 50 for each map
+
+commit 60a3fff5f88013fa541e1fc5b5fb1f7c0bb3eab2
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:20:39 2018 -0400
+
+    changed state to be immutable and fixed something in possible_commands
+
+commit ea1135758d5e7d00581d84debad8253001ef2b0e
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:20:24 2018 -0400
+
+    changed state to be immutable and fixed something in possible_commands
+
+commit 5198c9429d2b5beb7bfe6e5738a79492b14c358b
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 11:12:03 2018 -0400
+
+    Fixed the bug where you can send zero troops.
+
+commit a7e441f0de47dc1e41ea0818cf73d2665c09aa26
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 02:22:18 2018 -0400
+
+    .
+
+commit 041b59804dbf1b90eb3926275c7a0e6ff3a5e858
+Merge: b23ac1e 861f8e9
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 01:04:16 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit 861f8e955d8062d149c789318b4e963d843c2516
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 01:02:28 2018 -0400
+
+    spells work
+
+commit b23ac1e724a4ecc090507a1a8850eb0db0bdf38e
+Merge: 2596cc1 1a2bf45
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 00:42:29 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit 2596cc17c1c09b886ed061562f779b46ac9e1b7d
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 00:42:04 2018 -0400
+
+    a test doesnt pass
+
+commit 1a2bf4533d7f6ba6a269f528cdd09f68834757ab
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 00:39:59 2018 -0400
+
+    giving Nickolas State
+
+commit 12bb95676fd811dea30d31673428a4464b3740b9
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 00:29:28 2018 -0400
+
+    caught a bug... check it out
+
+commit 24f0d3207799751c6cc97232cc448d9c8b037f03
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 15 00:15:08 2018 -0400
+
+    Added in tests in ai_test.ml
+
+commit 96e3d02cc73b8726b83ce57647197b4afd50bf99
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 15 00:02:08 2018 -0400
+
+    updates
+
+commit f268ef1cfcf19b4523b9ad69447dfb7ed52acd3b
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 14 22:51:13 2018 -0400
+
+    Change ai spell box locations
+
+commit 257db0e89cb6ce21accd92ba597593d82723dd12
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 22:31:03 2018 -0400
+
+    made all state functions other than update deterministic by removing unnecessary delta derefs
+
+commit 93b1475e3a2cd69fbbfb3dac4dd9b10c9bf4dd55
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 22:30:40 2018 -0400
+
+    made all state functions other than update deterministic by removing unnecessary delta derefs
+
+commit 425414032872230af0cc1a0c4b66f7d7a839c524
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 22:17:56 2018 -0400
+
+    added core types to state_test to simplify testing
+
+commit 2c32fb107fa14d91392977ebd9b1e609ddba7e70
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 22:17:47 2018 -0400
+
+    added core types to state_test to simplify testing
+
+commit 77087f2cdf3d3aa42b317083cc77c3f8d385dc48
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 14 21:49:40 2018 -0400
+
+    temporarily handing over to Ryan
+
+commit 0a2739001eed64f37c89a013b3c110a8f932b65f
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 14 21:23:30 2018 -0400
+
+    updates
+
+commit 3a035448100c2de04f1478c3f43b487b7baad36d
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 20:07:38 2018 -0400
+
+    Minor bug fixes
+
+commit 98985a135184b185fcf5644d255cb3c7f082b0ec
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 19:51:14 2018 -0400
+
+    Added some code to allow the AI to use spells
+
+commit b05873c5c5d44ffba93b4ca53323129e40a71138
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 19:03:03 2018 -0400
+
+    trivial changes
+
+commit 453b232764d696e846c2773bfcec68a5d050f6f7
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon May 14 19:02:57 2018 -0400
+
+    trivial changes
+
+commit 336a35dee1e82611f1b5e85a1f3d8abaaf797554
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 14 01:45:08 2018 -0400
+
+    play testing
+
+commit 134ff65d86b9f7362affbe3601952a499d05719a
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 14 00:02:20 2018 -0400
+
+    OcamlotUnit2
+
+commit 65234ceded52fdd65feb32f5ebdf132c20351eb8
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 16:56:34 2018 -0400
+
+    Changed some parameters for the AI
+
+commit e58a76233d8e126aca42c1d395d252a81318c652
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 16:56:26 2018 -0400
+
+    Changed some parameters for the AI
+
+commit 70973aae709207ef93d448c1b8683934e4f5dede
+Merge: cc1535f 52f6a35
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 16:44:43 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit cc1535fd73877569dd398ad71ccd0b86fc1cc1a0
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 16:43:31 2018 -0400
+
+    Changed some parameters for the AI
+
+commit fa148fb322752697ada6b232e3f1e8eb61ed4530
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 16:40:13 2018 -0400
+
+    Tried various versions of the AI
+
+commit 52f6a350a681f81bdc51dea7d6dc6d8afaef8ae1
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 16:30:21 2018 -0400
+
+    Fixing spell and kill at the same time bug
+
+commit 05b901f6c59a95fb349b7f7d4cf8a4cf52e6324e
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 16:15:14 2018 -0400
+
+    gameover scene
+
+commit f495115b815d3a220095c27ee64551ddeaac481c
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 16:05:41 2018 -0400
+
+    ai fixed
+
+commit 9d6df52f08ca9172bab73a7b18de1747b90d7b1e
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun May 13 15:48:57 2018 -0400
+
+    Made changes to state to restrict the number of possible AI moves
+
+commit 886ee3f5fed5b91f7cbce1668e9c8094e00f3a08
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 14:36:11 2018 -0400
+
+    starting at map7
+
+commit a2cf2e07796c6758101056cedcf50c4699f97dc8
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 14:35:16 2018 -0400
+
+    ai doesn't play map 7 onwards on easy mode
+
+commit 9eb03e973fbfe254d2cc7d25b3371ca3a4b69358
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 13:36:36 2018 -0400
+
+    fixing engine
+
+commit b48486c48f53a65d7ec49890f874e47f46d641d1
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 13:36:15 2018 -0400
+
+    Adding more maps
+
+commit 84ed1dbb94614498533be98fdf27fc5abfb6f6f7
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 12:16:10 2018 -0400
+
+    more maps
+
+commit a666c55da6533ac28533663951dcf9833fcbc09c
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 13 03:37:07 2018 -0400
+
+    Added victory screen. Adding more maps
+
+commit c3dad0f6a7e6e550a9da9cd2dbf780dbc1e1090a
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 22:20:52 2018 -0400
+
+    now runs immutability tests
+
+commit ef04630e07d5a6a70aec1429e52668e4fe8a0cc1
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 22:20:40 2018 -0400
+
+    now runs immutability tests
+
+commit 4ee735cdcf204b25ee86607c928092d428874d08
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 22:13:16 2018 -0400
+
+    made immutability tests and minor change in state.mli
+
+commit 5646826192f29b75b53eb0d9e4f5adaefdbb7aae
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 22:12:38 2018 -0400
+
+    made immutability tests for state and changed state.mli to test a helper function
+
+commit 6d97954a5d0158c2d8eb046784e4175d97f25c4e
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 20:37:40 2018 -0400
+
+    test state makefile
+
+commit 2fa961ca2a7e494ab9afcdb22f82cf9d46f1afdb
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 20:26:27 2018 -0400
+
+    imported types to test_state.ml
+
+commit 857652ee1f1416354887d49aa752c653355e2518
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 20:26:17 2018 -0400
+
+    imported types to test_state.ml
+
+commit ec8c21cda3f931f92b2c73665df31a684f45f7f7
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 20:21:44 2018 -0400
+
+    state_mli created and a few basic helper function tests added to the corresponding ml file
+
+commit 9f4c6aee90cae07a25a650d1268676c350aed0b5
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 20:15:11 2018 -0400
+
+    resolving merge conflicts
+
+commit 233437dffbb1edebce3cbfba7e98e61cfabd7059
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 12 19:43:14 2018 -0400
+
+    Started writing the test code for AI
+
+commit 3df6066f9b4c73074aca0cd2b5aa3c01dd32cee7
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 19:34:24 2018 -0400
+
+    updates
+
+commit e675aca9b8b2f8302a1b679173e762c78d0c7fb5
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 18:21:50 2018 -0400
+
+    All sprites done
+
+commit 51c7eb9445a524dcf7ff806ba7c932e028b60562
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 17:07:50 2018 -0400
+
+    cavalry troops
+
+commit 5e073d0ac748a3b4c1e4dc99a631d38d9f35ab71
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 05:01:32 2018 -0400
+
+    changes
+
+commit cc75f15bae139536da7f8f643ec54bb4cfadf4a7
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 12 04:11:31 2018 -0400
+
+    gui updates
+
+commit b75208588e065894f87189e6ece2b65888567ee8
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 21:36:13 2018 -0400
+
+    minor formatting changes while attempting to debug ai skills
+
+commit 67497549a5c54ff7b498a1a1bb5d0ec00327e835
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 21:36:00 2018 -0400
+
+    minor formatting changes while attempting to debug ai skills
+
+commit f0cf5b0fc29dc2a197fed12129c374527bf46815
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 21:03:07 2018 -0400
+
+    changed the types so that make wouldnt bitch about anything
+
+commit 3b9b1bd398a4048f97cc8067cf98a8a61bb86b63
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 21:36:44 2018 -0400
+
+    Bug fixes
+
+commit 1b9686129466f9781738250bf50508cdae58c828
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 21:32:14 2018 -0400
+
+    Added in skills to the possible command function
+
+commit bc786759f888f703fe77c4ac65387a4c79268d64
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 20:33:40 2018 -0400
+
+    small changes
+
+commit 3c4b806430305a077e059677a56ebc8c3369cf35
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 20:33:02 2018 -0400
+
+    small changes
+
+commit 1543bf9f737d3b53b715a082418a42ca845e8c6a
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 20:49:22 2018 -0400
+
+    freeze animation
+
+commit 37cfe7b2b6aee5460072ba5ee3dc86301a558544
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 20:31:06 2018 -0400
+
+    stunning works
+
+commit cdc64ec642e7ca4a7baf1ed75eaa7bcd908b2392
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 15:39:33 2018 -0400
+
+    created the regeneration and stun skills in update_skills and added stun_skill to engine.ml
+
+commit 32caed91cf96f11bd8af4fdd0b4a445d93b1c6a4
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 13:05:56 2018 -0400
+
+    error
+
+commit 5e27e41d3dfef6936094a4f555af7d280bc7bc0b
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri May 11 13:02:03 2018 -0400
+
+    Made some changes to AI to make it run smoother, including adding difficulty levels
+
+commit e666287abb1de2cbefd3a5389f25422c250e7966
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 03:27:31 2018 -0400
+
+    Spells Work! Drag and Drop the lighting onto a tower
+
+commit dbf97a7a4fff9fc65a97abc5a41fa3ce55178b48
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 00:52:30 2018 -0400
+
+    player can no longer move enemy troops
+
+commit e32f49f5d681a490696f1fff7dc5b46774f94bcf
+Author: Eashaan <ek485@cornell.edu>
+Date:   Fri May 11 00:05:39 2018 -0400
+
+    freezing problem
+
+commit b970cd1c8409ef6a96ea1149ee7423b530adbdd1
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 23:56:15 2018 -0400
+
+    game really slow
+
+commit a48d1794268f0a839fcc80e87ba7f1590e835d03
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 23:35:27 2018 -0400
+
+    updates
+
+commit 7084281c7215f00317011523ccc23551b76fc309
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 22:39:31 2018 -0400
+
+    Fixed merge conflict
+
+commit 02c8f11b1e4373e9ec1ad41ee02a7d65e612e042
+Merge: 7d1a58d 0900311
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 22:11:56 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit 7d1a58d6df622f36e53dad9066117d2ed23e0951
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 22:09:01 2018 -0400
+
+    spell boxes
+
+commit 090031179ba55833ea72c34b3e3866505706f632
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu May 10 22:00:48 2018 -0400
+
+    Changed number of starting troops for the AI.
+
+commit e8355d6ed3bb725cdb51a9ad9727f54adfd950d1
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 19:19:35 2018 -0400
+
+    attempting to add skills
+
+commit f822bb5eac6a7f3187491d9b3731ca1e2455f5bc
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu May 10 17:27:56 2018 -0400
+
+    Fixed a bug where the AI wouldn't be able to make the moves necessary to win
+
+commit 67480c73b30d787ce1ab8ed23ec6e746053677b8
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 10 12:12:53 2018 -0400
+
+    Added enemy troop and tower type 1 sprites
+
+commit 8e6ee8a072aae18e2c581b0395f3a7ce2dc5f675
+Author: Eashaan <ek485@cornell.edu>
+Date:   Wed May 9 19:06:02 2018 -0400
+
+    updates
+
+commit 647c85d0c14ce5949caee7c4266b40891520bc79
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 8 23:55:47 2018 -0400
+
+    Implemented the AI in the game loop
+
+commit 55529c5dae438c0318fc7a8068cae4918819d393
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 16:20:54 2018 -0400
+
+    selector offsets
+
+commit a25eef1a0ed43d36c3434729bcd53187822e9ab0
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 8 15:10:53 2018 -0400
+
+    removed unnecessary commented-out code
+
+commit b271389422c9d0d67b68769062c5a06b12d00ae0
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 8 13:10:13 2018 -0400
+
+    refactored State.update and verified that the game still works.
+
+commit c88d4ab86fe565cac1d9fdd0e8211b0829bb8022
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 8 13:06:06 2018 -0400
+
+    refactored State.update
+
+commit 521127172b3bcace531dd174802e37ac8efa5b40
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 8 13:05:28 2018 -0400
+
+    refactored State.update
+
+commit f594c91712443ed3514d784cf86edadb9ea06c02
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 11:02:23 2018 -0400
+
+    trying to fix spawn location
+
+commit 91b4fcfdf8f2593d3262cdf8e4bbfdbfa41110e0
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 10:01:16 2018 -0400
+
+    updates
+
+commit 5fc3e08027830217ec03f2a18a9746f70a31725f
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 09:15:25 2018 -0400
+
+    updates
+
+commit 48a575f9b968d45a573a9fe43c74699c51003351
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 07:43:53 2018 -0400
+
+    tower
+
+commit b756e855f8a271ae1672f5fd453826747672a2fc
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 07:02:39 2018 -0400
+
+    Creating image for player tower
+
+commit 166bfa2c7b67151f3edb79e96a3711189ccc58d0
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 05:54:51 2018 -0400
+
+    lots of new sprites
+
+commit 8beb54c3b86ece6f2f0194dc9bae90248fc62420
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 8 03:46:18 2018 -0400
+
+    updates
+
+commit 62fafe61485900612ee2a90a5c951d25ca6ba974
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 7 21:51:35 2018 -0400
+
+    Illustrator art file
+
+commit 9d6f9900aa8be69196c23a6aafdaf3dfb8feeffa
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 7 17:10:53 2018 -0400
+
+    updates
+
+commit 1cb857a901f0373a812152e7c197a117ed242192
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 7 14:31:16 2018 -0400
+
+    updates
+
+commit 3974a9cc75ede354d97c75aeab7b6dd49e7b83d8
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 7 02:54:03 2018 -0400
+
+    screen automatically switches to game after completing one round
+
+commit 938846875f9c496ac5f08bf4e3826faeca5687a7
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon May 7 01:47:54 2018 -0400
+
+    Screen transitions seem to work
+
+commit 0ea92dd789d22e3a2663f2ee5a10e39ad5e9be68
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 6 23:07:11 2018 -0400
+
+    lose goes to gameover, win goes to next map
+
+commit e96581a3ce2691254d2f4c42647bfcf144f5c14e
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun May 6 21:56:39 2018 -0400
+
+    Intro scene
+
+commit fe4f051a539579c2876c3ae563ae7d74f1352a28
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat May 5 17:52:16 2018 -0400
+
+    Fixed some bugs in the AI code
+
+commit 294354e0da44b733760dfaa91b4b7d851701a5a5
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 5 12:57:55 2018 -0400
+
+    updates
+
+commit 68f93f86fe099257d30cc4a81dd6be00a480eb3b
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat May 5 12:56:57 2018 -0400
+
+    updates
+
+commit 9a845e0803f310344c920ebc89484ee4075cd8f1
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu May 3 22:34:45 2018 -0400
+
+    Implemented part of the AI into the game loop and worked on fixing AI bugs
+
+commit 0feaa56302c17566c3f08e0f502430a4f964c179
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu May 3 18:07:48 2018 -0400
+
+    Wrote the possible_commands function in state.ml
+
+commit 48621fd70536452b4cce426183a197b3c9b2c730
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu May 3 16:10:56 2018 -0400
+
+    Fixed the bug where it wasn't decreasing troop count
+
+commit 36e526069f5f0e6e1d9e765039634c4433c4d87e
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 3 14:55:04 2018 -0400
+
+    Scene transition to Gameover works
+
+commit 9d4f14581a7534c4e89dec89e4b6a16ea74d2eab
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 3 14:18:08 2018 -0400
+
+    scene changes
+
+commit 33dcd72c33b509c3faa64bc76a3a42f51a0b586c
+Author: Eashaan <ek485@cornell.edu>
+Date:   Thu May 3 13:09:02 2018 -0400
+
+    update
+
+commit 3aaf563a064b9cdc71dbfaa7567d18df59881fb1
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 22:20:22 2018 -0400
+
+    Added documentation to the MCTS code
+
+commit 3c79f4bf604807a38f918cef6451ea30777789c9
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:19:05 2018 -0400
+
+    finished specs in state.ml
+
+commit 16b7d159993ec84e19dc84b58141eb69a8e71fea
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:18:49 2018 -0400
+
+    finished specs in state.ml
+
+commit 868f709aff11b4b82ffaddcdd9c6fb613a62e40f
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:09:03 2018 -0400
+
+    finished specs in types.mli
+
+commit 17b3a2036c6420f1efaa3008053b5397ad37fab2
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:08:34 2018 -0400
+
+    finished specs in types.mli
+
+commit 85f3d43c59d35619a57a391bfb62f38a41aa3838
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 20:58:44 2018 -0400
+
+    cleaned
+
+commit 0f82d488dca1abf4f5b5f597e5f60f141f2d4853
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 20:56:06 2018 -0400
+
+    even more specs completed
+
+commit 9c5b7dcebbc4d0b9d651fbda1d898f5a37576b3b
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 20:49:54 2018 -0400
+
+    added some specs
+
+commit e9b3cc5f9fefe0605e23301ee6608e193d10956b
+Merge: b1c0c58 4d2cd0a
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:03:20 2018 -0400
+
+    Merge branch 'master' of https://github.coecis.cornell.edu/ek485/OCamlot
+
+commit b1c0c5894f9bf26fa2da63c34561686c59ef452f
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 21:02:39 2018 -0400
+
+    Tried fixing errors but had to resort to mutability
+
+commit 4d2cd0a462b890aa15235de32031b19b336a0183
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 20:45:04 2018 -0400
+
+    sprites
+
+commit 39102a7a640f0c2ecbc7756d82eb00d0fc7ffcd9
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 20:14:29 2018 -0400
+
+    Make some cosmetic changes
+
+commit 8c3f7b7731ea039c6374df5cc8f7011f00ebc11a
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 20:00:51 2018 -0400
+
+    Fixed a few bugs in new_state_plus_delta, and added an update for sprites
+
+commit c04470021a96445a9dd4ada1cf5e058bd5e0bc0e
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 19:50:21 2018 -0400
+
+    updates
+
+commit 5c48815e24ac74290a4873b9c4ac21b33f331b58
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 19:50:03 2018 -0400
+
+    updates
+
+commit e9b362206928cac839d166d6fa90d6693dfa3e67
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 19:38:34 2018 -0400
+
+    sample type
+
+commit cad827269d9abe62f586b06ef9a8d2d17a448220
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 19:29:33 2018 -0400
+
+    updates
+
+commit 736a92b3b753d7bac0c35008ea4e5b48bd7c1bf3
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 18:06:14 2018 -0400
+
+    Moving troopsgit add .
+
+commit 5247416dcfacb8c5c7c977233bbd83097de9809a
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue May 1 15:51:49 2018 -0400
+
+    updating movements
+
+commit 54a8e68366261ca9195d40524722b70bd66d0814
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue May 1 14:09:23 2018 -0400
+
+    Completed most of new_state_plus_delta
+
+commit b6fd5de0d89cb271cadf65a2d393543affb2e589
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Mon Apr 30 21:36:44 2018 -0400
+
+    Finished up the definition of new_state (for now) and started working on new_state_plus_delta
+
+commit 7b6c25d4459fa66a59cdd2ca1793f748384c1386
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun Apr 29 19:55:49 2018 -0400
+
+    Added functions to create, edit, and display movement types.
+
+commit 5cd1cc1e34827793fdc99c259ec65470bf744fe1
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun Apr 29 16:10:01 2018 -0400
+
+    updates
+
+commit 5bb171c40c26efae11696585b5302661059c3bdb
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun Apr 29 12:35:29 2018 -0400
+
+    updates
+
+commit 25c1e24860a47e08e9448f0ed40a6da1123cf890
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun Apr 29 02:52:22 2018 -0400
+
+    not much
+
+commit 7a3fe9e8d6d3a999c50e6ba393b0b2e40476e002
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sun Apr 29 01:35:15 2018 -0400
+
+    tower highlight
+
+commit 62b1022ed9fa321df390d74a1f824452f4a0a258
+Author: Eashaan <ek485@cornell.edu>
+Date:   Sat Apr 28 23:59:12 2018 -0400
+
+    temporary sprites
+
+commit 48cd0e4c091268dad4527d4f2b97c4a5c426e6fd
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Apr 26 00:44:27 2018 -0400
+
+    added some skill effect types and started new_state, which still has a few things unaccounted for
+
+commit 946574a687aef4c4a6b6cbe492b03bc67fc081af
+Author: Eashaan <ek485@cornell.edu>
+Date:   Wed Apr 25 02:20:28 2018 -0400
+
+    Button animation works
+
+commit 3681cf0e5c8fda1385232f9f43f197ae6d60b1d0
+Author: Eashaan <ek485@cornell.edu>
+Date:   Wed Apr 25 00:47:01 2018 -0400
+
+    Basic framework for UI
+
+commit 1b5803067d97db68aedd77f41b52ae892a1a2185
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue Apr 24 22:13:16 2018 -0400
+
+    Changing stuff in ui
+
+commit 0d173f9524c7239ef4616dbc95a0e53e821e0d24
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue Apr 24 13:28:09 2018 -0400
+
+    added get function for Button sprites
+
+commit c25824c64728b1b8d003d0b87c756ba43e4b5f3a
+Author: Eashaan <ek485@cornell.edu>
+Date:   Tue Apr 24 01:12:39 2018 -0400
+
+    added Ui module and started implementing button elements
+
+commit 79d122b701fe668782e7906c846b5c7ce83f9581
+Author: Eashaan <ek485@cornell.edu>
+Date:   Mon Apr 23 11:46:24 2018 -0400
+
+    edits
+
+commit 694dd048dfbf1a1aa70d00e1c0b7be066656b110
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sat Apr 21 20:32:21 2018 -0400
+
+    Made some changes to the AI to fix how it chooses the best move
+
+commit 8eb150c13f2957165f705b45738c27e75e870413
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Fri Apr 20 22:14:37 2018 -0400
+
+    Wrote the monte carlo tree search AI algorithm
+
+commit 4a9f9eed0cdad42fd56b2f7f2691d1c4dd184713
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Apr 19 21:19:51 2018 -0400
+
+    Fixed mouse state
+
+commit 415bce61e1ee24ab84715d4ca416822091729da2
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Apr 19 20:22:23 2018 -0400
+
+    types
+
+commit 8192dd9520ff98e7025c88f47dc124964c1a4b01
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Apr 19 19:23:03 2018 -0400
+
+    added a destination ref to get to_from
+
+commit 99818b78283f9a16f33a19a64b1dc13fd89cfb7e
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Apr 19 20:14:55 2018 -0400
+
+    types
+
+commit 2ebebbe670df5f2e8a59d06e691fdd3c27553528
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Apr 19 19:11:52 2018 -0400
+
+    changed type of vector 2 to vector2d and some specifications
+
+commit 6dea085f796cb99d31ce2274561c6b16a755115e
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Apr 19 19:11:19 2018 -0400
+
+    changed name of vector2 to vector2d and some specifications
+
+commit 2b43392e89b9c7fc94e274784e83d52c268bef1b
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Apr 17 02:34:50 2018 -0400
+
+    Trying to make mouse input more intuitive
+
+commit 8fe504ffbd7f35b167ed2b622c27d04213b6c3f1
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Apr 17 01:59:23 2018 -0400
+
+    mouse postion and press working
+
+commit f67dc95b8e2339a77ed9189d5e584e5c70eea4e3
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 20:17:47 2018 -0400
+
+    comments
+
+commit 952595b533d6ecec4c5856f40c256205e85f4ea6
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 19:45:00 2018 -0400
+
+    Sprite animations are working
+
+commit 91dea8de2acf3eb012ae4fadd91af252279844ac
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 18:50:50 2018 -0400
+
+    updates
+
+commit 7a0c2c69246b25095ddd97355e78635c1cd7023b
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun Apr 15 17:07:51 2018 -0400
+
+    Added in most of the minimax AI
+
+commit 2c13906b302f92dc75a99a0721e80c76cacc3f46
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Sun Apr 15 15:09:36 2018 -0400
+
+    Added a function in state that will be needed for the AI
+
+commit d8c0eadfc2ad7740cc4230fa6fc08f1f8736b867
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 14:49:08 2018 -0400
+
+    Rendering towers, getting 60 fps
+
+commit b335c8bfcf65a580d8ef3c1d3ea33cd7a2993d02
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 13:05:20 2018 -0400
+
+    Nice background, temporary instructions
+
+commit e81d3b232d8267f4f798a01db765cd9a06d71dee
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 02:07:28 2018 -0400
+
+    Readme
+
+commit 04501bc6b294f35a41f8e1bdc470d01585c94cfe
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sun Apr 15 01:55:00 2018 -0400
+
+    Redid everything
+
+commit b9c3b84940776de44529783ccc1d4772f2d63193
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 20:20:25 2018 -0400
+
+    Rendering pictures
+
+commit ce966476847bff03db93d6d7f3dd3b5f5e6181eb
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 17:12:41 2018 -0400
+
+    Page title now says Ocamlot
+
+commit f82a99f9294b4d9bc97d75821558f29426cda05a
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 17:12:31 2018 -0400
+
+    Page title now says Ocamlot
+
+commit dcc7096ae74fa9a068d9e1e8d47778c3e973c1d7
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 17:08:14 2018 -0400
+
+    Restructured engine to fit js_of_ocaml
+
+commit 7fc8caea63af8e43b796e898508567445fe1aab5
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 16:12:37 2018 -0400
+
+    Changes to engine.mli
+
+commit 7bb6ff9abaf1552e8b4847c9f9236137a94cdaaa
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Sat Apr 14 14:53:06 2018 -0400
+
+    Switched to js_of_ocaml
+
+commit 29ec6d4d5894ee7c95eb6ad22a4777cab3f1e55b
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Apr 12 00:14:45 2018 -0400
+
+    fps is slow
+
+commit e4a7ddc947ac0ca4de89088e9ad5d6b7469aa4eb
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 23:18:36 2018 -0400
+
+    clean
+
+commit fcfe13fb744ee6b1ea4df7b6b81ebfecd4db9819
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 23:17:24 2018 -0400
+
+    Added tower size
+
+commit e8fcfc6cdbed63d055c90f5ccea7e73e06ec900d
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 23:02:43 2018 -0400
+
+    render towers
+
+commit 45f385a742fc9749d4e578713794d40c473ddf3b
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 21:41:14 2018 -0400
+
+    Tower Generation
+
+commit 14e35b6cd01ead89e447a5e43d8c4e02084b9ec7
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 20:33:55 2018 -0400
+
+    more updates
+
+commit 1fb0b7dd39246e3cea6b96f2900d46fb71560a81
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 15:29:07 2018 -0400
+
+    clean
+
+commit 2df7513a317e71bdfbf538de5bcce90a16e335d1
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 15:24:27 2018 -0400
+
+    Window opens and closes
+
+commit 3ce4cd32ff7e7ad84711fe67021c93759faa1b8c
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 15:07:17 2018 -0400
+
+    Basic game window
+
+commit e38a50c776841623abaff0faa8c4e996b556bc51
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 14:40:54 2018 -0400
+
+    Main.ml
+
+commit 6310b16da98812bb99b89f67775464e0d86f1ed7
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 09:46:10 2018 -0400
+
+    clean
+
+commit 7e7dfd107e687b40128a573f4328c5b90585cffc
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 09:43:09 2018 -0400
+
+    Engine
+
+commit 26d7b1526d23c3a5eb1a8c5afe7de07998d0f38d
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Apr 11 01:18:11 2018 -0400
+
+    Sample properties
+
+commit 8db9aa29166bb4c71f1c2cad3fcb940c28ee14e3
+Merge: 57df06a a670659
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue Apr 10 16:08:20 2018 -0400
+
+    Added state.ml and ai.ml and wrote the types out for state.ml
+
+commit 57df06a1b46247b53ceea82f87746ed822f475ac
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue Apr 10 16:06:27 2018 -0400
+
+    Added state.ml and ai.ml and wrote the types out for state.ml
+
+commit a67065997efd76cc913d288d4f79411d8489613c
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Apr 10 14:58:36 2018 -0400
+
+    Adding main
+
+commit 1ac6c5e18310783f385de13dbaca3fc6e0c0bbe9
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Apr 10 14:23:19 2018 -0400
+
+    engine.ml
+
+commit 8b4f785df11686fff8b949e3c54f7b1ee88b12d1
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Apr 10 14:02:51 2018 -0400
+
+    files
+
+commit ef6d109384aa3b4b0ea5cbaed5b80dc7bee792f0
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Mar 29 18:25:54 2018 -0400
+
+    Design document
+
+commit 33ce0fa1b4f164d09df79254ee1be77ba4a75440
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Mar 29 18:23:20 2018 -0400
+
+    Created zip
+
+commit 481a9a6452c31bf643e9c7e60d5d4232716407ab
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Mar 29 17:18:00 2018 -0400
+
+    updated State.movement and minor modification in State.possible_moves
+
+commit 5505825e11184a42874b7007e585417913073093
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Thu Mar 29 12:06:42 2018 -0400
+
+    Sprite
+
+commit 81f26adba997adecbdd59753727adf27f329b65d
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Thu Mar 29 11:54:32 2018 -0400
+
+    Changed state.mli to include allegiance
+
+commit 16cd029f5e289eccda0b5f706797c4a09c12adba
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Wed Mar 28 16:33:05 2018 -0400
+
+    Added a few things in state.mli for the AI
+
+commit 11da1e83c5d351f7be70ff6585bea4f3a833a0bf
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Wed Mar 28 12:55:27 2018 -0400
+
+    engine.mli
+
+commit d663da425a0aa3a5e95d36b57cfe32c687faddf2
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue Mar 27 14:14:21 2018 -0400
+
+    Added some specifications for AI
+
+commit 39bb2684024589a42801a25e269b896f7d747627
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue Mar 27 12:02:32 2018 -0400
+
+    State initialized
+
+commit 71e2cafe687abee8267fa421e50f8d065b56c061
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Mar 27 12:32:42 2018 -0400
+
+    Created sprite.mli
+
+commit 03cd17b3f1cc627503bcb389caf1f851833d0469
+Author: vagrant <vagrant@vm3110-2018sp>
+Date:   Tue Mar 27 12:04:20 2018 -0400
+
+    Created the .mli files
+
+commit 66488b50fc558b4e6d3d368868852189ac925b05
+Author: Eashaan Kumar <ek485@cornell.edu>
+Date:   Tue Mar 27 11:57:43 2018 -0400
+
+    Initial commit

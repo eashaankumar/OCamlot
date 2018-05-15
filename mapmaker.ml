@@ -26,7 +26,7 @@ let troop_cavalry = {
  * [base_tower id team pos] generates a base tower with given arguments
  * returns: [tower]
  *)
-let base_tower id team pos =
+let base_tower id team pos : Types.tower =
   let troop_count =
   match team with
   | Player -> 1.
