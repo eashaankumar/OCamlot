@@ -335,7 +335,7 @@ let tests = [
 
   (***************************************************)
 
-  "update_tree_0" >::
+  (* "update_tree_0" >::
   (fun _ -> (Ai.update_tree tree1_0_children.(0) 1.);
     assert_tree_equal
       (Node (root_state0, Null, 0.5313968603139686, 10001.,
@@ -346,7 +346,7 @@ let tests = [
     assert_tree_equal
       (Node (root_state0, Null, 0.2037962037962038, 1001.,
              tree0_children, ref (tree1_helper), true))
-      !(tree1_0_children.(0))) ;
+      !(tree1_0_children.(0))) ; *)
 
   (***************************************************)
 
