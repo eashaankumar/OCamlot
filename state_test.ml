@@ -198,7 +198,7 @@ let init_kill_from_enemy_valid = {
 let init_reg_from_player_valid1 = {
   allegiance = Player;
   mana_cost = 0;
-  effect = Regen_incr 1.25;
+  effect = Regen_incr 5.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
@@ -208,7 +208,7 @@ let init_reg_from_player_valid1 = {
 let init_reg_from_enemy_valid1 = {
   allegiance = Enemy;
   mana_cost = 0;
-  effect = Regen_incr 1.25;
+  effect = Regen_incr 5.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
@@ -218,7 +218,7 @@ let init_reg_from_enemy_valid1 = {
 let init_reg_from_player_valid2 = {
   allegiance = Player;
   mana_cost = 0;
-  effect = Regen_incr 0.8;
+  effect = Regen_incr 0.2;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
@@ -228,7 +228,7 @@ let init_reg_from_player_valid2 = {
 let init_reg_from_enemy_valid2 = {
   allegiance = Enemy;
   mana_cost = 0;
-  effect = Regen_incr 0.8;
+  effect = Regen_incr 0.2;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
@@ -542,13 +542,31 @@ let state_immutability_tests : test list = [
 
 let s0 = ~<< init_state
 
-let s1_1 = new_state_plus_delta init_state (Skill (init_kill_from_player_valid)) delta
+let s1_1 = new_state_plus_delta init_state
+    (Skill (init_kill_from_player_valid)) delta
+
+let s1_2 = new_state_plus_delta init_state
+    (Skill (init_stun_from_player_valid)) delta
+
+let s1_3 = new_state_plus_delta init_state
+    (Skill (init_reg_from_player_valid1)) delta
+
+let s2_1 = new_state_plus_delta s1_2
+    (Move (Enemy, 2, 1)) delta
+
+let s2_2 = new_state_plus_delta s1_2
+    (Skill init_reg_from_enemy_valid1) delta
 
 let state_tests = [
   "trivial" >:: (fun _ -> assert_equal s0 (~<< init_state_copy));
   "killneutral" >:: (fun _ -> assert_equal (Neutral : allegiance) s1_1.towers.(2).twr_team);
   "kill0" >:: (fun _ -> assert_equal 0 (snd (get_scores s1_1)));
-
+  "stunnedmove" >:: (fun _ -> assert_equal (~<< s1_2).towers.(2)
+                         (~<< s2_1).towers.(2));
+  "stunnedregen1" >:: (fun _ -> assert_equal (~<< s2_2).towers.(2).twr_troops
+                          (~<< s1_2).towers.(2).twr_troops);
+  "stunnedregen2" >:: (fun _ -> assert_equal ((~<< s1_2).towers.(2).twr_troops_regen_speed *. 5.)
+                                  (~<< s2_2).towers.(2).twr_troops_regen_speed);
 ]
 
 (* All test lists must be in [tests] *)
