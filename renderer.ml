@@ -202,7 +202,7 @@ let draw_ui context interface =
   ()
 
 let draw_spells context scene =
-  match scene.state.player_skill with
+  (match scene.state.player_skill with
   | None -> ()
   | Some(skl) -> 
     begin
@@ -210,6 +210,16 @@ let draw_spells context scene =
       draw_sprite_sheet context skl.sprite tower.twr_pos tower.twr_size;
       ()
     end
+  );
+  match scene.state.enemy_skill with
+  | None -> ()
+  | Some(skl) -> 
+    begin
+      let tower = scene.state.towers.(skl.tower_id) in
+      draw_sprite_sheet context skl.sprite tower.twr_pos tower.twr_size;
+      ()
+    end
+  
 (*render*)
 let render context scene =
   (* House Keeping *)
