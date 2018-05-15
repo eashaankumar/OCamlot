@@ -31,7 +31,7 @@ let init_input = {
 (* Skills *)
 let lightning_skill = {
   allegiance = Neutral;
-  mana_cost = 40 ;
+  mana_cost = 70 ;
   effect = Kill 15 ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = -1;
@@ -41,7 +41,7 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 40;
+  mana_cost = 100;
   effect = Stun 10.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
@@ -51,9 +51,9 @@ let freeze_skill = {
 
 let health_skill = {
   allegiance = Neutral;
-  mana_cost = 40;
+  mana_cost = 150;
   effect = Regen_incr (3.);
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 30.};
   tower_id = -1;
   sprite = Sprite.sprite_heart;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
@@ -456,7 +456,10 @@ let scene_transition () =
 
 (* Enemy spells *) 
 let next_spell = ref "null"
+let current_wait = ref 0.
+
 let cast_ai_health sc health_spell_ref command = 
+  print_endline "Trying to cast health spell";
   let mana = sc.state.enemy_mana in
   match !health_spell_ref with
   | SpellBox (spell_box_property, pos, size, lightning_skill) ->
@@ -471,6 +474,7 @@ let cast_ai_health sc health_spell_ref command =
             else if t.twr_team = Enemy && t.twr_troops < sc.state.towers.(min_id).twr_troops then 
               t.twr_id else min_id 
           ) (-1) sc.state.towers in
+          print_endline (string_of_int (health_index));
           if health_index <> -1 then (
             (* set skill to regenerate *)
             next_spell := "null";
@@ -488,6 +492,7 @@ let cast_ai_health sc health_spell_ref command =
     | _ -> ()
 
 let cast_ai_freeze sc freeze_spell_ref command = 
+  print_endline "Trying to cast freeze spell";
   let mana = sc.state.enemy_mana in
   match !freeze_spell_ref with
   | SpellBox (spell_box_property, pos, size, lightning_skill) ->
@@ -516,6 +521,7 @@ let cast_ai_freeze sc freeze_spell_ref command =
       end
     | _ -> ()
 let cast_ai_lightning sc lightning_spell_ref command = 
+  print_endline "Trying to cast lightning spell";
   let mana = sc.state.enemy_mana in
   match !lightning_spell_ref with
   | SpellBox (spell_box_property, pos, size, lightning_skill) ->
@@ -549,85 +555,67 @@ let cast_ai_lightning sc lightning_spell_ref command =
           )
         )
       )
-    end
+      end
     | _ -> ()
 let get_enemy_spell sc =
-  if sc.name <> "Game" then Null
-  else (
-    print_endline ("Next spell to cast: "^(!next_spell));
-    let lightning_spell_ref = List.assoc "lightning_spell_ai" sc.interface in
-    let freeze_spell_ref = List.assoc "freeze_spell_ai" sc.interface in
-    let health_spell_ref = List.assoc "health_spell_ai" sc.interface in
-
-    let command = ref Null in
-
-    let _ = (
-      match !next_spell with
-      | "null" -> 
-        begin
-          (* schedule next spell *)
-          let spell_type = Random.float 1. in
-          print_endline (string_of_float spell_type);
-          if spell_type < 0.333 then (
-            next_spell := "lightning_spell_ai";
-          )
-          else if spell_type < 0.7 then (
-            next_spell := "freeze_spell_ai";
-
-          )
-          else (
-            next_spell := "health_spell_ai";
-          )
-        end
-      | "lightning_spell_ai" -> 
-        begin 
-          cast_ai_lightning sc lightning_spell_ref command;
-        end
-      | "freeze_spell_ai" -> 
-        begin 
-          cast_ai_freeze sc freeze_spell_ref command;
-        end
-      | "health_spell_ai" -> 
-        begin
-          cast_ai_health sc health_spell_ref command;
-        end
-      | _ -> () (* Should never happen *)
-    ) in
-    !command
+  let wait_time = (
+    match !State.difficulty_level with
+    | Easy -> 20.
+    | Medium -> 10.
+    | Hard -> 1.
+  ) in
+  if sc.name <> "Game" then (
+    Null
   )
-  (*
+  else (
+    if (!current_wait < wait_time) then (
+      print_endline ("Waiting to cast spell");
+      current_wait := !current_wait +. !Renderer.delta;
+      Null
+    )
+    else (
+      print_endline ("Next spell to cast: "^(!next_spell));
+      let lightning_spell_ref = List.assoc "lightning_spell_ai" sc.interface in
+      let freeze_spell_ref = List.assoc "freeze_spell_ai" sc.interface in
+      let health_spell_ref = List.assoc "health_spell_ai" sc.interface in
 
-  let health_cost = freeze_skill.mana_cost in
-  if mana > float_of_int kill_cost then
-    let kill_n =
-      match lightning_skill.effect with
-      | Kill n -> float_of_int n
-      | _ -> 0. in
-    let kill_index = Array.fold_left
-        (fun acc e -> if (e.twr_troops +. 2. < kill_n) && e.twr_team = Player
-          then e.twr_id else acc)
-        (-1)
-        st.towers in
-    if kill_index <> -1 then
-      Skill ({lightning_skill with
-              tower_id = kill_index;
-              allegiance = Enemy})
-    else
+      let command = ref Null in
 
-      if mana > float_of_int health_cost then
-        let health_index = Array.fold_left
-            (fun (indx, troops) e ->
-               if (e.twr_troops_max > troops) && e.twr_team = Enemy
-               then (e.twr_id,e.twr_troops_max) else (indx, troops))
-            (-1,0.)
-            st.towers in
-        Skill ({health_skill with
-                tower_id = (fst health_index);
-                allegiance = Enemy})
-      else
-        Null
-  else Null*)
-  (*let lightning_spell_ui_ref = List.assoc "lightning_spell_ai" (sc.interface) in*)
+      let _ = (
+        match !next_spell with
+        | "null" -> 
+          begin
+            (* schedule next spell *)
+            let spell_type = Random.float 1. in
+            print_endline (string_of_float spell_type);
+            if spell_type < 0.333 then (
+              next_spell := "lightning_spell_ai";
+            )
+            else if spell_type < 0.667 then (
+              next_spell := "freeze_spell_ai";
+
+            )
+            else (
+              next_spell := "health_spell_ai";
+            )
+          end
+        | "lightning_spell_ai" -> 
+          begin 
+            cast_ai_lightning sc lightning_spell_ref command;
+          end
+        | "freeze_spell_ai" -> 
+          begin 
+            cast_ai_freeze sc freeze_spell_ref command;
+          end
+        | "health_spell_ai" -> 
+          begin
+            cast_ai_health sc health_spell_ref command;
+          end
+        | _ -> () (* Should never happen *)
+      ) in
+      !command
+    )
+  )
 
 let game_loop context running =
   Random.init (3110);
@@ -636,8 +624,8 @@ let game_loop context running =
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match !State.difficulty_level with
-    | Easy -> 5.
-    | Medium -> 2.5
+    | Easy -> 7.
+    | Medium -> 4.
     | Hard -> 1. in
   let next_move_step = ref (base_step_length +. (Random.float 0.4)) in
 
