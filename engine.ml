@@ -31,7 +31,7 @@ let init_input = {
 (* Skills *)
 let lightning_skill = {
   allegiance = Neutral;
-  mana_cost = 70 ;
+  mana_cost = 40 ;
   effect = Kill 15 ;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = -1;
@@ -41,7 +41,7 @@ let lightning_skill = {
 
 let freeze_skill = {
   allegiance = Neutral;
-  mana_cost = 100;
+  mana_cost = 40;
   effect = Stun 10.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
@@ -51,7 +51,7 @@ let freeze_skill = {
 
 let health_skill = {
   allegiance = Neutral;
-  mana_cost = 200;
+  mana_cost = 40;
   effect = Regen_incr (3.);
   regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
   tower_id = -1;
@@ -455,6 +455,7 @@ let scene_transition () =
   )
 
 (* Enemy spells *) 
+let next_spell = ref "null"
 let cast_ai_health sc health_spell_ref command = 
   let mana = sc.state.enemy_mana in
   match !health_spell_ref with
@@ -472,7 +473,8 @@ let cast_ai_health sc health_spell_ref command =
           ) (-1) sc.state.towers in
           if health_index <> -1 then (
             (* set skill to regenerate *)
-            print_endline("Ai casting Lightning spell!!");
+            next_spell := "null";
+            print_endline("Ai casting Health spell!!");
             health_spell_ref := SpellBox ({spell_box_property with
                                                 spell_box_state = Regenerating
                                               }, pos,size,health_skill);
@@ -499,7 +501,8 @@ let cast_ai_freeze sc freeze_spell_ref command =
           ) 0 sc.state.towers in
           if freeze_index <> -1 then (
             (* set skill to regenerate *)
-            print_endline("Ai casting Lightning spell!!");
+            next_spell := "null";
+            print_endline("Ai casting Freeze spell!!");
             freeze_spell_ref := SpellBox ({spell_box_property with
                                                 spell_box_state = Regenerating
                                               }, pos,size,freeze_skill);
@@ -534,6 +537,7 @@ let cast_ai_lightning sc lightning_spell_ref command =
               sc.state.towers in
           if kill_index <> -1 then (
             (* set skill to regenerate *)
+            next_spell := "null";
             print_endline("Ai casting Lightning spell!!");
             lightning_spell_ref := SpellBox ({spell_box_property with
                                                 spell_box_state = Regenerating
@@ -545,17 +549,12 @@ let cast_ai_lightning sc lightning_spell_ref command =
           )
         )
       )
-      end
+    end
     | _ -> ()
 let get_enemy_spell sc =
-  let probability = (
-    match !State.difficulty_level with
-    | Easy -> 0.5
-    | Medium -> 0.8
-    | Hard -> 1.
-  ) in
-  if sc.name <> "Game" || (Random.float 1. > probability) then Null
+  if sc.name <> "Game" then Null
   else (
+    print_endline ("Next spell to cast: "^(!next_spell));
     let lightning_spell_ref = List.assoc "lightning_spell_ai" sc.interface in
     let freeze_spell_ref = List.assoc "freeze_spell_ai" sc.interface in
     let health_spell_ref = List.assoc "health_spell_ai" sc.interface in
@@ -563,17 +562,36 @@ let get_enemy_spell sc =
     let command = ref Null in
 
     let _ = (
-      (*let spell_type = Random.float 1. in
-      if spell_type < 0.333 then (
-        cast_ai_lightning sc lightning_spell_ref command;
-      )
-      else if spell_type < 0.666 then (
-        cast_ai_freeze sc freeze_spell_ref command;
-      )
-      else (
-        ();
-      )*)
-      cast_ai_health sc health_spell_ref command;
+      match !next_spell with
+      | "null" -> 
+        begin
+          (* schedule next spell *)
+          let spell_type = Random.float 1. in
+          print_endline (string_of_float spell_type);
+          if spell_type < 0.333 then (
+            next_spell := "lightning_spell_ai";
+          )
+          else if spell_type < 0.7 then (
+            next_spell := "freeze_spell_ai";
+
+          )
+          else (
+            next_spell := "health_spell_ai";
+          )
+        end
+      | "lightning_spell_ai" -> 
+        begin 
+          cast_ai_lightning sc lightning_spell_ref command;
+        end
+      | "freeze_spell_ai" -> 
+        begin 
+          cast_ai_freeze sc freeze_spell_ref command;
+        end
+      | "health_spell_ai" -> 
+        begin
+          cast_ai_health sc health_spell_ref command;
+        end
+      | _ -> () (* Should never happen *)
     ) in
     !command
   )
@@ -612,6 +630,7 @@ let get_enemy_spell sc =
   (*let lightning_spell_ui_ref = List.assoc "lightning_spell_ai" (sc.interface) in*)
 
 let game_loop context running =
+  Random.init (3110);
   print_endline ("State tests suite: "^OCamlotUnit2.run_tests State_test.tests);
   print_endline ("Ai tests suite: "^OCamlotUnit2.run_tests Ai_test.tests);
   let last_move_time = ref (Sys.time ()) in
