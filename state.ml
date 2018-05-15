@@ -337,10 +337,18 @@ let update_skill st' d' : state =
                 {st with
                  player_skill = None;
                  towers =
-                   let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
+                   let new_regen =
+                     new_towers.(tower).twr_troops_regen_speed *. incr_rate in
                    begin
+                     let twr =
+                       {new_towers.(tower) with
+                        twr_troops_regen_speed = new_regen
+                       } in
+                     new_towers.(tower) <- twr; new_towers
+                   end
+                   (* begin
                      new_towers.(tower).twr_troops_regen_speed <- new_regen
-                   end; new_towers
+                   end; new_towers *)
                 }
               )
               else (
@@ -462,10 +470,18 @@ let update_skill st' d' : state =
                 {st with
                  enemy_skill = None;
                  towers =
-                   let new_regen = new_towers.(tower).twr_troops_regen_speed *. incr_rate in
+                   let new_regen =
+                     new_towers.(tower).twr_troops_regen_speed *. incr_rate in
                    begin
+                     let twr =
+                       {new_towers.(tower) with
+                        twr_troops_regen_speed = new_regen
+                       } in
+                     new_towers.(tower) <- twr; new_towers
+                   end
+                   (* begin
                      new_towers.(tower).twr_troops_regen_speed <- new_regen
-                   end; new_towers
+                   end; new_towers *)
                 }
               )
               else (

@@ -246,9 +246,9 @@ type tower_core = {
   twr_troop_info : troop;
   twr_troops : float;
   twr_troops_max : float;
-  mutable twr_troops_regen_speed : float;
+  twr_troops_regen_speed : float;
   twr_team : allegiance;
-  mutable is_disabled : bool;
+  is_disabled : bool;
 }
 
 (* a movement without [mvmt_sprite] *)
@@ -506,26 +506,26 @@ let state_immutability_tests : test list = [
                          (ignore (new_state_plus_delta init_state_copy
                                     (Move (Enemy, 2, 0)) delta);
                           init_state_copy));
-  (* "nspd_immtbl5" >:: (fun _ -> assert_equal init_state
+  "nspd_immtbl5" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_stun_from_player_valid) delta);
-                         init_state_copy)); *)
+                         init_state_copy));
   "nspd_immtbl6" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_kill_from_player_valid) delta);
                          init_state_copy));
-  (* "nspd_immtbl7" >:: (fun _ -> assert_equal init_state
+  "nspd_immtbl7" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_player_valid1) delta);
-                         init_state_copy)); *)
-  (* "nspd_immtbl8" >:: (fun _ -> assert_equal init_state
+                         init_state_copy));
+  "nspd_immtbl8" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_player_valid2) delta);
-                         init_state_copy)); *)
-  (* "nspd_immtbl9" >:: (fun _ -> assert_equal init_state
+                         init_state_copy));
+  "nspd_immtbl9" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_stun_from_enemy_valid) delta);
-                         init_state_copy)); *)
+                         init_state_copy));
   "nspd_immtbl10" >:: (fun _ -> assert_equal init_state
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_kill_from_enemy_valid) delta);
