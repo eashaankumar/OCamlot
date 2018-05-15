@@ -565,7 +565,7 @@ let game_loop context running =
       begin
         last_move_time := new_time;
         next_move_step := (base_step_length +. (Random.float 1.));
-      let cm = Ai.MCTS_AI.get_move (!current_scene.state) !State.difficulty_level in
+      let cm = Ai.get_move (!current_scene.state) !State.difficulty_level in
       current_scene :=
         {!current_scene with
          state = State.new_state_plus_delta
