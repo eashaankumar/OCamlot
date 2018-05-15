@@ -1,9 +1,9 @@
 open Types
 
-let rec (@) l1 l2 =
+(* let rec (@) l1 l2 =
   match l1 with
   | [] -> l2
-  | h::t -> (@) t (h::l2)
+  | h::t -> (@) t (h::l2) *)
 
 (* represents the tower a is pressed on and released at
  *)
@@ -162,57 +162,11 @@ let possible_commands st side =
     if List.length neutral_twr_list > 0 then
       List.filter (fun (h,t) -> h<>t) (f side_twr_list neutral_twr_list [])
     else
-      List.filter (fun (h,t) -> h<>t) (f side_twr_list (opp_twr_list@side_twr_list) []) in
+      List.filter (fun (h,t) -> h<>t) (f side_twr_list (opp_twr_list) []) in
 
   let move_list = List.map (fun (h,t) -> Move (side, h, t)) indices_list in
 
   let command_list = (Null::move_list) in
-
-  (* let kill_list = if mana_points < 0. then [] else
-    List.map (fun id -> Skill ({
-      allegiance = side;
-      mana_cost = 0 ;
-      effect = Kill 100;
-      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
-      tower_id = id;
-      sprite = Sprite.sprite_lightning;
-      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 2.};
-    })) opp_twr_list in
-
-  let stun_list = if mana_points < 0. then [] else
-    List.map (fun id -> Skill ({
-      allegiance = side;
-      mana_cost = 0 ;
-      effect = Stun(3.5) ;
-      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 5.};
-      tower_id = id;
-      sprite = Sprite.sprite_freeze;
-      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.};
-    })) opp_twr_list in
-
-  let regen_buff_list = if mana_points < 0. then [] else
-    List.map (fun id -> Skill ({
-      allegiance = side;
-      mana_cost = 0 ;
-      effect = Regen_incr(1.25) ;
-      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 7.};
-      tower_id = id;
-      sprite = Sprite.sprite_lightning;
-      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
-    })) side_twr_list in
-
-  let regen_attack_list = if mana_points < 0. then [] else
-    List.map (fun id -> Skill ({
-      allegiance = side;
-      mana_cost = 0 ;
-      effect = Regen_incr(0.8) ;
-      regen_timer = {curr_time = 0. ; speed = 1. ; limit = 7.};
-      tower_id = id;
-      sprite = Sprite.sprite_lightning;
-      anim_timer = {curr_time = 0. ; speed = 1. ; limit = 1.5};
-    })) opp_twr_list in
-
-     Array.of_list ((((command_list@kill_list)@stun_list)@regen_buff_list)@regen_attack_list) *)
   Array.of_list command_list
 
 
@@ -333,9 +287,14 @@ let update_skill st' d' : state =
                 if secs <= 0. then
                   {st with
                    player_skill = None;
-                   towers = begin
-                     new_towers.(tower).is_disabled <- false; new_towers
-                   end
+                   towers =
+                     begin
+                       let twr =
+                         {new_towers.(tower) with
+                          is_disabled = false
+                         } in
+                       new_towers.(tower) <- twr; new_towers
+                     end
                   }
                 else
                 {st with
@@ -351,7 +310,11 @@ let update_skill st' d' : state =
               );
                  towers =
                    begin
-                     new_towers.(tower).is_disabled <- true; new_towers
+                     let twr =
+                       {new_towers.(tower) with
+                        is_disabled = true
+                       } in
+                     new_towers.(tower) <- twr; new_towers
                    end
                 }
               )
@@ -449,9 +412,14 @@ let update_skill st' d' : state =
                 if secs <= 0. then
                   {st with
                    enemy_skill = None;
-                   towers = begin
-                     new_towers.(tower).is_disabled <- false; new_towers
-                   end
+                   towers =
+                     begin
+                       let twr =
+                         {new_towers.(tower) with
+                          is_disabled = false
+                         } in
+                       new_towers.(tower) <- twr; new_towers
+                     end
                   }
                 else
                 {st with
@@ -467,7 +435,11 @@ let update_skill st' d' : state =
               );
                  towers =
                    begin
-                     new_towers.(tower).is_disabled <- true; new_towers
+                     let twr =
+                       {new_towers.(tower) with
+                        is_disabled = true
+                       } in
+                     new_towers.(tower) <- twr; new_towers
                    end
                 }
               )

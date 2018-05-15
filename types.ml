@@ -28,7 +28,7 @@ type sprite = {
   curr_time : float
 }
 
-type troop_type = 
+type troop_type =
   | Foot
   | Cavalry
 
@@ -47,11 +47,11 @@ type tower = {
   twr_troop_info : troop;
   twr_troops : float;
   twr_troops_max : float;
-  mutable twr_troops_regen_speed : float;
+  twr_troops_regen_speed : float;
   twr_team : allegiance;
   selector_offset : vector2d;
   count_label_offset : vector2d;
-  mutable is_disabled : bool;
+  is_disabled : bool;
 }
 
 type movement = {

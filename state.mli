@@ -17,6 +17,13 @@ val possible_commands : state -> allegiance -> command array
  *)
 val new_state : state -> command -> state
 
+(**
+ * [get_scores st] is a tuple containing the player score
+      and the enemy score in that order.
+   [st] - a valid state
+*)
+val get_scores : state -> int * int
+
 (*
  * [new_state_plus_delta st c d] is the state that is created by
  * applying command [c] to a state and then waiting [d]
