@@ -130,8 +130,8 @@ let map1 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -169,8 +169,8 @@ let map2 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -207,8 +207,8 @@ let map3 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -248,8 +248,8 @@ let map4 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -284,8 +284,8 @@ let map5 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -328,8 +328,8 @@ let map6 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("difficulty_label", ref
@@ -386,8 +386,8 @@ let map7 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("", ref
@@ -463,8 +463,8 @@ let map8 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("", ref
@@ -518,8 +518,8 @@ let map9 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("", ref
@@ -588,8 +588,8 @@ let map10 =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 0. ;
-    enemy_mana = 0. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   },
   [
     ("", ref
@@ -631,8 +631,8 @@ let fix_map (st,int) =
     movements = [] ;
     player_skill = None ;
     enemy_skill = None ;
-    player_mana = 100. ;
-    enemy_mana = 100. ;
+    player_mana = 50. ;
+    enemy_mana = 50. ;
   }, int
 
 let maps = [|
