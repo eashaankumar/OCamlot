@@ -169,7 +169,7 @@ let init_stun_from_enemy_valid = {
   allegiance = Enemy;
   mana_cost = 100;
   effect = Stun 5.;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 7.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
@@ -179,7 +179,7 @@ let init_kill_from_player_valid = {
   allegiance = Player;
   mana_cost = 70;
   effect = Kill 15;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 0.}
@@ -189,50 +189,50 @@ let init_kill_from_enemy_valid = {
   allegiance = Enemy;
   mana_cost = 70;
   effect = Kill 15;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 2.}
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.}
 }
 
 let init_reg_from_player_valid1 = {
   allegiance = Player;
   mana_cost = 0;
   effect = Regen_incr 1.25;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 let init_reg_from_enemy_valid1 = {
   allegiance = Enemy;
   mana_cost = 0;
   effect = Regen_incr 1.25;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 let init_reg_from_player_valid2 = {
   allegiance = Player;
   mana_cost = 0;
   effect = Regen_incr 0.8;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 let init_reg_from_enemy_valid2 = {
   allegiance = Enemy;
   mana_cost = 0;
   effect = Regen_incr 0.8;
-  regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
+  regen_timer = {curr_time = 0.; speed = 1.; limit = 0.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 (* A fake, ridiculously high time delta to produce test cases *)
@@ -546,7 +546,9 @@ let s1_1 = new_state_plus_delta init_state (Skill (init_kill_from_player_valid))
 
 let state_tests = [
   "trivial" >:: (fun _ -> assert_equal s0 (~<< init_state_copy));
-  "killneutral" >:: (fun _ -> assert_equal 0 s1_1.enemy_score);
+  "killneutral" >:: (fun _ -> assert_equal (Neutral : allegiance) s1_1.towers.(2).twr_team);
+  "kill0" >:: (fun _ -> assert_equal 0 s1_1.enemy_score);
+
 ]
 
 (* All test lists must be in [tests] *)
@@ -554,7 +556,6 @@ let tests = List.flatten [
     helper_tests;
     state_tests;
     state_immutability_tests;
-
   ]
 
 (*let alltests = "State test suite" >:: tests*)
