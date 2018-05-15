@@ -465,7 +465,7 @@ let get_enemy_spell sc =
     let command = ref Null in
     let _ = (
       match !lightning_spell_ref with
-      | SpellBox (spell_box_property, pos, size, lightning_skill) -> 
+      | SpellBox (spell_box_property, pos, size, lightning_skill) ->
         begin
           (* Check if can run lightning_spell *)
           if spell_box_property.spell_box_state = Neutral then (
@@ -475,7 +475,7 @@ let get_enemy_spell sc =
               let kill_n = (
                 match lightning_skill.effect with
                 | Kill n -> float_of_int n
-                | _ -> 0. 
+                | _ -> 0.
               ) in
               let kill_index = Array.fold_left
                   (fun acc e -> if (e.twr_troops +. 2. < kill_n) && e.twr_team = Player
@@ -488,7 +488,7 @@ let get_enemy_spell sc =
                 lightning_spell_ref := SpellBox ({spell_box_property with
                                                     spell_box_state = Regenerating
                                                   }, pos,size,lightning_skill);
-                
+
                 command := Skill ({lightning_skill with
                         tower_id = 2;
                         allegiance = Enemy})
@@ -501,7 +501,7 @@ let get_enemy_spell sc =
     !command
   )
   (*
-  
+
   let health_cost = freeze_skill.mana_cost in
   if mana > float_of_int kill_cost then
     let kill_n =
@@ -565,7 +565,7 @@ let game_loop context running =
       begin
         last_move_time := new_time;
         next_move_step := (base_step_length +. (Random.float 1.));
-      let cm = Ai.MCTS_AI.get_move (!current_scene.state) !State.difficulty_level in
+      let cm = Ai.get_move (!current_scene.state) !State.difficulty_level in
       current_scene :=
         {!current_scene with
          state = State.new_state_plus_delta

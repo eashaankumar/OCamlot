@@ -542,17 +542,19 @@ let state_immutability_tests : test list = [
 
 let s0 = ~<< init_state
 
+let s1_1 = new_state_plus_delta init_state (Skill (init_kill_from_player_valid)) delta
+
 let state_tests = [
   "trivial" >:: (fun _ -> assert_equal s0 (~<< init_state_copy));
-  "killneutral" >:: (fun _ -> assert_equal 0 (
-      new_state_plus_delta init_state (Skill (init_kill_from_player_valid)) delta).enemy_score)
+  "killneutral" >:: (fun _ -> assert_equal 0 s1_1.enemy_score);
 ]
 
 (* All test lists must be in [tests] *)
 let tests = List.flatten [
     helper_tests;
-    state_immutability_tests;
     state_tests;
+    state_immutability_tests;
+
   ]
 
 (*let alltests = "State test suite" >:: tests*)
