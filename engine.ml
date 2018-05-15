@@ -60,7 +60,7 @@ let health_skill = {
 }
 
 (* Spell Bar *)
-let spell_bar = [
+let spell_bar_player = [
   ("lightning_spell", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
@@ -95,6 +95,33 @@ let spell_bar = [
       {x=170.; y = Renderer.height -. 10.},
       {w=160.;h=70.};
     )
+  ));
+]
+
+let spell_bar_ai = [
+  ("lightning_spell_ai", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=0.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              lightning_skill)
+  ));
+  ("freeze_spell_ai", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=50.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              freeze_skill)
+  ));
+  ("health_spell_ai", ref (
+    SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
+            spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
+              {x=100.;y= Renderer.height -. 50.},
+              {w=50.;h=50.},
+              (* Skill *)
+              health_skill)
   ));
 ]
 (* Initialize scenes *)
@@ -169,7 +196,7 @@ let game_scene = {
   tasks = [];
   state = empty_state;
   interface = [("fps",ref Ui.fps_label);
-               ] @ spell_bar;
+               ] @ spell_bar_player @ spell_bar_ai;
   input = init_input;
   highlight_towers = [];
   next = None;

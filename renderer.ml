@@ -177,7 +177,7 @@ let draw_ui context interface =
         draw_sprite_sheet context sprite pos size;
         ()
       end
-    | SpellBox (prop, pos, size, _) -> begin
+    | SpellBox (prop, pos, size, skill) -> begin
         let (sprite_to_draw, draw_icon) = (
           match prop.spell_box_state with
             | Neutral -> prop.spell_box_sprite |> Sprite.set_animation_frame 0, true
@@ -196,6 +196,8 @@ let draw_ui context interface =
               draw_sprite_sheet context front_sprite (Physics.add_vector2d pos prop.spell_box_front_image_offset) size;
             end
         ) in
+        (* Draw mana cost text *)
+        draw_text context (string_of_int skill.mana_cost) {x = pos.x +. 10.; y = pos.y} {r=255;g=255;b=255;a=0.75} 15;
         ()
       end
     ) interface;
