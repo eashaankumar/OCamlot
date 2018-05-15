@@ -304,98 +304,10 @@ let current_scene = ref intro_scene
 (* Pref mouse state *)
 let prev_mouse_state = ref Moved
 
-(* TODO: Figure out how to get canvas from document *)
+(* canvas *)
 let canvas = ref ( Html.createCanvas document )
 
 (****** Helpers ******)
-let print_mouse_input () =
-
-  let scene = !current_scene in
-  let _ = (
-    match scene.input.mouse_state with
-    | Pressed ->
-      print_endline (("{x="^string_of_float !current_scene.input.mouse_pos.x)^";y="^(string_of_float !current_scene.input.mouse_pos.y)^"}")
-    | Released -> ()
-    | Moved -> ()
-  ) in
-  ()
-
-let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) =
-  let rect = (!canvas)##getBoundingClientRect () in
-  let x = event##clientX - int_of_float rect##left in
-  let y = event##clientY - int_of_float rect##top in
-  {x=float_of_int x;y= float_of_int y}
-
-let enforce_one_frame_mouse () =
-  (*print_endline (print_mouse_input ());*)
-  let scene = !current_scene in
-  let new_mouse_state = begin
-    match !prev_mouse_state with
-    | Pressed -> begin
-      match scene.input.mouse_state with
-      | Pressed -> Moved
-      | Moved -> Moved
-      | Released -> Released
-      end
-    | Moved -> begin
-        match scene.input.mouse_state with
-        | Pressed -> Pressed
-        | Moved -> Moved
-        | Released -> Released
-      end
-    | Released -> begin
-        match scene.input.mouse_state with
-        | Pressed -> Pressed
-        | Moved -> Moved
-        | Released -> Moved
-      end
-  end in
-  prev_mouse_state := scene.input.mouse_state;
-  {mouse_pos = scene.input.mouse_pos; mouse_state = new_mouse_state}
-
-(*********************)
-
-let get_html_element id =
-  Js.Opt.get (document##getElementById (js id)) (fun _ -> assert false)
-
-(*let key_pressed event =
-  let _ = match event##keyCode with
-  | key -> print_endline ((string_of_int key)^" pressed")
-  in Js._true
-
-let key_released event =
-  let _ = match event##keyCode with
-  | key -> print_endline ((string_of_int key)^" released")
-  in Js._true*)
-
-let mouse_pressed (event:Dom_html.mouseEvent Js.t) =
-  let pos = calculate_mouse_pos event in
-  let scene = !current_scene in
-  scene.input <- {mouse_pos = pos; mouse_state = Pressed;};
-  current_scene := scene;
-  Js._true
-
-let mouse_released event =
-  let pos = calculate_mouse_pos event in
-  let scene = !current_scene in
-  scene.input <- {mouse_pos = pos; mouse_state = Released;};
-  current_scene := scene;
-  Js._true
-
-let mouse_move event =
-  let pos = calculate_mouse_pos event in
-  let scene = !current_scene in
-  scene.input <- {mouse_pos = pos; mouse_state = Moved;};
-  current_scene := scene;
-  Js._true
-
-let get_scene_from_name name =
-  match name with
-  | "Intro" -> intro_scene
-  | "Game" -> game_scene
-  | "Game Over" -> game_over_scene
-  | "Select Difficulty" -> difficulty_selection_scene
-  | _ -> intro_scene
 (**
  * [schedule_transition scid] transitions [current_scene] to [next] scene.
  * returns: [unit]
@@ -411,18 +323,36 @@ let schedule_transition scid =
           print_endline("Switching to "^(nxt));
           let tasks = (
             if nxt = "Game" && Mapmaker.get_state_index () <> (-1) then (
-              [Victory(4.,Mapmaker.get_current_state_ending ());fade_out_alpha_0_5]
+              [Victory(4.,Mapmaker.get_current_state_ending ());
+              fade_out_alpha_0_5]
             )
             else (
               [fade_out]
             )
           ) in
-          current_scene := {!current_scene with tasks = tasks@[SwitchScene(nxt)]};
+          current_scene := 
+            {!current_scene with tasks = tasks@[SwitchScene(nxt)]};
           ()
         end
     end in
   ()
 
+(**
+ * [get_scene_from_name name] gets scene based on [name].
+ * returns: [scene]
+ *)
+let get_scene_from_name name =
+  match name with
+  | "Intro" -> intro_scene
+  | "Game" -> game_scene
+  | "Game Over" -> game_over_scene
+  | "Select Difficulty" -> difficulty_selection_scene
+  | _ -> intro_scene
+
+(**
+ * [scene_transition unit] changes the scene.
+ * retuns: [unit]
+ *)
 let scene_transition () =
   if List.length !current_scene.tasks > 0 then (
     match List.hd !current_scene.tasks with
@@ -453,6 +383,74 @@ let scene_transition () =
       end
     | _ -> ()
   )
+
+(**
+  * [calculate_mouse_pos event] calculates the mouse position. It accounts for
+  * the canvas offset based on browser screen size.
+  * returns: [vector2d] mouse position.
+  *)
+let calculate_mouse_pos (event:Dom_html.mouseEvent Js.t) =
+  let rect = (!canvas)##getBoundingClientRect () in
+  let x = event##clientX - int_of_float rect##left in
+  let y = event##clientY - int_of_float rect##top in
+  {x=float_of_int x;y= float_of_int y}
+
+(**
+ * [enforce_one_frame_mouse unit] makes sure that [input] only has a [Pressed]
+ * event for one frame when the mouse was pressed. Otherwise, its [Neutral]
+ * returns: [input]
+ *)
+let enforce_one_frame_mouse () =
+  let scene = !current_scene in
+  let new_mouse_state = begin
+    match !prev_mouse_state with
+    | Pressed -> begin
+      match scene.input.mouse_state with
+      | Pressed -> Moved
+      | Moved -> Moved
+      | Released -> Released
+      end
+    | Moved -> begin
+        match scene.input.mouse_state with
+        | Pressed -> Pressed
+        | Moved -> Moved
+        | Released -> Released
+      end
+    | Released -> begin
+        match scene.input.mouse_state with
+        | Pressed -> Pressed
+        | Moved -> Moved
+        | Released -> Moved
+      end
+  end in
+  prev_mouse_state := scene.input.mouse_state;
+  {mouse_pos = scene.input.mouse_pos; mouse_state = new_mouse_state}
+
+(*********************)
+
+let get_html_element id =
+  Js.Opt.get (document##getElementById (js id)) (fun _ -> assert false)
+
+let mouse_pressed (event:Dom_html.mouseEvent Js.t) =
+  let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
+  scene.input <- {mouse_pos = pos; mouse_state = Pressed;};
+  current_scene := scene;
+  Js._true
+
+let mouse_released event =
+  let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
+  scene.input <- {mouse_pos = pos; mouse_state = Released;};
+  current_scene := scene;
+  Js._true
+
+let mouse_move event =
+  let pos = calculate_mouse_pos event in
+  let scene = !current_scene in
+  scene.input <- {mouse_pos = pos; mouse_state = Moved;};
+  current_scene := scene;
+  Js._true
 
 (* Enemy spells *) 
 let next_spell = ref "null"
@@ -560,7 +558,7 @@ let cast_ai_lightning sc lightning_spell_ref command =
 let get_enemy_spell sc =
   let wait_time = (
     match !State.difficulty_level with
-    | Easy -> 20.
+    | Easy -> 15.
     | Medium -> 10.
     | Hard -> 1.
   ) in
@@ -648,7 +646,6 @@ let game_loop context running =
            !current_scene.state spell_cm 0.};
 
     !current_scene.input <- enforce_one_frame_mouse ();
-    print_mouse_input ();
     !current_scene.interface <- Ui.tick !current_scene.interface !current_scene.input;
     (* Only update if task is Update *)
     if (List.length !current_scene.tasks > 0) && List.hd !current_scene.tasks = Update then (

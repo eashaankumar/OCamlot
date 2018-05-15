@@ -1,7 +1,12 @@
 open Types
 
-(* intializes a new movement with no progress *)
-val new_movement : int -> int -> int -> sprite -> allegiance -> float -> float -> movement
+(**
+ * [new_movement ts_index te_index troops sprite side damage speed] 
+ * creates a new movement based on given parameters.
+ # returns: a new [movement]
+ *)
+val new_movement : 
+  int -> int -> int -> sprite -> allegiance -> float -> float -> movement
 
 val difficulty_level : difficulty ref
 

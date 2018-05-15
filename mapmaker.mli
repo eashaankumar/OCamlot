@@ -24,8 +24,20 @@ val all_states_completed : unit -> bool
  *)
 val reset_states_counter : unit -> unit
 
+(**
+ * [get_state_index unit] returns current map number
+ * retuns: [int] map number
+ *)
 val get_state_index : unit -> int
 
+(**
+ * [get_current_state_ending unit] returns victory screen on current map
+ * retuns: [interface] map ending
+ *)
 val get_current_state_ending : unit -> interface
 
+(**
+ * [get_current_map_index unit] returns index current map
+ * retuns: [int] map index of current
+ *)
 val get_current_map_index : unit -> int
