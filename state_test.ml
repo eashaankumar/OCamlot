@@ -162,7 +162,7 @@ let init_stun_from_player_valid = {
   regen_timer = {curr_time = 0.; speed = 1.; limit = 7.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 let init_stun_from_enemy_valid = {
@@ -172,7 +172,7 @@ let init_stun_from_enemy_valid = {
   regen_timer = {curr_time = 0.; speed = 1.; limit = 7.};
   tower_id = 0;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.};
 }
 
 let init_kill_from_player_valid = {
@@ -182,7 +182,7 @@ let init_kill_from_player_valid = {
   regen_timer = {curr_time = 0.; speed = 1.; limit = 5.};
   tower_id = 2;
   sprite = Sprite.sprite_freeze;
-  anim_timer = {curr_time = 0.; speed = 1.; limit = 2.}
+  anim_timer = {curr_time = 0.; speed = 1.; limit = 0.}
 }
 
 let init_kill_from_enemy_valid = {
@@ -235,7 +235,7 @@ let init_reg_from_enemy_valid2 = {
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
-(* A fake time delta to produce test cases *)
+(* A fake, ridiculously high time delta to produce test cases *)
 let delta = 0.1
 
 (* tower without [twr_sprite], [selector_offset], or [count_label_offset] *)
@@ -244,6 +244,7 @@ type tower_core = {
   twr_pos : vector2d;
   twr_size : bounds;
   twr_troop_info : troop;
+  twr_troops : float;
   twr_troops_max : float;
   mutable twr_troops_regen_speed : float;
   twr_team : allegiance;
@@ -296,6 +297,7 @@ let tower_to_core (towers : tower array) : tower_core array =
         twr_pos = t.twr_pos;
         twr_size = t.twr_size;
         twr_troop_info = t.twr_troop_info;
+        twr_troops = t.twr_troops;
         twr_troops_max = t.twr_troops_max;
         twr_troops_regen_speed = t.twr_troops_regen_speed;
         twr_team = t.twr_team;
@@ -334,7 +336,7 @@ let movements_to_core (movements : movement list) : movement_core list =
     ) movements
 
 (* Converts a [state] to a [state_core] *)
-let to_core (st : state) : state_core =
+let state_to_core (st : state) : state_core =
   let towers_core = tower_to_core st.towers in
   let player_skill_core = skill_to_core st.player_skill in
   let enemy_skill_core = skill_to_core st.enemy_skill in
@@ -351,10 +353,89 @@ let to_core (st : state) : state_core =
     enemy_mana = st.enemy_mana;
   }
 
+(* Creates a [tower] array out of a [tower_core] array by using dummy values
+   for fields of [tower] not in [tower_core].
+*)
+let core_to_towers (towers : tower_core array) : tower array =
+  Array.map (fun tc ->
+      {
+        twr_id = tc.twr_id;
+        twr_pos = tc.twr_pos;
+        twr_size = tc.twr_size;
+        twr_sprite = Sprite.tower_type1; (* Dummy sprite *)
+        twr_troop_info = tc.twr_troop_info;
+        twr_troops = tc.twr_troops;
+        twr_troops_max = tc.twr_troops_max;
+        twr_troops_regen_speed = tc.twr_troops_regen_speed;
+        twr_team = tc.twr_team;
+        selector_offset = {x=0.;y=50.}; (* Dummy offset *)
+        count_label_offset = {x = 10.; y = 5.}; (* Dummy offset *)
+        is_disabled = tc.is_disabled;
+      }
+    ) towers
+
+(* Creates a [skill] option out of a [skill_core] option by using dummy values
+   for fields of [skill] not in [skill_core].
+*)
+let core_to_skill (skill_core : skill_core option) : skill option =
+  match skill_core with
+  | None -> None
+  | Some skc -> Some (
+    {
+      allegiance = skc.allegiance;
+      mana_cost = skc.mana_cost;
+      effect = skc.effect;
+      regen_timer = skc.regen_timer;
+      tower_id = skc.tower_id;
+      sprite = Sprite.sprite_freeze; (* Dummy sprite *)
+      anim_timer = skc.anim_timer;
+    }
+  )
+
+(* Creates a [movement] list out of a [movement_core] list by using
+   dummy values for fields of [movement] not in [movement_core].
+*)
+let core_to_movements (mvmts_core : movement_core list) : movement list =
+  List.map (fun mc ->
+      {
+        start_tower = mc.start_tower;
+        end_tower = mc.end_tower;
+        mvmt_troops = mc.mvmt_troops;
+        mvmt_sprite = Sprite.blue_troop1_right;
+        mvmt_team = mc.mvmt_team;
+        progress = mc.progress;
+        damage = mc.damage;
+        speed = mc.speed;
+      }
+    ) mvmts_core
+
+(* Creates a [state] out of a [state_core] by using dummy values for
+   everything that a [state] contains that a [state_core] does not contain.
+*)
+let core_to_state (stc : state_core) : state =
+  let player_skill = core_to_skill stc.player_skill in
+  let enemy_skill = core_to_skill stc.enemy_skill in
+  let movements = core_to_movements stc.movements in
+  let towers = core_to_towers stc.towers in
+  {
+    towers = towers;
+    num_towers = stc.num_towers;
+    player_score = stc.player_score;
+    enemy_score = stc.enemy_score;
+    movements = movements;
+    player_skill = player_skill;
+    enemy_skill = enemy_skill;
+    player_mana = stc.player_mana;
+    enemy_mana = stc.enemy_mana;
+  }
+
+let (~>>) = core_to_state
+
+let (~<<) = state_to_core
 
 let helper_tests = [
   "new_mvmt" >:: (fun _ -> assert_equal init_movement02
-                     (new_movement 1 2 5 Sprite.blue_troop1_right Player 1. 50.));
+                     (new_movement 0 2 5 Sprite.blue_troop1_right Player 1. 100.));
 ]
 
 let state_immutability_tests : test list = [
@@ -459,8 +540,12 @@ let state_immutability_tests : test list = [
                          init_state_copy));
 ]
 
+let s0 = ~<< init_state
+
 let state_tests = [
-  
+  "trivial" >:: (fun _ -> assert_equal s0 (~<< init_state_copy));
+  "killneutral" >:: (fun _ -> assert_equal 0 (
+      new_state_plus_delta init_state (Skill (init_kill_from_player_valid)) delta).enemy_score)
 ]
 
 (* All test lists must be in [tests] *)
