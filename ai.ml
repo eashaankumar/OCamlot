@@ -2,125 +2,13 @@ open Types
 open State
 
 
-(* module MiniMax_AI : AI = struct
-
-  let delta = 0.1
-  let max_depth = 3
-
-  let heuristic st side =
-    0.0
-      (*Make a good enemy state positive*)
-
-(**
- * Returns: [swap_allegiance] is the opposite allegiance of
- *          [side]. In the case of Neutral, Neutral is returned.
- * Parameters: [side] is of type allegiance
- *)
-  let swap_allegiance side =
-    match side with
-    | Player -> Enemy
-    | Enemy -> Player
-    | Neutral -> Neutral
-
-  (**
-   * Returns: [minimax_value] runs the minimax algorithm starting
-   *          at [st] with the other standard minimax parameters.
-   * Parameters: [st] is the beginning state for the algorithm
-   *              [depth] is the number of moves deep to search
-   *              [minV]/[maxV] are float values for alpha-beta pruning
-   *              [side] is an allegiance that determines whether this
-   *                    is a max or a min state
-   *              [original_side] is the side that is to be maximized
-   *)
-  let rec minimax_value st depth minV maxV side original_side=
-    if (State.gameover st) || depth = 0 then
-  		heuristic st side
-  	else
-  	if (side = original_side) (*If it's a max state*) then
-      let value = minV in
-      let moves = State.possible_commands st side in
-
-  		let rec loop m loop_max v =
-  			let this_move = Array.get moves m in
-  			let new_st = State.new_state_plus_delta st this_move delta in
-        let v_prime =
-          minimax_value new_st (depth-1) v maxV (swap_allegiance side) original_side in
-  			if v_prime > v then
-          let v = v_prime in
-          if v>maxV then
-            maxV
-          else
-          if (m+1) < loop_max then
-    				loop (m+1) loop_max v
-    			else
-    				v
-
-        else
-    			if v>maxV then
-            maxV
-          else
-          if (m+1) < loop_max then
-    				loop (m+1) loop_max v
-    			else
-  				  v in
-
-  		loop 0 (Array.length moves) value
-
-  	else (*If it's a min state*)
-  		let value = maxV in
-      let moves = State.possible_commands st side in
-  		let rec loop m loop_max v=
-  			let this_move = Array.get moves m in
-  			let new_st = State.new_state_plus_delta st this_move delta in
-        let v_prime =
-          minimax_value new_st (depth-1) minV v (swap_allegiance side) original_side in
-        if v_prime < v then
-          let v = v_prime in
-          if v<minV then
-            minV
-          else
-          if (m+1) < loop_max then
-    				loop (m+1) loop_max v
-    			else
-    				v
-
-        else
-    			if v<minV then
-            minV
-          else
-          if (m+1) < loop_max then
-    				loop (m+1) loop_max v
-    			else
-  				  v in
-
-  		loop 0 (Array.length moves) value
-
-
-  let get_move st difficulty =
-    let best_move = ref Null in
-    let best_score = ref (0.0 -. max_float) in
-    let moves = State.possible_commands st Enemy in
-    let num_moves = Array.length moves in
-    for move=0 to (num_moves-1) do
-      let this_move = (Array.get moves move) in
-      let st2 = State.new_state_plus_delta st this_move delta in
-      let move_score = minimax_value st2 max_depth (0.0 -. max_float) max_float Player Enemy in
-      if move_score > !best_score then
-        best_score := move_score;
-        best_move := this_move;
-    done;
-    !best_move
-
-
-   end *)
-
   (*Time-step*)
   let delta = 2.2
   (*Constant in front of the MTCS value function*)
   let c = sqrt 2.0
   (*Number of times to run the algorithm*)
-  let easy_iterations = 100
-  let medium_iterations = 150
+  let easy_iterations = 50
+  let medium_iterations = 125
   let hard_iterations = 200
 
   let max_random_iters = ref 100
