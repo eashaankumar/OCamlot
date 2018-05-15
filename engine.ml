@@ -42,7 +42,7 @@ let lightning_skill = {
 let freeze_skill = {
   allegiance = Neutral;
   mana_cost = 100;
-  effect = Stun 7.;
+  effect = Stun 10.;
   regen_timer = {curr_time = 0.; speed = 1.; limit = 20.};
   tower_id = -1;
   sprite = Sprite.sprite_freeze;
@@ -555,9 +555,9 @@ let game_loop context running =
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match !State.difficulty_level with
-    | Easy -> 3.6
-    | Medium -> 1.9
-    | Hard -> 0.7 in
+    | Easy -> 5.
+    | Medium -> 2.5
+    | Hard -> 1. in
   let next_move_step = ref (base_step_length +. (Random.float 0.4)) in
 
   let rec helper () =

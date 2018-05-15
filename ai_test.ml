@@ -210,15 +210,17 @@ let tree1_children = Array.map (fun cm -> ref (Leaf (cm,1.)))
 let tree1_helper =
   (Node (root_state0, Null, 0.53135, 10000., tree0_children, ref (tree0_0), true))
 
+let tree1_0_children =
+    [|
+      ref (Node (root_state0, Null, 0.203, 1000., tree0_children, ref (tree1_helper), true));
+      ref (Node (root_state0, Null, 0.672, 1500., tree0_children, ref (tree1_helper), true));
+      ref (Node (root_state0, Null, 0.358, 2000., tree0_children, ref (tree1_helper), true));
+      ref (Node (root_state0, Null, 0.511, 2500., tree0_children, ref (tree1_helper), true));
+      ref (Node (root_state0, Null, 0.703, 3000., tree0_children, ref (tree1_helper), true));
+    |]
+
 let tree1_0 =  Node (root_state0, Null, 0.53135, 10000.,
- [|
-   ref (Node (root_state0, Null, 0.203, 1000., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.672, 1500., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.358, 2000., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.511, 2500., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.703, 3000., tree0_children, ref (tree1_helper), true));
- |]
-, ref (Leaf(Null,1.)), true)
+ tree1_0_children, ref (Leaf(Null,1.)), true)
 
 let tree1_1 =  Node (root_state0, Null, 0.44615, 10000.,
  [|
@@ -317,17 +319,6 @@ let tests = [
   (fun _ -> ( Ai.get_extreme_child (ref tree1_1) false) =
             (ref (Node (root_state0, Null, 0.112, 1500.,
                         tree0_children, ref (tree1_helper), true)))) ;
-
-  (***************************************************)
-
-  "new_node_0" >::
-  (fun _ -> Ai.new_node (ref (Leaf (Null,1.))) Null = ref (Leaf (Null,1.))) ;
-
-
-  (* "new_node_1" >::
-  (fun _ -> Ai.new_node (ref tree0) (Move (Enemy,1,0)) =
-            ref (Node (State.new_state_plus_delta root_state0 (Move (Enemy,1,0))
-                         Ai.delta, Move(Enemy,1,0), 0., 0., tree0_children, ref (tree0), false))) ; *)
 
   (***************************************************)
 
