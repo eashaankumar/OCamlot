@@ -454,54 +454,126 @@ let scene_transition () =
     | _ -> ()
   )
 
+(* Enemy spells *) 
+let cast_ai_health sc health_spell_ref command = 
+  let mana = sc.state.enemy_mana in
+  match !health_spell_ref with
+  | SpellBox (spell_box_property, pos, size, lightning_skill) ->
+    begin
+      (* Check if can run lightning_spell *)
+      if spell_box_property.spell_box_state = Neutral then (
+        let cost = health_skill.mana_cost in
+        if mana > float_of_int cost then (
+          let health_index = Array.fold_left (fun min_id t -> 
+            if min_id = -1 && t.twr_team = Enemy then 
+              t.twr_id
+            else if t.twr_team = Enemy && t.twr_troops < sc.state.towers.(min_id).twr_troops then 
+              t.twr_id else min_id 
+          ) (-1) sc.state.towers in
+          if health_index <> -1 then (
+            (* set skill to regenerate *)
+            print_endline("Ai casting Lightning spell!!");
+            health_spell_ref := SpellBox ({spell_box_property with
+                                                spell_box_state = Regenerating
+                                              }, pos,size,health_skill);
+            command := Skill ({health_skill with
+                    tower_id = health_index;
+                    allegiance = Enemy})
+          )
+        )
+      )
+      end
+    | _ -> ()
+
+let cast_ai_freeze sc freeze_spell_ref command = 
+  let mana = sc.state.enemy_mana in
+  match !freeze_spell_ref with
+  | SpellBox (spell_box_property, pos, size, lightning_skill) ->
+    begin
+      (* Check if can run lightning_spell *)
+      if spell_box_property.spell_box_state = Neutral then (
+        let cost = lightning_skill.mana_cost in
+        if mana > float_of_int cost then (
+          let freeze_index = Array.fold_left (fun max_id t -> 
+            if t.twr_team = Player && t.twr_troops > sc.state.towers.(max_id).twr_troops then t.twr_id else max_id 
+          ) 0 sc.state.towers in
+          if freeze_index <> -1 then (
+            (* set skill to regenerate *)
+            print_endline("Ai casting Lightning spell!!");
+            freeze_spell_ref := SpellBox ({spell_box_property with
+                                                spell_box_state = Regenerating
+                                              }, pos,size,freeze_skill);
+
+            command := Skill ({freeze_skill with
+                    tower_id = freeze_index;
+                    allegiance = Enemy})
+          )
+        )
+      )
+      end
+    | _ -> ()
+let cast_ai_lightning sc lightning_spell_ref command = 
+  let mana = sc.state.enemy_mana in
+  match !lightning_spell_ref with
+  | SpellBox (spell_box_property, pos, size, lightning_skill) ->
+    begin
+      (* Check if can run lightning_spell *)
+      if spell_box_property.spell_box_state = Neutral then (
+        let kill_cost = lightning_skill.mana_cost in
+        if mana > float_of_int kill_cost then (
+          (* get kill amount *)
+          let kill_n = (
+            match lightning_skill.effect with
+            | Kill n -> float_of_int n
+            | _ -> 0.
+          ) in
+          let kill_index = Array.fold_left
+              (fun acc e -> if (e.twr_troops +. 4. < kill_n) && e.twr_team = Player
+                then e.twr_id else acc)
+              (-1)
+              sc.state.towers in
+          if kill_index <> -1 then (
+            (* set skill to regenerate *)
+            print_endline("Ai casting Lightning spell!!");
+            lightning_spell_ref := SpellBox ({spell_box_property with
+                                                spell_box_state = Regenerating
+                                              }, pos,size,lightning_skill);
+
+            command := Skill ({lightning_skill with
+                    tower_id = kill_index;
+                    allegiance = Enemy})
+          )
+        )
+      )
+      end
+    | _ -> ()
 let get_enemy_spell sc =
-  if sc.name <> "Game" then Null
+  let probability = (
+    match !State.difficulty_level with
+    | Easy -> 0.5
+    | Medium -> 0.8
+    | Hard -> 1.
+  ) in
+  if sc.name <> "Game" || (Random.float 1. > probability) then Null
   else (
-    let mana = sc.state.enemy_mana in
     let lightning_spell_ref = List.assoc "lightning_spell_ai" sc.interface in
     let freeze_spell_ref = List.assoc "freeze_spell_ai" sc.interface in
     let health_spell_ref = List.assoc "health_spell_ai" sc.interface in
 
     let command = ref Null in
-    let _ = (
-      match !lightning_spell_ref with
-      | SpellBox (spell_box_property, pos, size, lightning_skill) ->
-        begin
-          (* Check if can run lightning_spell *)
-          if spell_box_property.spell_box_state = Neutral then (
-            print_endline("Its neutral.");
-            let kill_cost = lightning_skill.mana_cost in
-            if mana > float_of_int kill_cost then (
-              (* get kill amount *)
-              let kill_n = (
-                match lightning_skill.effect with
-                | Kill n -> float_of_int n
-                | _ -> 0.
-              ) in
-              let kill_index = Array.fold_left
-                  (fun acc e -> if (e.twr_troops +. 4. < kill_n) && e.twr_team = Player
-                    then e.twr_id else acc)
-                  (-1)
-                  sc.state.towers in
-              if kill_index <> -1 then (
-                (* set skill to regenerate *)
-                print_endline("Ai casting Lightning spell!!");
-                lightning_spell_ref := SpellBox ({spell_box_property with
-                                                    spell_box_state = Regenerating
-                                                  }, pos,size,lightning_skill);
 
-                command := Skill ({lightning_skill with
-                        tower_id = kill_index;
-                        allegiance = Enemy})
-              )
-            )
-          )
-
-        end
-      | _ -> ()
-    ) in
     let _ = (
-      
+      (*let spell_type = Random.float 1. in
+      if spell_type < 0.333 then (
+        cast_ai_lightning sc lightning_spell_ref command;
+      )
+      else if spell_type < 0.666 then (
+        cast_ai_freeze sc freeze_spell_ref command;
+      )
+      else (
+        ();
+      )*)
+      cast_ai_health sc health_spell_ref command;
     ) in
     !command
   )

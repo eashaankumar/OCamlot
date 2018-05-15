@@ -195,7 +195,7 @@ let sprite_freeze = init_sprite "images/ocamlot_sprites.png" 0.18
 let sprite_freeze_icon = init_sprite "images/ocamlot_sprites.png" 0.05
                   |> add_animation_frame (576.07, 575.74) (71.96, 71.63)
 
-let sprite_heart = init_sprite "images/freeze_spell.png" 0.05
+let sprite_heart = init_sprite "images/ocamlot_sprites.png" 0.05
                   |> add_animation_frame (648.03, 575.74) (71.96, 71.63)
 
 let sprite_heart_icon = init_sprite "images/ocamlot_sprites.png" 0.05
