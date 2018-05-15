@@ -48,6 +48,19 @@ let tower_base_enemy = {
   is_disabled = false
 }
 
+let root_state0 =
+  {
+    towers = [| tower_base_player; tower_base_enemy |] ;
+    num_towers = 8 ;
+    player_score = 4 ;
+    enemy_score = 3 ;
+    movements = [] ;
+    player_skill = None ;
+    enemy_skill = None ;
+    player_mana = 100. ;
+    enemy_mana = 150. ;
+  }
+
 let root_state1 =
 {
   towers = [| tower_base_player; tower_base_enemy;
