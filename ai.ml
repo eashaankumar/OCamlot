@@ -225,11 +225,11 @@ open State
    [is_max] - whether node is a max node
  *)
   let get_extreme_child node is_max =
-    let func = if is_max then (>) else (<) in
-    let children,is_max =
+    let func = (>) in (*if is_max then (>) else (>) in*)
+    let children =
       match !node with
-      | Node(_,_,_,_,chldrn,_,is_max_bool) -> chldrn,is_max_bool
-      | Leaf _ -> [||],true in
+      | Node(_,_,_,_,chldrn,_,is_max_bool) -> chldrn
+      | Leaf _ -> [||] in
     Array.fold_left
       (fun acc child -> if (func (get_value !child is_max) (get_value !acc is_max)) then child else acc)
       (Array.get children 0) children

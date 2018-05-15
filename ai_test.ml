@@ -187,7 +187,7 @@ let root_state2 =
     enemy_mana = 150. ;
   }
 
-let tree0_children = Array.map (fun cm -> ref (Leaf (cm,100.)))
+let tree0_children = Array.map (fun cm -> ref (Leaf (cm,10000.)))
     (State.possible_commands root_state0 Enemy)
 let tree0_0 =
   Node (root_state0, Null, 0., 1., tree0_children, ref (Leaf(Null,1.)), true)
@@ -205,7 +205,7 @@ let tree0_2_helper =
   Node (root_state0, Null, 0.672, 1000., tree0_children, ref (tree0_2), true)
 
 
-let tree1_children = Array.map (fun cm -> ref (Leaf (cm,1.)))
+let tree1_children = Array.map (fun cm -> ref (Leaf (cm,10000.)))
     (State.possible_commands root_state1 Enemy)
 let tree1_helper =
   (Node (root_state0, Null, 0.53135, 10000., tree0_children, ref (tree0_0), true))
@@ -218,27 +218,40 @@ let tree1_0_children =
       ref (Node (root_state0, Null, 0.511, 2500., tree0_children, ref (tree1_helper), true));
       ref (Node (root_state0, Null, 0.703, 3000., tree0_children, ref (tree1_helper), true));
     |]
-
 let tree1_0 =  Node (root_state0, Null, 0.53135, 10000.,
  tree1_0_children, ref (Leaf(Null,1.)), true)
 
+let tree1_1_children =
+  [|
+    ref (Node (root_state0, Null, 0.503, 1000., tree0_children, ref (tree1_helper), true));
+    ref (Node (root_state0, Null, 0.112, 1500., tree0_children, ref (tree1_helper), true));
+    ref (Node (root_state0, Null, 0.702, 2000., tree0_children, ref (tree1_helper), true));
+    ref (Node (root_state0, Null, 0.111, 2500., tree0_children, ref (tree1_helper), true));
+    ref (Node (root_state0, Null, 0.702, 3000., tree0_children, ref (tree1_helper), true));
+  |]
 let tree1_1 =  Node (root_state0, Null, 0.44615, 10000.,
- [|
-   ref (Node (root_state0, Null, 0.503, 1000., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.112, 1500., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.702, 2000., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.111, 2500., tree0_children, ref (tree1_helper), true));
-   ref (Node (root_state0, Null, 0.703, 3000., tree0_children, ref (tree1_helper), true));
- |]
-, ref (Leaf(Null,1.)), true)
+ tree1_1_children, ref (Leaf(Null,1.)), true)
 
-let tree2_children = Array.map (fun cm -> ref (Leaf (cm,1.)))
+
+let tree2_children = Array.map (fun cm -> ref (Leaf (cm,10000.)))
     (State.possible_commands root_state2 Enemy)
 let tree0 =  Node (root_state0, Null, 0., 0., tree0_children, ref (Leaf(Null,1.)), true)
 let tree1 =  Node (root_state1, Null, 0., 0., tree1_children, ref (Leaf(Null,1.)), true)
 let tree2 =  Node (root_state2, Null, 0., 0., tree2_children, ref (Leaf(Null,1.)), true)
 
-
+let assert_tree_equal t1 t2 =
+  match t1, t2 with
+  | Node (st1,cm1,v1,n1,chldrn1,parent1,max1),
+    Node (st2,cm2,v2,n2,chldrn2,parent2,max2) ->
+    (st1 = st2 &&
+     cm1 = cm2 &&
+     (* v1 -. v2 < 0.000001 && *)
+     n1 = n2 &&
+     chldrn1 = chldrn2 &&
+     parent1 = parent2 &&
+     max1 = max2)
+  | Leaf (cm1,_), Leaf (cm2,_) -> cm1 = cm2
+  | _ -> false
 
 let tests = [
   "random_moves_0" >::
@@ -304,34 +317,44 @@ let tests = [
   (**************************************************)
 
   "get_extreme_child_0" >::
-  (fun _ -> ( Ai.get_extreme_child (ref tree1_0) true) =
-            (ref (Node (root_state0, Null, 0.703, 3000.,
+  (fun _ -> (assert_tree_equal !(Ai.get_extreme_child (ref tree1_0) true))
+            ((Node (root_state0, Null, 0.703, 3000.,
                         tree0_children, ref (tree1_helper), true)))) ;
   "get_extreme_child_1" >::
-  (fun _ -> ( Ai.get_extreme_child (ref tree1_0) false) =
-            (ref (Node (root_state0, Null, 0.203, 1000.,
+  (fun _ -> (assert_tree_equal !(Ai.get_extreme_child (ref tree1_0) false))
+            ((Node (root_state0, Null, 0.203, 1000.,
                         tree0_children, ref (tree1_helper), true)))) ;
   "get_extreme_child_2" >::
-  (fun _ -> ( Ai.get_extreme_child (ref tree1_1) true) =
-            (ref (Node (root_state0, Null, 0.702, 2000.,
+  (fun _ -> (assert_tree_equal !(Ai.get_extreme_child (ref tree1_1) true))
+            ((Node (root_state0, Null, 0.702, 2000.,
                         tree0_children, ref (tree1_helper), true)))) ;
   "get_extreme_child_3" >::
-  (fun _ -> ( Ai.get_extreme_child (ref tree1_1) false) =
-            (ref (Node (root_state0, Null, 0.112, 1500.,
+  (fun _ -> (assert_tree_equal !(Ai.get_extreme_child (ref tree1_1) false))
+            ((Node (root_state0, Null, 0.112, 1500.,
                         tree0_children, ref (tree1_helper), true)))) ;
 
   (***************************************************)
 
   "update_tree_0" >::
-  (fun _ -> (true)) ;
+  (fun _ -> (Ai.update_tree tree1_0_children.(0) 1.);
+    assert_tree_equal
+      (Node (root_state0, Null, 0.5313968603139686, 10001.,
+             tree1_0_children, ref (Leaf(Null,1.)), true))
+      tree1_0) ;
+  "update_tree_1" >::
+  (fun _ ->
+    assert_tree_equal
+      (Node (root_state0, Null, 0.2037962037962038, 1001.,
+             tree0_children, ref (tree1_helper), true))
+      !(tree1_0_children.(0))) ;
 
   (***************************************************)
 
   "beginning_node_0" >::
-  (fun _ -> !(Ai.beginning_node root_state0) = tree0) ;
+  (fun _ -> assert_tree_equal !(Ai.beginning_node root_state0) tree0) ;
   "beginning_node_1" >::
-  (fun _ -> !(Ai.beginning_node root_state1) = tree1) ;
+  (fun _ -> assert_tree_equal !(Ai.beginning_node root_state1) tree1) ;
   "beginning_node_2" >::
-  (fun _ -> !(Ai.beginning_node root_state2) = tree2) ;
+  (fun _ -> assert_tree_equal !(Ai.beginning_node root_state2) tree2) ;
 
 ]
