@@ -731,6 +731,8 @@ let update_spell_boxes scene input : command =
     match !uref with
     | SpellBox (prop, pos, size, skill) ->
       begin
+          print_endline("Updating spell box: "^id);
+
         let _ =
           begin
             if prop.spell_box_state = Regenerating then (
