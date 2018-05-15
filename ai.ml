@@ -1,37 +1,6 @@
 open Types
 open State
 
-module type AI = sig
-
-  type tree =
-    | Leaf of command * float
-    | Node of Types.state * command * float * float * ((tree ref) array) *
-              tree ref * bool
-
-  val get_random_command : Types.state -> Types.allegiance -> Types.command
-
-  val random_playout : Types.state -> bool -> float
-
-  val get_value : tree -> bool -> float
-
-  val get_extreme_child : tree ref -> bool -> tree ref
-
-  val update_node : tree ref -> float -> unit
-
-  val update_tree : tree ref -> float -> unit
-
-  val new_node : tree ref -> Types.command -> tree ref
-
-  val beginning_node : Types.state -> tree ref
-
-  val create_tree : Types.state -> int -> tree ref
-
-  val get_highest_percentage : tree ref -> tree ref
-
-  val get_move : Types.state -> Types.difficulty -> Types.command
-
-end
-
 
 (* module MiniMax_AI : AI = struct
 
@@ -143,9 +112,8 @@ end
     !best_move
 
 
-end *)
+   end *)
 
-module MCTS_AI : AI = struct
   (*Time-step*)
   let delta = 2.2
   (*Constant in front of the MTCS value function*)
@@ -421,6 +389,3 @@ module MCTS_AI : AI = struct
     match !child with
     | Node(_,cm,_,_,_,_,_) -> cm
     | Leaf(cm,_) -> cm
-
-
-end
