@@ -55,7 +55,7 @@ let health_skill = {
   effect = Regen_incr (3.);
   regen_timer = {curr_time = 0.; speed = 1.; limit = 40.};
   tower_id = -1;
-  sprite = Sprite.sprite_freeze;
+  sprite = Sprite.sprite_heart;
   anim_timer = {curr_time = 0.; speed = 1.; limit = 1.};
 }
 
@@ -88,9 +88,9 @@ let spell_bar_player = [
   ("player_mana_label", ref (
     Label (
       {
-        text = "mana: ";
+        text = "player mana: -";
         color = {r=255;g=255;b=255;a=1.};
-        font_size = 20;
+        font_size = 15;
       },
       {x=170.; y = Renderer.height -. 10.},
       {w=160.;h=70.};
@@ -102,7 +102,7 @@ let spell_bar_ai = [
   ("lightning_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=0.;y= 0.},
+              {x=0.;y= -100.},
               {w=50.;h=50.},
               (* Skill *)
               lightning_skill)
@@ -110,7 +110,7 @@ let spell_bar_ai = [
   ("freeze_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=50.;y= 0.},
+              {x=50.;y= -100.},
               {w=50.;h=50.},
               (* Skill *)
               freeze_skill)
@@ -118,7 +118,7 @@ let spell_bar_ai = [
   ("health_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=100.;y= 0.},
+              {x=100.;y= -100.},
               {w=50.;h=50.},
               (* Skill *)
               health_skill)
@@ -126,11 +126,11 @@ let spell_bar_ai = [
   ("enemy_mana_label", ref (
     Label (
       {
-        text = "mana: ";
+        text = "enemy mana: -";
         color = {r=255;g=255;b=255;a=1.};
-        font_size = 20;
+        font_size = 15;
       },
-      {x=170.; y = 30.},
+      {x=170.; y = Renderer.height -. 30.},
       {w=160.;h=70.};
     )
   ));
@@ -479,11 +479,11 @@ let get_enemy_spell sc =
                 | _ -> 0.
               ) in
               let kill_index = Array.fold_left
-                  (fun acc e -> if (e.twr_troops +. 2. < kill_n) && e.twr_team = Player
+                  (fun acc e -> if (e.twr_troops +. 4. < kill_n) && e.twr_team = Player
                     then e.twr_id else acc)
                   (-1)
                   sc.state.towers in
-              if kill_index <> -1 then
+              if kill_index <> -1 then (
                 (* set skill to regenerate *)
                 print_endline("Ai casting Lightning spell!!");
                 lightning_spell_ref := SpellBox ({spell_box_property with
@@ -491,13 +491,17 @@ let get_enemy_spell sc =
                                                   }, pos,size,lightning_skill);
 
                 command := Skill ({lightning_skill with
-                        tower_id = 2;
+                        tower_id = kill_index;
                         allegiance = Enemy})
+              )
             )
           )
 
         end
       | _ -> ()
+    ) in
+    let _ = (
+      
     ) in
     !command
   )
@@ -538,20 +542,6 @@ let get_enemy_spell sc =
 let game_loop context running =
   print_endline ("State tests suite: "^OCamlotUnit2.run_tests State_test.tests);
   print_endline ("Ai tests suite: "^OCamlotUnit2.run_tests Ai_test.tests);
-  (*let start = Sys.time () in
-  let cm = Ai.MCTS_AI.get_move (!current_scene.state) in
-  let finish = Sys.time () in
-  print_endline (string_of_float (finish -. start));
-  let (b,c) =
-    match cm with
-    | Move (x,y,z) -> (y,z)
-    | _ -> (-1,-1) in
-  print_endline ("Start: "^(string_of_int b));
-  current_scene :=
-    {!current_scene with
-     state = State.new_state_plus_delta
-         !current_scene.state cm !Renderer.delta};
-  *)
   let last_move_time = ref (Sys.time ()) in
   let base_step_length =
     match !State.difficulty_level with

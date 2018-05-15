@@ -868,7 +868,7 @@ let update sc input =
     begin
       match Ui.find_ui_ref sc.interface "player_mana_label" with
       | Some(ref_mana_label) ->
-        (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.player_mana);
+        (Ui.get_label_prop !ref_mana_label).text <- "player mana: "^string_of_int (int_of_float sc.state.player_mana);
       | None -> ()
     end
   in
@@ -876,7 +876,7 @@ let update sc input =
     begin
       match Ui.find_ui_ref sc.interface "enemy_mana_label" with
       | Some(ref_mana_label) ->
-        (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.enemy_mana);
+        (Ui.get_label_prop !ref_mana_label).text <- "enemy mana: "^string_of_int (int_of_float sc.state.enemy_mana);
       | None -> ()
     end
   in

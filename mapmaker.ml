@@ -354,30 +354,13 @@ let map7 =
       base_tower 1 Enemy {x=1019.;y=511.};
       tower_mini 2 Neutral {x=73.;y=405.};
       tower_mini 3 Neutral {x=241.;y=227.};
-      tower_mini 4 Neutral {x=527.;y=126.};
-      tower_mini 5 Neutral {x=703.;y=124.};
-      tower_mini 6 Neutral {x=855.;y=174.};
-      tower_mini 6 Neutral {x=967.;y=281.};
-      tower_mini 6 Neutral {x=983.;y=417.};
       tower_mini 6 Neutral {x=912.;y=562.};
       tower_mini 0 Neutral {x=690.;y=628.};
-      tower_mini 0 Neutral {x=387.;y=588.};
-      tower_medium 0 Player {x=165.;y=400.};
-      tower_medium 0 Player {x=346.;y=205.};
-      tower_medium 0 Player {x=374.;y=329.};
-      tower_medium 0 Enemy {x=839.;y=605.};
-      tower_medium 0 Enemy {x=945.;y=501.};
-      tower_medium 0 Enemy {x=780.;y=491.};
-      tower_cavalry 0 Neutral {x=123.;y=296.};
+      tower_medium 0 Player {x=Renderer.width/.2. -.30.;y=Renderer.height/.2. -. 20.};
       tower_cavalry 0 Neutral {x=283.;y=141.};
       tower_cavalry 0 Neutral {x=634.;y=549.};
       tower_cavalry 0 Neutral {x=890.;y=396.};
       tower_cavalry 0 Neutral {x=408.;y=72.};
-      tower_cavalry 0 Neutral {x=813.;y=66.};
-      tower_cavalry 0 Neutral {x=779.;y=272.};
-      tower_cavalry 0 Neutral {x=523.;y=289.};
-      tower_cavalry 0 Neutral {x=168.;y=594.};
-      tower_cavalry 0 Neutral {x=452.;y=488.};
 
     |] ;
     num_towers = 8 ;
@@ -427,35 +410,15 @@ let map8 =
       base_tower 1 Player {x=1000.;y=374.};
       tower_mini 2 Neutral {x=103.;y=157.};
       tower_cavalry 3 Neutral {x=149.;y=115.};
-      tower_mini 4 Neutral {x=151.;y=482.};
-      tower_mini 5 Neutral {x=212.;y=404.};
-      tower_mini 6 Neutral {x=264.;y=358.};
       tower_cavalry 6 Neutral {x=329.;y=292.};
       tower_mini 6 Neutral {x=363.;y=246.};
-      tower_mini 6 Neutral {x=496.;y=125.};
-      tower_mini 0 Neutral {x=251.;y=450.};
-      tower_mini 0 Neutral {x=477.;y=243.};
       tower_cavalry 2 Neutral {x=928.;y=600.};
-      tower_mini 3 Neutral {x=1021.;y=555.};
-      tower_mini 4 Neutral {x=716.;y=278.};
-      tower_mini 5 Neutral {x=771.;y=486.};
       tower_cavalry 6 Neutral {x=835.;y=494.};
       tower_mini 6 Neutral {x=908.;y=433.};
-      tower_mini 6 Neutral {x=963.;y=269.};
-      tower_mini 6 Neutral {x=1041.;y=238.};
-      tower_cavalry 0 Neutral {x=664.;y=539.};
-      tower_mini 0 Neutral {x=902.;y=363.};
-      tower_medium 0 Neutral {x=201.;y=559.};
-      tower_cavalry 0 Neutral {x=364.;y=540.};
       tower_medium 0 Neutral {x=433.;y=433.};
       tower_medium 0 Neutral {x=529.;y=329.};
       tower_cavalry 0 Neutral {x=688.;y=109.};
       tower_medium 0 Neutral {x=524.;y=600.};
-      tower_medium 0 Neutral {x=679.;y=437.};
-      tower_cavalry 0 Neutral {x=810.;y=299.};
-      tower_medium 0 Neutral {x=920.;y=200.};
-      tower_medium 0 Neutral {x=899.;y=98.};
-
     |] ;
     num_towers = 8 ;
     player_score = 8 ;
@@ -488,27 +451,15 @@ let map9 =
       base_tower 0 Player {x=71.;y=87.};
       base_tower 1 Player {x=162.;y=187.};
       base_tower 0 Player {x=112.;y=340.};
-      base_tower 1 Player {x=77.;y=504.};
-      base_tower 1 Player {x=215.;y=414.};
-      base_tower 0 Enemy {x=943.;y=539.};
-      base_tower 1 Enemy {x=995.;y=381.};
       base_tower 0 Enemy {x=915.;y=249.};
       base_tower 1 Enemy {x=970.;y=79.};
       base_tower 1 Enemy {x=835.;y=387.};
       tower_mini 2 Neutral {x=300.;y=287.};
       tower_mini 4 Neutral {x=431.;y=141.};
       tower_mini 5 Neutral {x=632.;y=89.};
-      tower_mini 6 Neutral {x=811.;y=162.};
-      tower_mini 6 Neutral {x=824.;y=307.};
-      tower_mini 6 Neutral {x=846.;y=568.};
-      tower_mini 0 Neutral {x=727.;y=601.};
-      tower_mini 0 Neutral {x=551.;y=617.};
-      tower_mini 3 Neutral {x=384.;y=533.};
-      tower_mini 4 Neutral {x=270.;y=380.};
       tower_cavalry 0 Neutral {x=492.;y=282.};
       tower_cavalry 0 Neutral {x=711.;y=275.};
       tower_cavalry 0 Neutral {x=488.;y=488.};
-      tower_cavalry 0 Neutral {x=744.;y=473.};
       tower_medium 0 Neutral {x=593.;y=344.};
 
     |] ;
@@ -540,46 +491,25 @@ let map9 =
 let map10 =
   {
     towers = [|
-      base_tower 0 Player {x=121.;y=81.};
-      base_tower 1 Player {x=260.;y=81.};
-      base_tower 0 Player {x=414.;y=81.};
-      base_tower 1 Player {x=575.;y=81.};
-      base_tower 1 Player {x=752.;y=81.};
-      base_tower 1 Player {x=919.;y=81.};
-      base_tower 0 Enemy {x=121.;y=485.};
-      base_tower 1 Enemy {x=260.;y=485.};
-      base_tower 0 Enemy {x=414.;y=485.};
-      base_tower 1 Enemy {x=575.;y=485.};
-      base_tower 1 Enemy {x=752.;y=485.};
-      base_tower 1 Enemy {x=919.;y=485.};
-      tower_mini 2 Neutral {x=148.;y=221.};
-      tower_mini 4 Neutral {x=236.;y=221.};
+      tower_mini 2 Player {x=148.;y=221.};
       tower_mini 5 Neutral {x=312.;y=221.};
-      tower_mini 6 Neutral {x=312.;y=300.};
+      tower_mini 6 Neutral {x=312.;y=332.5};
       tower_mini 6 Neutral {x=230.;y=325.};
-      tower_mini 6 Neutral {x=312.;y=365.};
       tower_mini 0 Neutral {x=312.;y=414.};
-      tower_mini 0 Neutral {x=236.;y=415.};
       tower_mini 3 Neutral {x=148.;y=416.};
 
       tower_mini 5 Neutral {x=444.;y=221.};
-      tower_mini 6 Neutral {x=444.;y=300.};
-      tower_mini 6 Neutral {x=444.;y=365.};
+      tower_mini 6 Neutral {x=444.;y=332.5};
       tower_mini 0 Neutral {x=444.;y=414.};
 
       tower_mini 5 Neutral {x=586.;y=221.};
-      tower_mini 6 Neutral {x=586.;y=300.};
-      tower_mini 6 Neutral {x=586.;y=365.};
+      tower_mini 6 Neutral {x=586.;y=332.5};
       tower_mini 0 Neutral {x=586.;y=414.};
 
-      tower_mini 2 Neutral {x=748.;y=221.};
       tower_mini 4 Neutral {x=836.;y=221.};
-      tower_mini 5 Neutral {x=912.;y=221.};
       tower_mini 6 Neutral {x=748.;y=325.};
       tower_mini 6 Neutral {x=912.;y=325.};
-      tower_mini 0 Neutral {x=912.;y=414.};
-      tower_mini 0 Neutral {x=836.;y=415.};
-      tower_mini 3 Neutral {x=748.;y=416.};
+      tower_mini 0 Enemy {x=836.;y=415.};
 
     |] ;
     num_towers = 8 ;
