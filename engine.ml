@@ -102,7 +102,7 @@ let spell_bar_ai = [
   ("lightning_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_lightning_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=0.;y= Renderer.height -. 50.},
+              {x=0.;y= 0.},
               {w=50.;h=50.},
               (* Skill *)
               lightning_skill)
@@ -110,7 +110,7 @@ let spell_bar_ai = [
   ("freeze_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_freeze_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=50.;y= Renderer.height -. 50.},
+              {x=50.;y= 0.},
               {w=50.;h=50.},
               (* Skill *)
               freeze_skill)
@@ -118,10 +118,21 @@ let spell_bar_ai = [
   ("health_spell_ai", ref (
     SpellBox ({spell_box_state = Regenerating; spell_box_sprite = Sprite.spell_btn_sprite;
             spell_box_front_image = Some (Sprite.sprite_heart_icon); spell_box_front_image_offset = {x=0.;y=0.};},
-              {x=100.;y= Renderer.height -. 50.},
+              {x=100.;y= 0.},
               {w=50.;h=50.},
               (* Skill *)
               health_skill)
+  ));
+  ("enemy_mana_label", ref (
+    Label (
+      {
+        text = "mana: ";
+        color = {r=255;g=255;b=255;a=1.};
+        font_size = 20;
+      },
+      {x=170.; y = 30.},
+      {w=160.;h=70.};
+    )
   ));
 ]
 (* Initialize scenes *)
@@ -443,9 +454,54 @@ let scene_transition () =
     | _ -> ()
   )
 
-let get_enemy_spell st =
-  let mana = st.enemy_mana in
-  let kill_cost = lightning_skill.mana_cost in
+let get_enemy_spell sc =
+  if sc.name <> "Game" then Null
+  else (
+    let mana = sc.state.enemy_mana in
+    let lightning_spell_ref = List.assoc "lightning_spell_ai" sc.interface in
+    let freeze_spell_ref = List.assoc "freeze_spell_ai" sc.interface in
+    let health_spell_ref = List.assoc "health_spell_ai" sc.interface in
+
+    let command = ref Null in
+    let _ = (
+      match !lightning_spell_ref with
+      | SpellBox (spell_box_property, pos, size, lightning_skill) -> 
+        begin
+          (* Check if can run lightning_spell *)
+          if spell_box_property.spell_box_state = Neutral then (
+            let kill_cost = lightning_skill.mana_cost in
+            if mana > float_of_int kill_cost then (
+              (* get kill amount *)
+              let kill_n = (
+                match lightning_skill.effect with
+                | Kill n -> float_of_int n
+                | _ -> 0. 
+              ) in
+              let kill_index = Array.fold_left
+                  (fun acc e -> if (e.twr_troops +. 2. < kill_n) && e.twr_team = Player
+                    then e.twr_id else acc)
+                  (-1)
+                  sc.state.towers in
+              if kill_index <> -1 then
+                (* set skill to regenerate *)
+                print_endline("Ai casting Lightning spell!!");
+                lightning_spell_ref := SpellBox ({spell_box_property with
+                                                    spell_box_state = Regenerating
+                                                  }, pos,size,lightning_skill);
+                
+                command := Skill ({lightning_skill with
+                        tower_id = 2;
+                        allegiance = Enemy})
+            )
+          )
+
+        end
+      | _ -> ()
+    ) in
+    !command
+  )
+  (*
+  
   let health_cost = freeze_skill.mana_cost in
   if mana > float_of_int kill_cost then
     let kill_n =
@@ -475,7 +531,8 @@ let get_enemy_spell st =
                 allegiance = Enemy})
       else
         Null
-  else Null
+  else Null*)
+  (*let lightning_spell_ui_ref = List.assoc "lightning_spell_ai" (sc.interface) in*)
 
 let game_loop context running =
   print_endline ("State tests suite: "^OCamlotUnit2.run_tests State_test.tests);
@@ -514,7 +571,7 @@ let game_loop context running =
          state = State.new_state_plus_delta
              !current_scene.state cm !Renderer.delta}
       end;
-    let spell_cm = get_enemy_spell (!current_scene.state) in
+    let spell_cm = get_enemy_spell (!current_scene) in
     current_scene :=
       {!current_scene with
        state = State.new_state_plus_delta

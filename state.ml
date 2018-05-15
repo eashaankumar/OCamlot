@@ -731,8 +731,6 @@ let update_spell_boxes scene input : command =
     match !uref with
     | SpellBox (prop, pos, size, skill) ->
       begin
-          print_endline("Updating spell box: "^id);
-
         let _ =
           begin
             if prop.spell_box_state = Regenerating then (
@@ -879,6 +877,14 @@ let update sc input =
       match Ui.find_ui_ref sc.interface "player_mana_label" with
       | Some(ref_mana_label) ->
         (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.player_mana);
+      | None -> ()
+    end
+  in
+  let _ =
+    begin
+      match Ui.find_ui_ref sc.interface "enemy_mana_label" with
+      | Some(ref_mana_label) ->
+        (Ui.get_label_prop !ref_mana_label).text <- "mana: "^string_of_int (int_of_float sc.state.enemy_mana);
       | None -> ()
     end
   in
