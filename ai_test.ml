@@ -208,7 +208,7 @@ let tree0_2_helper =
 let tree1_children = Array.map (fun cm -> ref (Leaf (cm,1.)))
     (State.possible_commands root_state1 Enemy)
 let tree1_helper =
-  (Node (root_state0, Null, 0., 10000., tree0_children, ref (tree0_0), true))
+  (Node (root_state0, Null, 0.53135, 10000., tree0_children, ref (tree0_0), true))
 
 let tree1_0 =  Node (root_state0, Null, 0.53135, 10000.,
  [|

@@ -258,7 +258,11 @@ let new_state st (c : command) : state =
              (*st.towers.(start) <- ts';
                st.towers*)
             end;
-            movements = new_mvmt::(st.movements)
+           movements =
+             if !mvmt_troop_count = 0 then
+               st.movements
+             else
+               new_mvmt::(st.movements)
                   }
         end
     end
