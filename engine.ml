@@ -469,6 +469,7 @@ let get_enemy_spell sc =
         begin
           (* Check if can run lightning_spell *)
           if spell_box_property.spell_box_state = Neutral then (
+            print_endline("Its neutral.");
             let kill_cost = lightning_skill.mana_cost in
             if mana > float_of_int kill_cost then (
               (* get kill amount *)
