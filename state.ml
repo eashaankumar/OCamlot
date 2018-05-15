@@ -45,7 +45,7 @@ let update_movement mvmt delta st =
   (*TODO make velocity not hard-coded*)
   {mvmt with
    progress = mvmt.progress +. (mvmt.speed *. delta)/.distance;
-   mvmt_sprite = Sprite.tick mvmt.mvmt_sprite !Renderer.delta
+   mvmt_sprite = Sprite.tick mvmt.mvmt_sprite delta
   }
 
 (**
@@ -554,7 +554,7 @@ let update_skill st' d' : state =
  * [update_troop_count tower] updates the troop count in [tower]
  * returns: new troop [count]
  *)
-let update_troop_count tower =
+let update_troop_count tower d =
   match tower.twr_team with
   | Neutral -> 0.
   | _ ->
@@ -564,9 +564,9 @@ let update_troop_count tower =
       if dir = 0 then
         tower.twr_troops_max
       else if dir < 0 then
-        tower.twr_troops +. tower.twr_troops_regen_speed *. !Renderer.delta
+        tower.twr_troops +. tower.twr_troops_regen_speed *. d
       else
-        tower.twr_troops -. tower.twr_troops_regen_speed *. !Renderer.delta *. 2.
+        tower.twr_troops -. tower.twr_troops_regen_speed *. d *. 2.
     end
 
 
@@ -633,7 +633,7 @@ let new_state_plus_delta st c d =
     (* Update score and regenerated troops *)
     towers = begin
       Array.map (fun tower ->
-        let new_tcount = update_troop_count tower in
+        let new_tcount = update_troop_count tower d in
         {tower with twr_troops = new_tcount}
       ) temp_state.towers
     end;

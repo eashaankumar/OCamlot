@@ -357,7 +357,7 @@ let helper_tests = [
                      (new_movement 1 2 5 Sprite.blue_troop1_right Player 1. 50.));
 ]
 
-let state_tests : test list = [
+let state_immutability_tests : test list = [
   (* This section of state tests will assert the immutability of a previous
      state after creating a new one from that previous state. *)
   "immtbl_axiom" >:: (fun _ -> assert_equal init_state init_state_copy);
@@ -457,15 +457,17 @@ let state_tests : test list = [
                         (ignore (new_state_plus_delta init_state_copy
                                    (Skill init_reg_from_enemy_valid2) delta);
                          init_state_copy));
-  (* Now that we have ascertained that functions updating the state don't
-     mutate the state passed into it, it's time to test some basic
-     functionality. *)
+]
+
+let state_tests = [
+  
 ]
 
 (* All test lists must be in [tests] *)
 let tests = List.flatten [
     helper_tests;
-    state_tests
+    state_immutability_tests;
+    state_tests;
   ]
 
 (*let alltests = "State test suite" >:: tests*)
