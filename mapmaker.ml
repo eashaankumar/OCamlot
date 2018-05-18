@@ -29,8 +29,8 @@ let troop_cavalry = {
 let base_tower id team pos : Types.tower =
   let troop_count =
   match team with
-  | Player -> 1.
-  | Enemy -> 10.
+  | Player -> 20.
+  | Enemy -> 20.
   | Neutral -> 0. in
   {
   twr_id = id;
