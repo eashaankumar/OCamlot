@@ -4,7 +4,7 @@
 
 `opam install js_of_ocaml js_of_ocaml-ocamlbuild js_of_ocaml-camlp4 js_of_ocaml-lwt`
 
-## Run
+## Play
 1. Clone this repository
 2. `cd OCamlot`
 3. `make`
