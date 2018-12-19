@@ -10,6 +10,8 @@
 3. `make`
 4. Run index.html in browser
 
+**NOTE**: You can run `make clean` to remove all binaries.
+
 ## Citations
 
 - Lightning spell
