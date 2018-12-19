@@ -4,11 +4,11 @@
 
 `opam install js_of_ocaml js_of_ocaml-ocamlbuild js_of_ocaml-camlp4 js_of_ocaml-lwt`
 
-`git clone https://github.coecis.cornell.edu/ek485/OCamlot`
-
-run `make`
-
-run index.html in browser
+## Run
+1. Clone this repository
+2. `cd OCamlot`
+3. `make`
+4. Run index.html in browser
 
 ## Citations
 
